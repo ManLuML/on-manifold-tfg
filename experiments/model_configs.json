@@ -1,0 +1,78 @@
+{
+  "jit-b-16": {
+    "model_type": "JiT",
+    "checkpoint": "checkpoints/jit_official/jit-b-16.pth",
+    "img_size": 256,
+    "sampling_method": "heun",
+    "nfe": 100,
+    "cfg_scale": 3.0
+  },
+  "jit-b-32": {
+    "model_type": "JiT",
+    "checkpoint": "checkpoints/jit_official/jit-b-32.pth",
+    "img_size": 512,
+    "sampling_method": "heun",
+    "nfe": 100,
+    "cfg_scale": 3.0
+  },
+  "jit-l-16": {
+    "model_type": "JiT",
+    "checkpoint": "checkpoints/jit_official/jit-l-16.pth",
+    "img_size": 256,
+    "sampling_method": "heun",
+    "nfe": 100,
+    "cfg_scale": 2.4
+  },
+  "jit-l-32": {
+    "model_type": "JiT",
+    "checkpoint": "checkpoints/jit_official/jit-l-32.pth",
+    "img_size": 512,
+    "sampling_method": "heun",
+    "nfe": 100,
+    "cfg_scale": 2.5
+  },
+  "jit-h-16": {
+    "model_type": "JiT",
+    "checkpoint": "checkpoints/jit_official/jit-h-16.pth",
+    "img_size": 256,
+    "sampling_method": "heun",
+    "nfe": 100,
+    "cfg_scale": 2.2
+  },
+  "jit-h-32": {
+    "model_type": "JiT",
+    "checkpoint": "checkpoints/jit_official/jit-h-32.pth",
+    "img_size": 512,
+    "sampling_method": "heun",
+    "nfe": 100,
+    "cfg_scale": 2.3
+  },
+  "dit": {
+    "model_type": "DiT",
+    "from_pretrained": "facebook/DiT-XL-2-256",
+    "img_size": 256,
+    "sampling_method": "ddpm",
+    "nfe": 250,
+    "cfg_scale": 1.5,
+    "vae_type": "ema"
+  },
+  "sit": {
+    "model_type": "SiT",
+    "checkpoint": "checkpoints/sit_official/SiT-XL-2-256.pt",
+    "img_size": 256,
+    "sampling_method": "heun",
+    "nfe": 250,
+    "cfg_scale": 1.5,
+    "vae_type": "ema"
+  },
+  "pixelflow": {
+    "model_type": "PixelFlow",
+    "checkpoint": "checkpoints/pixelflow",
+    "from_pretrained": "ShoufaChen/PixelFlow-Class2Image",
+    "img_size": 256,
+    "sampling_method": "euler",
+    "nfe": 30,
+    "_nfe_note": "per-stage (total NFE = nfe × 4 stages = 120)",
+    "cfg_scale": 2.4
+  }
+}

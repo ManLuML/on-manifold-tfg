@@ -1,0 +1,41 @@
+# PixelFlow XL configuration for 256x256 generation
+# v-prediction, pixel-space model
+
+model:
+  name: "PixelFlow-XL"
+  params:
+    # Architecture (XL size)
+    depth: 28
+    num_attention_heads: 16
+    attention_head_dim: 72  # embed_dim = 16 * 72 = 1152
+
+    # I/O
+    in_channels: 3
+    out_channels: 3
+    patch_size: 4
+
+    # Conditioning
+    num_classes: 1000
+
+    # Attention
+    attention_bias: true
+
+# Prediction target
+pred_target: "v"
+
+# Image settings
+img_size: 256
+latent_size: 64  # 256 / 4 = 64
+
+# Sampling defaults (paper optimal)
+sampling:
+  num_steps: 30
+  cfg_scale: 2.4
+  method: "euler"
+
+# Notes
+notes: |
+  PixelFlow XL (v-prediction, pixel-space)
+  - Same time convention as JiT (t=0: noise, t=1: clean)
+  - NO VAE needed (operates directly in pixel space)
+  - FID 1.98 on ImageNet 256x256

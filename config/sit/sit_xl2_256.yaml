@@ -1,0 +1,52 @@
+# SiT-XL/2 256x256 Configuration
+# For baseline inference without TFG guidance
+
+# Model Configuration
+model: "SiT-XL/2"
+input_size: 32  # Latent size (256 / 8)
+patch_size: 2
+in_channels: 4  # VAE latent channels
+hidden_size: 1152
+depth: 28
+num_heads: 16
+mlp_ratio: 4.0
+num_classes: 1000
+learn_sigma: true
+
+# Prediction Target
+# SiT predicts velocity (v), unlike DiT which predicts noise (epsilon)
+pred_target: "v"
+
+# Flow Matching Configuration
+# SiT uses the same time convention as JiT:
+# - t=0: pure noise
+# - t=1: clean data
+# - x_t = t*x + (1-t)*ε
+path_type: "linear"  # Linear interpolation path
+t_eps: 0.05  # Small epsilon for numerical stability
+
+# Sampling Configuration
+num_sampling_steps: 125  # 125 Heun steps = 250 NFE (matches paper)
+sampling_method: "heun"  # "euler" or "heun" (paper uses Heun)
+
+# Classifier-Free Guidance
+cfg_scale: 1.5  # Optimal for FID (paper Table 1: FID=2.15)
+cfg_channel_mode: "first3"  # "first3" (original SiT) or "all" (TFG research)
+
+# VAE Configuration
+vae_type: "ema"  # "mse" or "ema" (ema matches official eval)
+vae_scale_factor: 0.18215
+
+# Image Configuration
+img_size: 256  # Output image size
+
+# Checkpoint Sources
+# Option 1: Local checkpoint
+# checkpoint: "checkpoints/SiT-XL-2-256.pt"
+# Option 2: HuggingFace Hub (if available)
+# from_pretrained: "mit-han-lab/SiT-XL-2-256"
+
+# Notes:
+# - SiT checkpoints use the same format as DiT (ema/model key)
+# - Time convention matches JiT (no conversion needed)
+# - Prediction target is velocity, not epsilon
