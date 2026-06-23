@@ -13,12 +13,10 @@ Package Structure:
     ├── jit/
     │   ├── model.py      - JiT transformer architecture
     │   ├── denoiser.py   - Flow-matching denoiser wrapper
-    │   ├── engine.py     - Training and evaluation functions
     │   ├── prepare_ref.py - Reference dataset preparation
     │   └── utils/        - Utility functions
     │       ├── crop.py       - Image cropping utilities
-    │       ├── lr_sched.py   - Learning rate scheduling
-    │       ├── misc.py       - Distributed training utilities
+    │       ├── checkpoint.py - Inference checkpoint loading
     │       └── model_util.py - Model utilities (RoPE, embeddings)
     └── tfg/
         ├── __init__.py   - TFG module exports
