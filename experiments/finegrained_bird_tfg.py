@@ -314,7 +314,7 @@ def load_sit_model(config: dict[str, Any], device: str, num_steps: int):
             f"SiT checkpoint not found: {checkpoint_path}\n"
             "Download from HuggingFace:\n"
             "  huggingface-cli download nyu-visionx/SiT-collections "
-            "--local-dir checkpoints/sit_official"
+            "--local-dir checkpoints/sit"
         )
 
     denoiser = load_sit_denoiser(

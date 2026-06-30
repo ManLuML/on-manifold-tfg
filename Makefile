@@ -116,10 +116,10 @@ check-models:
 from pathlib import Path; \
 import os; \
 checks = [ \
-    ('SiT-XL/2-256',  'checkpoints/sit_official/SiT-XL-2-256.pt'), \
-    ('JiT-H/16',      'checkpoints/jit_official/jit-h-16.pth'), \
-    ('JiT-L/16',      'checkpoints/jit_official/jit-l-16.pth'), \
-    ('JiT-B/16',      'checkpoints/jit_official/jit-b-16.pth'), \
+    ('SiT-XL/2-256',  'checkpoints/sit/SiT-XL-2-256.pt'), \
+    ('JiT-H/16',      'checkpoints/jit/jit-h-16.pth'), \
+    ('JiT-L/16',      'checkpoints/jit/jit-l-16.pth'), \
+    ('JiT-B/16',      'checkpoints/jit/jit-b-16.pth'), \
     ('DiT-XL/2-256',  os.path.expanduser('~/.cache/jit-tfg/dit/DiT-XL-2-256x256.pt')), \
 ]; \
 [print(('   ✓ ' if Path(p).exists() else '   ✗ ') + f'{n:18s} {p}') for n, p in checks]; \
