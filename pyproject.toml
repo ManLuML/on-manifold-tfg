@@ -2,7 +2,7 @@
 name = "on-manifold-tfg"
 version = "0.0.1"
 description = "Code release for 'Not All Prediction Targets Keep Training-Free Diffusion Guidance on the Manifold' (ECCV 2026): comparing x, epsilon, and v prediction targets for training-free diffusion guidance"
-authors = [{ name = "Yunsung Lee", email = "dldbstjd9751@gmail.com" }]
+authors = [{ name = "Yunsung Lee" }, { name = "Hyeongmin Lee" }]
 readme = "README.md"
 keywords = ['python']
 requires-python = "~=3.11"
