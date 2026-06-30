@@ -268,5 +268,8 @@ This empirically improves performance by:
 ## Next Steps
 
 - [Research Context](research-context.md): Understand the research goals
-- [Denoiser API](../api/denoiser.md): Training and sampling wrapper
-- [Model API](../api/model.md): JiT model implementation details
+- [Timestep Conventions](timestep-conventions.md): How DiT/SiT/JiT time conventions differ
+- [Guidance Spaces](guidance-spaces.md): How TFG corrections are applied
+
+The denoiser and model wrappers live in `src/jit_tfg/models/jit/`
+(`denoiser.py`, `model.py`); read the source for the per-class API.

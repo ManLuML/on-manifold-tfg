@@ -23,16 +23,20 @@ We target a computational budget of **100 NFE** for all models.
 > **Why 100 steps for DiT?**
 > Originally, DiT baselines often used 50 steps. However, since DDIM is a 1st-order solver (1 NFE/step) and Heun is a 2nd-order solver (2 NFE/step), running DiT for 50 steps resulted in only 50 NFE, giving it a computational disadvantage compared to JiT/SiT (100 NFE). We now default DiT to 100 steps to ensure parity in total model evaluations.
 
-## Paper Reproduction Mode
+## Reproducing original-paper numbers
 
-While the "Fair Comparison" settings are used for our internal research and cross-model analysis, the `--reproduce_paper` flag allows strictly reproducing valid numbers from the original papers.
+The fair-comparison settings above are used for cross-model analysis. To instead
+match the protocol of each model's original publication, override the per-model
+sampler defaults with `--nfe` / `--sampling_method` (see the per-model defaults
+in `experiments/model_configs.json`):
 
-| Model | `--reproduce_paper` Settings | Target FID |
-|-------|------------------------------|------------|
+| Model | Original-paper settings | Target FID |
+|-------|-------------------------|------------|
 | **DiT-XL/2** | Steps=**250**, CFG=1.0, VAE=ema | 2.27 |
 | **SiT-XL/2** | Steps=**250**, CFG=1.0, VAE=ema | 2.06 |
 
-When `--reproduce_paper` is used, the default "Fair Comparison" settings are overridden to match the original publication's protocol.
+These reproduce the original publication's protocol rather than the NFE-matched
+fair-comparison budget.
 
 ## Inverse Problem Evaluation
 
@@ -40,11 +44,14 @@ For inverse problems (Gaussian deblur, 4× super-resolution), the same model con
 
 | Aspect | Classification Guidance | Inverse Problem Guidance |
 |--------|------------------------|--------------------------|
-| **Script** | `imagenet_tfg.py` / `finegrained_bird_tfg.py` | `deblur_sr.py` |
+| **Script** | `finegrained_bird_tfg.py` | `deblur_sr.py` |
 | **Guider** | Classifier (log p(y\|x)) | InverseProblemGuider (-\|\|y - A(x)\|\|₂) |
 | **Metrics** | FID, IS, Validity | LPIPS, PSNR, SSIM |
 | **Reference** | None (generate from scratch) | ImageNet val images (degraded + noisy) |
 | **Models** | 256×256 only | 256×256 only |
 
 > [!NOTE]
-> Inverse problem TFG presets differ per task (deblur vs super-resolution) and come from the original TFG paper's scripts (`gaussian_deblur.sh`, `super_resolution.sh`). See `experiments/AGENTS.md` Section 6 for details.
+> Inverse-problem TFG presets differ per task (deblur vs super-resolution). They
+> follow the conventions of the upstream Training-Free-Guidance inverse-problem
+> tasks; the shipped presets live in `experiments/deblur_sr.py`. Run that script
+> with `--help` for the full set of task-specific flags.

@@ -1,225 +1,133 @@
 # Quick Start
 
-This guide walks you through training a JiT model and generating images.
+This guide walks you through generating images and reproducing the paper's
+headline metrics. The release is **evaluation / inference only** — the four main
+models (JiT, DiT, SiT, PixelFlow) are used from their pretrained checkpoints; no
+training code is shipped.
 
-## Training
+Before you start, make sure you have installed the environment and downloaded
+the checkpoints and FID statistics — see [Installation](installation.md) and
+[`CHECKPOINTS.md`](../../CHECKPOINTS.md).
 
-### Single GPU Training
+All experiment entry points live in `experiments/` (plus the self-contained
+`spiral_test/` toy ablation). Each writes images, a `config.json`, and a
+`metrics.json` under `outputs/`. Runs are resumable — re-invoking a command
+skips already-generated images and cached metrics.
 
-```bash
-python experiments/jit_train.py \
-    --data_path /path/to/imagenet \
-    --model JiT-B/16 \
-    --img_size 256 \
-    --batch_size 128 \
-    --epochs 200 \
-    --output_dir ./outputs/jit_b_16
-```
+## CFG-only baselines (FID / IS)
 
-### Multi-GPU Training
-
-For distributed training across multiple GPUs:
-
-```bash
-torchrun --nproc_per_node=8 experiments/jit_train.py \
-    --data_path /path/to/imagenet \
-    --model JiT-L/16 \
-    --img_size 256 \
-    --batch_size 64 \
-    --epochs 400 \
-    --output_dir ./outputs/jit_l_16
-```
-
-### Training Configuration
-
-Key training arguments:
-
-| Argument | Default | Description |
-|----------|---------|-------------|
-| `--model` | `JiT-B/16` | Model variant |
-| `--img_size` | `256` | Image resolution |
-| `--batch_size` | `128` | Per-GPU batch size |
-| `--epochs` | `200` | Total training epochs |
-| `--blr` | `5e-5` | Base learning rate |
-| `--warmup_epochs` | `5` | LR warmup epochs |
-| `--lr_schedule` | `constant` | LR schedule (`constant` or `cosine`) |
-
-### Flow Matching Parameters
-
-| Argument | Default | Description |
-|----------|---------|-------------|
-| `--P_mean` | `-0.8` | Timestep distribution mean |
-| `--P_std` | `0.8` | Timestep distribution std |
-| `--noise_scale` | `1.0` | Initial noise scale |
-| `--t_eps` | `5e-2` | Epsilon for numerical stability |
-| `--label_drop_prob` | `0.1` | CFG label dropout probability |
-
-## Image Generation
-
-### Generate from Checkpoint
+Generate the zero-guidance baseline for any of the four models. The default is
+1000 classes × 50 images = 50K samples:
 
 ```bash
-python experiments/jit_train.py \
-    --resume ./outputs/jit_l_16 \
-    --evaluate_gen \
-    --num_images 50000 \
-    --cfg 4.0 \
-    --sampling_method heun \
-    --num_sampling_steps 50
+uv run python experiments/imagenet_no_guidance.py --model jit-h-16
 ```
 
-### Programmatic Generation
+Swap `--model` for `dit`, `sit`, or `pixelflow`. The reported CFG-only FID is
+≈ 2 for all four models (JiT-H 1.86 · PixelFlow 1.98 · SiT 2.06 · DiT 2.27).
+
+## Headline guidance study (bird Child-FID / Validity)
+
+The headline experiment is a **DPS ρ-sweep**: sweep `--rho_override` to trace
+the Pareto frontier of guided-class FID (Child-FID) vs. classifier validity.
+
+```bash
+# x-prediction model (JiT-H/16, Heun, x-space guidance)
+uv run python experiments/finegrained_bird_tfg.py \
+    --model jit-h-16 --guidance_mode dps --rho_override 0.5
+
+# epsilon-prediction model (DiT-XL/2, DDIM)
+uv run python experiments/finegrained_bird_tfg.py \
+    --model dit --guidance_mode dps --rho_override 0.5
+```
+
+Sweep `--rho_override` over several values (e.g. `0.1 0.3 0.5 ...`) to produce
+the frontier. `--model sit` and `--model pixelflow` are also supported. The
+zero-guidance reference point comes from
+`experiments/finegrained_bird_no_guidance.py`.
+
+## Inverse problems (deblur / super-resolution)
+
+```bash
+# Gaussian deblur
+uv run python experiments/deblur_sr.py --task deblur \
+    --model jit-h-16 --guidance_mode dps --imagenet_dir <path/to/imagenet/val>
+
+# 4x super-resolution
+uv run python experiments/deblur_sr.py --task super_resolution \
+    --model jit-h-16 --guidance_mode dps --imagenet_dir <path/to/imagenet/val>
+```
+
+These report LPIPS / PSNR / SSIM against degraded ImageNet validation images and
+need a local ImageNet validation set passed via `--imagenet_dir`.
+
+## Toy manifold ablation (crossed lines)
+
+`spiral_test/` is a self-contained 2D→512D toy ablation that trains tiny MLPs
+from scratch (it does **not** use the pretrained Diffusion Transformers):
+
+```bash
+uv run python spiral_test/generate_data.py --name crossed_lines
+uv run python spiral_test/train.py --data crossed_lines
+uv run python spiral_test/inference.py --exp crossed_lines_<YYYYMMDD_HHMMSS> -s 0.0 2.0 5.0 -n 50
+```
+
+See [`spiral_test/README.md`](../../spiral_test/README.md) for details.
+
+## Useful shared flags
+
+The bird / inverse / CFG scripts share several flags:
+
+| Flag | Description |
+|------|-------------|
+| `--nfe`, `--sampling_method` | Override the per-model sampler defaults |
+| `--images_per_class` | Samples generated per class |
+| `--batch_size` | Per-batch sample count (lower it if you hit OOM) |
+| `--device` | `cuda` (default) or `cpu` |
+| `--seed` | Random seed |
+| `--force_rerun` | Ignore cached images/metrics and regenerate |
+
+Run any script with `--help` for the full list.
+
+## Programmatic generation
+
+You can drive a model wrapper directly. The wrappers load their pretrained
+checkpoints from the paths described in [`CHECKPOINTS.md`](../../CHECKPOINTS.md):
 
 ```python
 import torch
-from types import SimpleNamespace
 from jit_tfg.models.jit.denoiser import Denoiser
+from types import SimpleNamespace
 
-# Model configuration
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 args = SimpleNamespace(
-    model="JiT-L/16",
+    model="JiT-H/16",
     img_size=256,
     class_num=1000,
-    attn_dropout=0.0,
-    proj_dropout=0.0,
-    label_drop_prob=0.1,
-    P_mean=-0.8,
-    P_std=0.8,
-    t_eps=5e-2,
-    noise_scale=1.0,
-    ema_decay1=0.9999,
-    ema_decay2=0.9996,
     sampling_method="heun",
     num_sampling_steps=50,
-    cfg=4.0,
-    interval_min=0.0,
-    interval_max=1.0,
+    cfg=2.9,
 )
 
-# Create model
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = Denoiser(args).to(device)
-model.eval()
+model = Denoiser(args).to(device).eval()
+# Load the pretrained checkpoint (see CHECKPOINTS.md for the expected path):
+# state = torch.load("checkpoints/jit/jit-h-16.pth", map_location=device, weights_only=True)
+# model.load_state_dict(state)
 
-# Load checkpoint (optional)
-# checkpoint = torch.load("checkpoint.pth", map_location=device)
-# model.load_state_dict(checkpoint["model"])
-
-# Generate images
-batch_size = 4
-labels = torch.randint(0, 1000, (batch_size,), device=device)
-
+labels = torch.randint(0, 1000, (4,), device=device)
 with torch.no_grad():
     images = model.generate(labels)  # (B, 3, 256, 256) in [-1, 1]
 
-# Convert to [0, 255] for display
 images = ((images + 1) / 2 * 255).clamp(0, 255).byte()
 ```
 
-### Sampling Parameters
-
-| Parameter | Default | Description |
-|-----------|---------|-------------|
-| `sampling_method` | `heun` | ODE solver (`euler` or `heun`) |
-| `num_sampling_steps` | `50` | Integration steps |
-| `cfg` | `4.0` | Classifier-free guidance scale |
-| `interval_min` | `0.0` | CFG interval start |
-| `interval_max` | `1.0` | CFG interval end |
-
-## Evaluation
-
-### Compute FID and IS
-
-During training with online evaluation:
-
-```bash
-python experiments/jit_train.py \
-    --data_path /path/to/imagenet \
-    --online_eval \
-    --eval_freq 40 \
-    --num_images 50000
-```
-
-### Standalone Evaluation
-
-```bash
-python experiments/jit_train.py \
-    --resume ./outputs/jit_l_16 \
-    --evaluate_gen \
-    --num_images 50000 \
-    --cfg 4.0
-```
-
-## Understanding the Training Loop
-
-The training implements flow matching with the following steps:
-
-```mermaid
-graph TD
-    A[Clean Image x] --> B[Sample t ~ LogitNormal]
-    A --> C[Sample noise e ~ N(0, I)]
-    B --> D[Create z_t = t*x + (1-t)*e]
-    C --> D
-    D --> E[Model predicts x̂]
-    E --> F[Compute velocity v̂ = (x̂-z)/(1-t)]
-    A --> G[True velocity v = (x-z)/(1-t)]
-    F --> H[Loss = MSE(v, v̂)]
-    G --> H
-```
-
-### Loss Functions
-
-The codebase currently implements **x-prediction with v-loss**:
-
-- **Prediction target**: Model outputs \\(\hat{x}_0\\) (clean image estimate)
-- **Loss computation**: Computed in velocity space:
-
-\\[
-\mathcal{L} = \mathbb{E}_{t, x, \epsilon} \left[ \left\| v - \hat{v} \right\|^2 \right]
-\\]
-
-where \\(v = (x - z_t) / (1-t)\\) and \\(\hat{v} = (\hat{x} - z_t) / (1-t)\\).
-
-## Monitoring Training
-
-### TensorBoard
-
-Training logs are written to TensorBoard:
-
-```bash
-tensorboard --logdir ./outputs/jit_l_16
-```
-
-Tracked metrics:
-
-- `train_loss`: Flow matching loss
-- `lr`: Learning rate
-- `fid_cfg{X}_res{Y}`: FID score (if online_eval enabled)
-- `is_cfg{X}_res{Y}`: Inception Score (if online_eval enabled)
-
-### Checkpoints
-
-Checkpoints are saved with the following structure:
-
-```
-outputs/jit_l_16/
-├── checkpoint-last.pth  # Latest checkpoint
-├── checkpoint-0.pth     # Epoch 0
-├── checkpoint-100.pth   # Epoch 100
-├── events.out.*         # TensorBoard logs
-└── ...
-```
-
-Each checkpoint contains:
-
-- `model`: Model state dict
-- `model_ema1`: First EMA state dict
-- `model_ema2`: Second EMA state dict
-- `optimizer`: Optimizer state
-- `epoch`: Current epoch
+> The exact `SimpleNamespace` fields a wrapper expects depend on the model; the
+> experiment scripts in `experiments/` are the canonical, tested entry points —
+> prefer them over hand-rolled drivers.
 
 ## Next Steps
 
-- [Architecture Overview](../concepts/architecture.md): Deep dive into model design
-- [Research Context](../concepts/research-context.md): Understand the research goals
-- [API Reference](../api/index.md): Detailed code documentation
+- [Architecture Overview](../concepts/architecture.md): Deep dive into model design.
+- [Research Context](../concepts/research-context.md): Understand the research goals.
+- [Timestep Conventions](../concepts/timestep-conventions.md): How DiT/SiT/JiT time conventions differ.

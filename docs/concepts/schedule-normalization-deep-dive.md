@@ -2,6 +2,13 @@
 
 This document provides a detailed analysis of TFG's Schedule Normalization: what it is, why it's needed, and the mathematical justification for converting from the original DDPM implementation to Flow Matching.
 
+> **On code references below.** Paths of the form `edm/methods/*.py` refer to the
+> **upstream** Training-Free-Guidance codebase
+> ([YWolfeee/Training-Free-Guidance](https://github.com/YWolfeee/Training-Free-Guidance),
+> built on EDM), which is the provenance of our guidance logic. Those upstream
+> clones are **not** shipped with this release; only our own implementation in
+> `src/jit_tfg/tfg/` is included. See `THIRD_PARTY_LICENSES.md` for attribution.
+
 ---
 
 ## 0. Schedule Definition in TFG Paper (Direct Quotes)
@@ -583,9 +590,12 @@ For affine path (α=t, β=1-t):
 
 **Key Result**: The theoretical scaling factor for covariance-preconditioned gradient guidance in flow matching is **`(1-t)/t`** (ignoring sign).
 
-### C.2 Official Implementation Analysis (original_implementations/flow_guidance)
+### C.2 Upstream Implementation Analysis (Flow Guidance)
 
-**Schedule Definitions** (`image/gflow_img/utils/grad_fn.py`):
+The upstream Flow Guidance reference implementation (Feng et al., ICML 2025; not
+vendored in this release) defines its schedules as follows.
+
+**Schedule Definitions** (upstream `image/gflow_img/utils/grad_fn.py`):
 
 ```python
 def get_scheduler(name, eps=1e-1):

@@ -21,7 +21,8 @@ Original TFG (Algorithm 1, Line 9, DDPM formulation):
 x_prev += Δ_t / √α_t + √ᾱ_{t-1} · Δ_0
 ```
 
-Original implementation (`edm/methods/tfg.py:129`):
+Original implementation (upstream Training-Free-Guidance, `edm/methods/tfg.py:129`
+— not shipped here; see `THIRD_PARTY_LICENSES.md`):
 ```python
 x_prev += Delta_t / alpha_t ** 0.5 + Delta_0 * alpha_prod_t_prev ** 0.5
 ```

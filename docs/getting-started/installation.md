@@ -1,96 +1,62 @@
 # Installation
 
-This guide covers setting up the JiT-TFG development environment.
+This guide covers setting up `on-manifold-tfg` for **evaluation / inference**.
+The release ships the four pretrained Diffusion Transformers' wrappers plus the
+TFG sampler and evaluation code — **no model training is included**, and the
+four main models are used from their authors' pretrained checkpoints.
 
 ## Prerequisites
 
 - **Python**: 3.11 or higher
-- **CUDA**: 11.8+ (for GPU training)
+- **CUDA**: 11.8+ recommended for GPU inference (CPU works but is slow)
 - **Git**: For cloning the repository
-- **uv**: Recommended for fast dependency management
+- **uv**: [`uv`](https://docs.astral.sh/uv/) for dependency management
 
 ## Quick Installation
 
-### Using uv (Recommended)
-
-[uv](https://github.com/astral-sh/uv) is a fast Python package manager that we recommend for development.
-
-```bash
-# Clone the repository
-git clone https://github.com/ManLuML/on-manifold-tfg.git
-cd on-manifold-tfg
-
-# Install with make (sets up environment and pre-commit hooks)
-make install
-```
-
-This will:
-
-1. Create a virtual environment
-2. Install all dependencies
-3. Set up pre-commit hooks for code quality
-4. Generate the `uv.lock` file
-
-### Using pip
+This release is **self-contained** — no Git submodules and no upstream clones
+are required. Install the locked environment with `uv`:
 
 ```bash
 # Clone the repository
 git clone https://github.com/ManLuML/on-manifold-tfg.git
 cd on-manifold-tfg
 
-# Create and activate virtual environment
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-
-# Install in editable mode
-pip install -e .
-
-# Install development dependencies
-pip install -e ".[dev]"
+# Create the virtual environment and install all dependencies from uv.lock
+uv sync
 ```
 
-## Dependencies
+All commands below are run with `uv run python ...` from the repository root.
 
-### Core Dependencies
+## Download checkpoints and FID statistics
 
-The project requires these main packages:
+The repository never commits model weights or reference statistics. Fetch them
+with the two helper scripts (see [`CHECKPOINTS.md`](../../CHECKPOINTS.md) for the
+full per-model details and expected local paths):
 
-| Package | Version | Purpose |
-|---------|---------|---------|
-| `torch` | >=2.9.1 | Deep learning framework |
-| `torchvision` | latest | Image utilities |
-| `numpy` | latest | Numerical computing |
-| `einops` | latest | Tensor operations |
-| `timm` | latest | Vision model utilities |
-| `tensorboard` | latest | Training visualization |
-| `scipy` | latest | Scientific computing |
-| `opencv-python` | latest | Image I/O |
+```bash
+# Diffusion model checkpoints -> checkpoints/
+uv run python scripts/download_checkpoints.py --all
 
-### Development Dependencies
+# FID reference statistics -> src/jit_tfg/evaluation/generation/fid_stats/
+uv run python scripts/download_fid_stats.py
+```
 
-For development work, additional packages are required:
-
-| Package | Purpose |
-|---------|---------|
-| `pytest` | Testing framework |
-| `ruff` | Linting and formatting |
-| `mkdocs` | Documentation |
-| `mkdocs-material` | Documentation theme |
-| `mkdocstrings[python]` | API documentation |
+The guidance/evaluation classifiers used by the bird benchmark are pulled from
+the HuggingFace Hub automatically on first run (cached under
+`~/.cache/huggingface`), so they need no manual step. The Stable Diffusion VAE
+used by the latent models (DiT, SiT) is likewise fetched at load time.
 
 ## Verify Installation
 
 After installation, verify everything works:
 
 ```bash
-# Run tests
-make test
-
-# Or using pytest directly
+# Run the unit tests
 uv run pytest tests/
 
-# Check imports
-python -c "from jit_tfg.models.jit.model import JiT_models; print(list(JiT_models.keys()))"
+# Check that the model wrappers import and the JiT variants register
+uv run python -c "from jit_tfg.models.jit.model import JiT_models; print(list(JiT_models.keys()))"
 ```
 
 Expected output:
@@ -101,89 +67,25 @@ Expected output:
 
 ## GPU Setup
 
-### CUDA Configuration
-
-For GPU training, ensure CUDA is properly configured:
+Inference runs on a single GPU. Confirm CUDA is visible to PyTorch:
 
 ```bash
-# Check CUDA availability
-python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
-python -c "import torch; print(f'CUDA version: {torch.version.cuda}')"
-python -c "import torch; print(f'cuDNN version: {torch.backends.cudnn.version()}')"
+uv run python -c "import torch; print(f'CUDA available: {torch.cuda.is_available()}')"
+uv run python -c "import torch; print(f'CUDA version: {torch.version.cuda}')"
 ```
 
-### Multi-GPU Setup
-
-For distributed training, the codebase uses PyTorch's DistributedDataParallel (DDP):
-
-```bash
-# Example: 4 GPU training
-torchrun --nproc_per_node=4 experiments/jit_train.py \
-    --data_path /path/to/imagenet \
-    --model JiT-L/16 \
-    --batch_size 64
-```
-
-## Data Preparation
-
-### ImageNet Dataset
-
-The training script expects ImageNet in the standard torchvision format:
-
-```
-/path/to/imagenet/
-├── train/
-│   ├── n01440764/
-│   │   ├── n01440764_10026.JPEG
-│   │   └── ...
-│   └── ...
-└── val/
-    ├── n01440764/
-    │   └── ...
-    └── ...
-```
-
-### Preparing FID Reference Statistics
-
-For evaluation, prepare reference statistics:
-
-```bash
-python -m jit_tfg.models.jit.prepare_ref \
-    --data_path /path/to/imagenet \
-    --output_path imagenet-train-256 \
-    --img_size 256
-```
-
-This creates preprocessed images for FID computation.
+Pass `--device cpu` to the experiment scripts to run without a GPU (slow).
 
 ## Troubleshooting
 
-### Common Issues
+### ImportError: No module named 'jit_tfg'
 
-#### ImportError: No module named 'jit_tfg'
+Run commands through the project environment with `uv run ...`, or activate the
+environment created by `uv sync` (`source .venv/bin/activate`).
 
-Ensure the package is installed in editable mode:
+### CUDA out of memory
 
-```bash
-pip install -e .
-```
-
-#### CUDA out of memory
-
-Reduce batch size or use gradient accumulation:
-
-```bash
-python experiments/jit_train.py --batch_size 32
-```
-
-#### torch.compile errors
-
-If you encounter compilation errors, disable torch.compile:
-
-```python
-# In your training script, set:
-torch._dynamo.config.suppress_errors = True
-```
+Reduce the per-batch sample count with `--batch_size` on the experiment scripts.
 
 ### Getting Help
 
@@ -192,5 +94,5 @@ torch._dynamo.config.suppress_errors = True
 
 ## Next Steps
 
-- [Quick Start Guide](quickstart.md): Run your first training and generation
-- [Architecture Overview](../concepts/architecture.md): Understand the model design
+- [Quick Start Guide](quickstart.md): Generate images and reproduce the paper metrics.
+- [Architecture Overview](../concepts/architecture.md): Understand the model design.

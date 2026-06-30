@@ -1,6 +1,6 @@
 # Timestep Conventions and Sampling Methods
 
-This document explains the critical differences in timestep conventions and sampling methods across DiT, SiT, and JiT models. Understanding these differences is essential for correct implementation of training, sampling, and guidance.
+This document explains the critical differences in timestep conventions and sampling methods across DiT, SiT, and JiT models. Understanding these differences is essential for correct sampling and guidance across the three prediction targets.
 
 ## Quick Reference Table
 
@@ -24,8 +24,9 @@ This document explains the critical differences in timestep conventions and samp
 > - **DiT**: t=0 → clean, t=999 → noise (opposite direction)
 >
 > **Note**: The SiT paper describes the convention as t=0 clean, t=1 noise,
-> but the actual SiT implementation (`original_implementations/SiT/transport/path.py`)
-> uses α_t = t and σ_t = 1-t, resulting in z_t = t·x + (1-t)·ε, which is the JiT convention.
+> but the upstream SiT implementation (willisma/SiT, `transport/path.py`; vendored
+> here under `src/jit_tfg/models/sit/transport/`) uses α_t = t and σ_t = 1-t,
+> resulting in z_t = t·x + (1-t)·ε, which is the JiT convention.
 
 ---
 
@@ -110,8 +111,9 @@ SiT uses the interpolant framework. **In the implementation**, t=0 is noise and 
 
 > **Note on Paper vs Implementation Discrepancy**:
 > The SiT paper describes the convention as α_t = 1-t, σ_t = t (t=0 clean, t=1 noise).
-> However, the actual implementation in `original_implementations/SiT/transport/path.py`
-> uses α_t = t, σ_t = 1-t, which means **t=0 is noise and t=1 is clean** (same as JiT).
+> However, the upstream SiT implementation (willisma/SiT, `transport/path.py`;
+> vendored here under `src/jit_tfg/models/sit/transport/`) uses α_t = t, σ_t = 1-t,
+> which means **t=0 is noise and t=1 is clean** (same as JiT).
 
 ### Forward Process (Interpolation)
 
@@ -176,12 +178,11 @@ for i, t in enumerate(linspace(0, 1, num_steps)):
 ### Code Reference
 
 ```python
-# src/jit_tfg/tfg/latent_sampler.py - LatentTFGSampler
-def _predict_x0(self, z: Tensor, v: Tensor, t: float) -> Tensor:
-    """x0 = z + (1-t) * v (SiT uses same convention as JiT)"""
-    return z + (1.0 - t) * v
+# src/jit_tfg/models/sit/denoiser.py
+# v -> x_0: x = z + (1-t) * v  (SiT uses the same convention as JiT)
+x_pred = z + (1.0 - t) * v_pred
 
-# original_implementations/SiT/transport/path.py - ICPlan
+# src/jit_tfg/models/sit/transport/path.py - ICPlan (vendored from willisma/SiT)
 def compute_alpha_t(self, t):
     return t, 1  # α_t = t (data coefficient)
 
@@ -343,18 +344,9 @@ def get_schedule_weight(t: float, schedule: str) -> float:
 ### Code Reference
 
 ```python
-# src/jit_tfg/tfg/latent_sampler.py (SiT)
+# src/jit_tfg/tfg/unified_sampler.py (SiT and JiT)
+# Both use t=1 as clean, so 'increase' = more weight at high t (clean).
 def _get_schedule_weight(self, t: float, schedule: str) -> float:
-    """SiT uses t=1 as clean (same as JiT), so 'increase' = more weight at high t (clean)"""
-    if schedule == "increase":
-        return t
-    elif schedule == "decrease":
-        return 1.0 - t
-    return 1.0
-
-# src/jit_tfg/tfg/sampler.py (JiT)
-def _get_schedule_weight(self, t: float, schedule: str) -> float:
-    """JiT uses t=1 as clean, so 'increase' = more weight at high t (clean)"""
     if schedule == "increase":
         return t
     elif schedule == "decrease":
@@ -362,7 +354,9 @@ def _get_schedule_weight(self, t: float, schedule: str) -> float:
     return 1.0
 ```
 
-**Note**: SiT and JiT use identical schedule weight functions because they share the same time convention.
+**Note**: SiT and JiT share one schedule-weight function because they share the
+same time convention; the `UnifiedSampler` handles both (and DiT's reversed DDPM
+convention) in one place.
 
 ---
 
@@ -455,6 +449,9 @@ x_from_v = z_t + (1-t) * v_pred  # ✓ No division needed, same for both
 
 ## Next Steps
 
-- [TFG Implementation](../dit-tfg-implementation.md): Detailed TFG sampler documentation
-- [Denoiser API](../api/denoiser.md): JiT denoiser implementation
+- [Guidance Spaces](guidance-spaces.md): How TFG corrections are applied to the trajectory
+- [Schedule Normalization Deep Dive](schedule-normalization-deep-dive.md): DDPM→flow schedule conversion
 - [Research Context](research-context.md): Research goals and methodology
+
+The unified TFG sampler is implemented in `src/jit_tfg/tfg/unified_sampler.py`;
+read the source for the per-model sampling and guidance API.
