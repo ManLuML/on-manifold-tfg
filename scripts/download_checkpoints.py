@@ -26,9 +26,12 @@ Examples
 
 Notes
 -----
-The official JiT-H/16 download URL is not encoded here yet; ``JIT_H16_URL`` is a
-placeholder. Until it is set, obtain the checkpoint manually and place it at
-``checkpoints/jit/jit-h-16.pth`` (see ``CHECKPOINTS.md``).
+The JiT-H/16 weights are published by the original authors (Li & He, "Back to
+Basics: Let Denoising Generative Models Denoise", arXiv:2511.13720) at
+https://github.com/LTH14/JiT and distributed via Dropbox, so they cannot be
+auto-downloaded from a single stable URL. ``download_jit`` prints the manual
+step; place the file at ``checkpoints/jit/jit-h-16.pth`` (see ``CHECKPOINTS.md``).
+DiT / SiT / PixelFlow download automatically from their official Hub sources.
 """
 
 from __future__ import annotations
@@ -46,9 +49,14 @@ CHECKPOINTS_DIR = PROJECT_ROOT / "checkpoints"
 TODO_PREFIX = "TODO"
 
 # --- JiT-H/16 (x-prediction, pixel space) ------------------------------------
-# FIXME: set the official JiT-H/16 checkpoint URL once it is available.
-# The loader infers the variant from the filename, so keep it 'jit-h-16.pth'.
-JIT_H16_URL = "TODO-set-jit-h16-url"
+# Published by the original authors at https://github.com/LTH14/JiT (weights via
+# Dropbox). Manual download — see download_jit(). Keep the filename
+# 'jit-h-16.pth'; the loader infers the variant ('JiT-H/16') from it.
+JIT_REPO_URL = "https://github.com/LTH14/JiT"
+JIT_WEIGHTS_DROPBOX = (
+    "https://www.dropbox.com/scl/fo/3ken1avtsd81ip67b9qpi/"
+    "AK218ZNvXKSv74igVvht4PQ?rlkey=14gjrblmljewpl6ygxzlr3njm&dl=0"
+)
 JIT_H16_TARGET = CHECKPOINTS_DIR / "jit" / "jit-h-16.pth"
 
 # --- DiT-XL/2 (epsilon-prediction, latent space) -----------------------------
@@ -97,17 +105,19 @@ def _download_url(url: str, target: Path, *, dry_run: bool) -> None:
 
 
 def download_jit(*, dry_run: bool) -> None:
-    """Download JiT-H/16 (x-prediction)."""
-    if _is_placeholder(JIT_H16_URL):
-        print(
-            "[skip] JiT-H/16: no download URL is set yet.\n"
-            "       Set JIT_H16_URL in this script, or obtain the checkpoint\n"
-            f"       manually and place it at: {JIT_H16_TARGET}\n"
-            "       (keep the filename 'jit-h-16.pth' — the loader parses it).\n"
-            "       See CHECKPOINTS.md for details."
-        )
-        return
-    _download_url(JIT_H16_URL, JIT_H16_TARGET, dry_run=dry_run)
+    """JiT-H/16 (x-prediction) — manual download from the original authors."""
+    already = JIT_H16_TARGET.exists()
+    print(
+        "JiT-H/16 weights are distributed by the original authors and cannot be\n"
+        "auto-downloaded. To obtain them:\n"
+        f"  1. Open the official repo: {JIT_REPO_URL}\n"
+        f"  2. Download the pretrained weights (Dropbox): {JIT_WEIGHTS_DROPBOX}\n"
+        f"  3. Place the JiT-H/16 file at: {JIT_H16_TARGET}\n"
+        "     (keep the filename 'jit-h-16.pth' — the loader parses the variant from it).\n"
+        f"  Status: {'FOUND' if already else 'NOT FOUND yet'} at {JIT_H16_TARGET}"
+    )
+    if not dry_run and not already:
+        JIT_H16_TARGET.parent.mkdir(parents=True, exist_ok=True)
 
 
 def download_dit(*, dry_run: bool) -> None:
