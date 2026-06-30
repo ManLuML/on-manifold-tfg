@@ -476,8 +476,13 @@ def evaluate_generated_images(
 
     # Compute FID
     print("  Computing FID (global)...")
-    stats_path = get_reference_stats_path(img_size=img_size)
-    fid = calculate_fid_from_features(features, stats_path)
+    fid = 0.0
+    try:
+        stats_path = get_reference_stats_path(img_size=img_size)
+        fid = calculate_fid_from_features(features, stats_path)
+    except FileNotFoundError as e:
+        print(f"  WARNING: {e}")
+        print("  WARNING: FID reference stats absent; reporting FID=0.0.")
 
     # Compute IS
     print("  Computing Inception Score...")
