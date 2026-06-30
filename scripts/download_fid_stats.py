@@ -12,10 +12,10 @@ They are downloaded into ``src/jit_tfg/evaluation/generation/fid_stats/`` — th
 exact paths the evaluation code resolves. The ``.npz`` files there are
 gitignored and never committed to the repository.
 
-HOSTING IS DEFERRED: the HuggingFace dataset that will host these files is not
-published yet. ``HF_FID_STATS_REPO`` is a placeholder; until it is set to the
-real dataset ID, this script prints an explanatory message and exits without
-downloading.
+HOSTING IS LIVE: the files are published on the HuggingFace Hub under the
+ManLuML organization in the dataset ``ManLuML/onmanifold-tfg-fid-stats``.
+``HF_FID_STATS_REPO`` points at that dataset. A generic placeholder safety
+check remains so a future unset value fails loudly rather than silently.
 
 Examples
 --------
@@ -36,8 +36,8 @@ FID_STATS_DIR = PROJECT_ROOT / "src" / "jit_tfg" / "evaluation" / "generation" /
 # Sentinel marking an unset placeholder constant.
 TODO_PREFIX = "TODO"
 
-# FIXME: set after the FID-stats dataset is uploaded to the HuggingFace Hub.
-HF_FID_STATS_REPO = "TODO-ManLuML/<dataset>"
+# FID reference statistics, hosted on the HuggingFace Hub under the ManLuML org.
+HF_FID_STATS_REPO = "ManLuML/onmanifold-tfg-fid-stats"
 
 # Files to fetch: (path-within-HF-repo, path-relative-to-FID_STATS_DIR).
 # Both use the same relative layout, matching what the evaluation code expects.
@@ -87,15 +87,15 @@ def main(argv: list[str] | None = None) -> int:
 
     if _is_placeholder(HF_FID_STATS_REPO):
         print(
-            "\n[deferred] The FID-stats HuggingFace dataset is not published yet.\n"
-            f"           HF_FID_STATS_REPO is still a placeholder: {HF_FID_STATS_REPO!r}\n"
+            "\n[error] HF_FID_STATS_REPO has been reset to a placeholder value:\n"
+            f"        {HF_FID_STATS_REPO!r}\n"
             "\n"
-            "To enable this download:\n"
-            "  1. Upload the .npz files to a HuggingFace dataset, preserving layout:\n"
+            "The FID-stats dataset is hosted under the ManLuML organization at\n"
+            "'ManLuML/onmanifold-tfg-fid-stats'. Restore HF_FID_STATS_REPO to that\n"
+            "dataset ID. Expected layout within the dataset:\n"
             "       imagenet/in256_stats.npz\n"
             "       finegrained/parent_fid_stats.npz\n"
             "       finegrained/child_fid_stats.npz\n"
-            "  2. Set HF_FID_STATS_REPO in this script to that dataset ID.\n"
             "\n"
             "See CHECKPOINTS.md for details.",
         )
