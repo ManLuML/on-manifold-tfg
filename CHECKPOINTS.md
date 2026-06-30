@@ -34,7 +34,7 @@ the FP32 weights as published; expect some variation.
 
 | Model | Target | Space | Params | Source | Target path | Approx. size |
 |-------|--------|-------|--------|--------|-------------|--------------|
-| **JiT-H/16** | x | Pixel | 953M | TODO — see note below | `checkpoints/jit/jit-h-16.pth` | ~3.7 GB |
+| **JiT-H/16** | x | Pixel | 953M | [`LTH14/JiT`](https://github.com/LTH14/JiT) (official, Dropbox — manual) | `checkpoints/jit/jit-h-16.pth` | ~3.7 GB |
 | **DiT-XL/2** | ε | Latent | 675M (+49M VAE) | `facebook/DiT-XL-2-256` (HF) / Meta URL | `checkpoints/dit/DiT-XL-2-256x256.pt` | ~2.7 GB |
 | **SiT-XL/2** | v | Latent | 675M (+49M VAE) | `nyu-visionx/SiT-collections` (HF) | `checkpoints/sit/` | ~2.7 GB |
 | **PixelFlow** | v | Pixel | 677M | `ShoufaChen/PixelFlow-Class2Image` (HF) | `checkpoints/pixelflow/` | ~2.7 GB |
@@ -43,22 +43,21 @@ The latent models (DiT, SiT) additionally need the Stable Diffusion VAE
 decoder. It is fetched automatically from HuggingFace (`stabilityai/sd-vae-ft-ema`,
 ~335 MB) by the model wrappers at load time; no manual download is required.
 
-### JiT-H/16 (x-prediction) — manual step required
+### JiT-H/16 (x-prediction)
 
 JiT-H/16 is the primary x-prediction model (from *Back to Basics: Let Denoising
-Generative Models Denoise*, Li & He 2025). At release time we do not have a
-verified public download URL encoded in the code, so the download script uses a
-**clearly-marked placeholder**:
+Generative Models Denoise*, Li & He 2025, [arXiv:2511.13720](https://arxiv.org/abs/2511.13720)).
+The weights are published by the original authors and distributed via Dropbox,
+so this is a **manual download** (no stable single-file URL to auto-fetch):
 
-```python
-# scripts/download_checkpoints.py
-JIT_H16_URL = "TODO-set-jit-h16-url"  # FIXME: official JiT-H/16 checkpoint URL
-```
+- Official repository: [`LTH14/JiT`](https://github.com/LTH14/JiT)
+- Pretrained weights (Dropbox, linked from the repo README): <https://www.dropbox.com/scl/fo/3ken1avtsd81ip67b9qpi/AK218ZNvXKSv74igVvht4PQ?rlkey=14gjrblmljewpl6ygxzlr3njm&dl=0>
 
-Until that URL is set, obtain the checkpoint from the official *JiT* release and
-place it at `checkpoints/jit/jit-h-16.pth`. The loader infers the model variant
-from the filename (`jit-h-16.pth` -> `JiT-H/16`), so keep that exact name. The
-loader reads weights with `torch.load(..., weights_only=True)`.
+`uv run python scripts/download_checkpoints.py --only jit` prints these steps.
+Download the JiT-H/16 file and place it at `checkpoints/jit/jit-h-16.pth`. The
+loader infers the model variant from the filename (`jit-h-16.pth` -> `JiT-H/16`),
+so keep that exact name. The loader reads weights with
+`torch.load(..., weights_only=True)`.
 
 ### DiT-XL/2 (ε-prediction)
 
@@ -108,10 +107,10 @@ Download with:
 uv run python scripts/download_fid_stats.py
 ```
 
-> **Hosting is deferred.** The HuggingFace dataset that will host these `.npz`
-> files is not yet published. `scripts/download_fid_stats.py` defines
-> `HF_FID_STATS_REPO = "TODO-ManLuML/<dataset>"` and prints a clear message
-> instead of downloading until that constant is set to the real repo ID.
+> These `.npz` files are hosted on the HuggingFace Hub under the ManLuML
+> organization in the dataset
+> [`ManLuML/onmanifold-tfg-fid-stats`](https://huggingface.co/datasets/ManLuML/onmanifold-tfg-fid-stats).
+> `scripts/download_fid_stats.py` fetches them from there into the layout below.
 
 These statistics are Inception-V3 (pool3, 2048-dim) mean/covariance pairs
 (`mu`, `sigma`) — the standard FID reference format. You can regenerate them

@@ -5,9 +5,9 @@
 [![ECCV 2026 — Accepted](https://img.shields.io/badge/ECCV%202026-Accepted-brightgreen)](#citation)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-[**Paper**](#) (link TBD) &nbsp;·&nbsp; [**arXiv**](#) (link TBD) &nbsp;·&nbsp; [**Project Page**](https://ManLuML.github.io/on-manifold-tfg) (link TBD) &nbsp;·&nbsp; [**Code**](https://github.com/ManLuML/on-manifold-tfg)
+[**Paper**](#) (coming soon) &nbsp;·&nbsp; [**arXiv**](#) (coming soon) &nbsp;·&nbsp; [**Project Page**](https://ManLuML.github.io/on-manifold-tfg) &nbsp;·&nbsp; [**Code**](https://github.com/ManLuML/on-manifold-tfg)
 
-> Authors: **Yunsung Lee**, **Hyeongmin Lee** · `<affiliation TBD>`
+> Authors: **Yunsung Lee**, **Hyeongmin Lee** · maum.ai
 
 ---
 
@@ -40,9 +40,18 @@ The paper evaluates four pretrained Diffusion Transformers that span all three p
 | **JiT-H/16** | x | Pixel | Heun | **1.86** |
 | **PixelFlow-XL** | v | Pixel | Euler (per-stage) | 1.98 |
 | **SiT-XL/2** | v | Latent | Heun | 2.06 |
-| **DiT-XL/2** | ε | Latent | DDIM | 2.27 |
+| **DiT-XL/2** | ε | Latent | DDPM (250 steps) | 2.27 |
 
-> **Checkpoints** are downloaded automatically or via helper scripts on first use (each model wrapper points at its official source on the HuggingFace Hub). See [`CHECKPOINTS.md`](CHECKPOINTS.md) for the per-model download instructions and expected local paths.
+> **Checkpoints** point at each model's official source. DiT / SiT / PixelFlow download automatically via the helper scripts; **JiT-H/16 is a manual download** from the original authors' repo (see below). Expected local paths:
+>
+> | Model | Local checkpoint path | Source |
+> |-------|-----------------------|--------|
+> | JiT-H/16 | `checkpoints/jit/jit-h-16.pth` | [`LTH14/JiT`](https://github.com/LTH14/JiT) — official weights (Dropbox), manual download |
+> | DiT-XL/2 | `checkpoints/dit/DiT-XL-2-256x256.pt` | `facebook/DiT-XL-2-256` |
+> | SiT-XL/2 | `checkpoints/sit/SiT-XL-2-256.pt` | official SiT release |
+> | PixelFlow-XL | `checkpoints/pixelflow/` | `ShoufaChen/PixelFlow-Class2Image` |
+>
+> See [`CHECKPOINTS.md`](CHECKPOINTS.md) for the per-model download instructions.
 
 The two evaluation classifiers used by the bird benchmark (a guidance classifier and a separate validity classifier) are pulled from the HuggingFace Hub on first run.
 
@@ -56,7 +65,8 @@ The headline guidance study is a **DPS ρ-sweep** (rho-only guidance): sweep `--
 
 | Paper result | Command | Notes |
 |--------------|---------|-------|
-| **Fine-grained bird — Child-FID / Validity ρ-sweep** (headline; `rho_fid_vs_child_fid.png`, `rho_fid_vs_validity.png`, `vis_{on,off}_{jit,dit}`) | `uv run python experiments/finegrained_bird_tfg.py --model jit-h-16 --guidance_mode dps --rho_override <ρ>`<br>`uv run python experiments/finegrained_bird_tfg.py --model dit --guidance_mode dps --rho_override <ρ>` | Sweep `<ρ>` (e.g. `0.1 0.3 0.5 ...`). JiT-H uses Heun + `--guidance_space x`; DiT uses DDIM (x-space only). Also `--model sit` (Heun) and `--model pixelflow`. |
+| **ImageNet-256 guided — Child-FID / Validity ρ-sweep** (abstract headline; Child-FID **32.9** (x) vs. **38.1** (ε) at matched classifier accuracy) | `uv run python experiments/imagenet_tfg.py --model jit-h-16 --guidance_mode dps --rho_override <ρ>`<br>`uv run python experiments/imagenet_tfg.py --model dit --guidance_mode dps --rho_override <ρ>` | Sweep `<ρ>` (e.g. `0.1 0.3 0.5 ...`) to trace the Child-FID / Validity Pareto frontier on ImageNet 256×256 — the numbers behind the abstract's 5.2-point x-vs-ε gap. Also `--model sit` and `--model pixelflow`. |
+| **Fine-grained bird — Child-FID / Validity ρ-sweep** (headline; `rho_fid_vs_child_fid.png`, `rho_fid_vs_validity.png`, `vis_{on,off}_{jit,dit}`) | `uv run python experiments/finegrained_bird_tfg.py --model jit-h-16 --guidance_mode dps --rho_override <ρ>`<br>`uv run python experiments/finegrained_bird_tfg.py --model dit --guidance_mode dps --rho_override <ρ>` | Sweep `<ρ>` (e.g. `0.1 0.3 0.5 ...`). JiT-H uses Heun + `--guidance_space x`; DiT uses DDPM (250 steps, x-space only). Also `--model sit` (Heun) and `--model pixelflow`. |
 | **Fine-grained bird — CFG-only baseline** (zero-guidance reference point) | `uv run python experiments/finegrained_bird_no_guidance.py --model jit-h-16` | One run per model (`jit-h-16`, `dit`, `sit`, `pixelflow`). |
 | **Inverse problems — Gaussian deblur** | `uv run python experiments/deblur_sr.py --task deblur --model jit-h-16 --guidance_mode dps --imagenet_dir <path/to/imagenet/val>` | Reports LPIPS / PSNR / SSIM. Swap `--model dit` etc. |
 | **Inverse problems — 4× super-resolution** | `uv run python experiments/deblur_sr.py --task super_resolution --model jit-h-16 --guidance_mode dps --imagenet_dir <path/to/imagenet/val>` | Same metrics as deblur. |
@@ -75,7 +85,7 @@ FID/Child-FID computation needs precomputed Inception reference statistics, whic
 uv run python scripts/download_fid_stats.py
 ```
 
-This populates `src/jit_tfg/evaluation/generation/fid_stats/` (`imagenet/in256_stats.npz`, `finegrained/{parent,child}_fid_stats.npz`). The download URL is a **placeholder with a `TODO`** — HuggingFace hosting is pending. Until then, runs without these files print a warning and report FID as `0.0`; validity and IS are unaffected.
+This populates `src/jit_tfg/evaluation/generation/fid_stats/` (`imagenet/in256_stats.npz`, `finegrained/{parent,child}_fid_stats.npz`). The stats are hosted on the HuggingFace Hub dataset repo [`ManLuML/onmanifold-tfg-fid-stats`](https://huggingface.co/datasets/ManLuML/onmanifold-tfg-fid-stats) and fetched automatically by the script. Until you download the stats, runs without these files print a warning and report FID as `0.0`; validity and IS are unaffected.
 
 ---
 
@@ -99,14 +109,14 @@ on-manifold-tfg/
 │   ├── finegrained_bird_tfg.py         # Bird Child-FID / Validity ρ-sweep (headline)
 │   ├── finegrained_bird_no_guidance.py # Bird CFG-only baseline
 │   ├── deblur_sr.py                    # Inverse problems: deblur + 4× SR
+│   ├── imagenet_tfg.py                 # ImageNet-256 guided Child-FID / Validity ρ-sweep (headline)
 │   ├── imagenet_no_guidance.py         # CFG-only FID/IS for 4 models
 │   └── utils.py
 ├── spiral_test/                  # Crossed-lines 2D→512D toy manifold ablation
-├── config/                       # Model + classifier YAML configs
+├── config/                       # Model YAML configs
 │   ├── dit/dit_xl2_256.yaml
 │   ├── sit/sit_xl2_256.yaml
-│   ├── pixelflow/pixelflow_xl_256.yaml
-│   └── tfg/imagenet_classifier.yaml
+│   └── pixelflow/pixelflow_xl_256.yaml
 ├── scripts/                      # download_fid_stats.py (FID reference stats)
 ├── tests/                        # Unit tests (sampler, models, schedules, …)
 ├── docs/                         # concepts/ · getting-started/ · evaluation/
