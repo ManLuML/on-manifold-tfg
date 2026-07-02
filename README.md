@@ -7,7 +7,7 @@
 
 [**Paper**](#) (coming soon) &nbsp;·&nbsp; [**arXiv**](https://arxiv.org/abs/2607.00647) &nbsp;·&nbsp; [**Project Page**](https://ManLuML.github.io/on-manifold-tfg) &nbsp;·&nbsp; [**Code**](https://github.com/ManLuML/on-manifold-tfg)
 
-> Authors: **Yunsung Lee**, **Hyeongmin Lee** · maum.ai
+> Authors: **Yunsung Lee**, **Hyeongmin Lee**
 
 ---
 
@@ -161,6 +161,6 @@ on-manifold-tfg/
 
 ## License
 
-This project is released under the [MIT License](LICENSE) © Yunsung Lee.
+This project is released under the [MIT License](LICENSE) © Yunsung Lee and Hyeongmin Lee.
 
 It builds on several upstream projects with their own terms (JiT, DiT, SiT, PixelFlow, TFG, InverseBench, EDM). See [`THIRD_PARTY_LICENSES.md`](THIRD_PARTY_LICENSES.md) for full attribution. **Note:** the DiT components derive from Meta's DiT, which is licensed **CC-BY-NC 4.0 (non-commercial)** — that restriction applies to the DiT-derived code (`src/jit_tfg/models/dit/`) regardless of the top-level MIT license.
