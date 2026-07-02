@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en" class="has-navbar-fixed-top">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Not All Prediction Targets Keep Training-Free Diffusion Guidance on the Manifold</title>
+  <meta name="description" content="ECCV 2026. A strict error-amplification hierarchy across diffusion prediction targets (x, v, epsilon) governs whether training-free guidance keeps samples on the data manifold.">
+  <link rel="canonical" href="https://ManLuML.github.io/on-manifold-tfg/">
+  <meta name="theme-color" content="#363636">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="static/images/favicon.svg">
+  <link rel="apple-touch-icon" href="static/images/favicon.svg">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Not All Prediction Targets Keep Training-Free Diffusion Guidance on the Manifold">
+  <meta property="og:description" content="ECCV 2026. A strict error-amplification hierarchy across diffusion prediction targets (x, v, epsilon) governs whether training-free guidance keeps samples on the data manifold.">
+  <meta property="og:image" content="https://ManLuML.github.io/on-manifold-tfg/static/images/og_card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url" content="https://ManLuML.github.io/on-manifold-tfg/">
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Not All Prediction Targets Keep Training-Free Diffusion Guidance on the Manifold">
+  <meta name="twitter:description" content="ECCV 2026. A strict error-amplification hierarchy across diffusion prediction targets (x, v, epsilon) governs whether training-free guidance keeps samples on the data manifold.">
+  <meta name="twitter:image" content="https://ManLuML.github.io/on-manifold-tfg/static/images/og_card.png">
+
+  <!-- Bulma CSS via CDN (no build step) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.4/css/academicons.min.css">
+
+  <!-- MathJax for inline math -->
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script" async></script>
+
+  <style>
+    html { scroll-padding-top: 3.75rem; }
+    body { font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .hero-title { font-weight: 700; line-height: 1.18; }
+    .author-block { display: inline-block; margin: 0 0.6rem; }
+    .affil-block { display: inline-block; margin: 0 0.5rem; }
+    .figure-caption { font-size: 0.95rem; color: #4a4a4a; margin-top: 0.6rem; }
+    .key-idea-box {
+      background: #f7f9fc;
+      border-left: 4px solid #3273dc;
+      border-radius: 6px;
+      padding: 1.4rem 1.6rem;
+    }
+    .tldr-box {
+      background: #fffaf0;
+      border-left: 4px solid #b45309;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      max-width: 760px;
+      margin: 1.5rem auto 0;
+      text-align: left;
+    }
+    .pred-x { color: #1f77b4; font-weight: 700; }
+    .pred-v { color: #b45309; font-weight: 700; }   /* darkened for WCAG AA contrast */
+    .pred-eps { color: #c62828; font-weight: 700; }
+    pre.bibtex {
+      background: #f5f5f5;
+      border-radius: 6px;
+      padding: 1.25rem;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      line-height: 1.45;
+    }
+    .bibtex-wrap { position: relative; }
+    .copy-btn { position: absolute; top: 0.6rem; right: 0.6rem; }
+    .section { padding: 2.4rem 1.5rem; }
+    .badge-eccv {
+      display: inline-block;
+      background: #363636;
+      color: #fff;
+      border-radius: 999px;
+      padding: 0.35rem 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      font-size: 0.9rem;
+    }
+    .img-card img { border: 1px solid #ededed; border-radius: 6px; }
+    .vis-grid figure { margin: 0; }
+    .stat-gap { color: #1f77b4; font-weight: 700; }
+    hr.thin { background: #ededed; height: 1px; margin: 0; }
+    .skip-link {
+      position: absolute; left: -999px; top: auto; z-index: 100;
+      background: #363636; color: #fff; padding: 0.6rem 1rem; border-radius: 6px;
+    }
+    .skip-link:focus { left: 1rem; top: 0.5rem; }
+  </style>
+</head>
+<body>
+
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<!-- ===================== NAV ===================== -->
+<nav class="navbar is-fixed-top has-shadow" role="navigation" aria-label="main navigation">
+  <div class="container is-max-desktop">
+    <div class="navbar-brand">
+      <a class="navbar-item has-text-weight-semibold" href="#top">On-Manifold TFG</a>
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navmenu">
+        <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
+      </a>
+    </div>
+    <div id="navmenu" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="#abstract">Abstract</a>
+        <a class="navbar-item" href="#method">Method</a>
+        <a class="navbar-item" href="#results">Results</a>
+        <a class="navbar-item" href="#bibtex">BibTeX</a>
+        <a class="navbar-item" href="https://github.com/ManLuML/on-manifold-tfg" target="_blank" rel="noopener">Code</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<header class="section" id="top" style="padding-top: 3rem;">
+  <div class="container is-max-desktop has-text-centered">
+    <div class="mb-4"><span class="badge-eccv">ECCV 2026</span></div>
+    <h1 class="title is-2 hero-title">
+      Not All Prediction Targets Keep<br>Training-Free Diffusion Guidance on the Manifold
+    </h1>
+
+    <div class="is-size-5 mt-4 mb-2">
+      <span class="author-block">Yunsung Lee<sup>1</sup></span>
+      <span class="author-block">Hyeongmin Lee<sup>2</sup></span>
+    </div>
+    <div class="is-size-6 has-text-grey-dark">
+      <span class="affil-block"><sup>1</sup>Maum AI</span>
+      <span class="affil-block"><sup>2</sup>SeoulTech</span>
+    </div>
+    <div class="is-size-7 mt-2">
+      <a href="mailto:sung@maum.ai">sung@maum.ai</a> &nbsp;·&nbsp;
+      <a href="mailto:hyeongmin.lee@seoultech.ac.kr">hyeongmin.lee@seoultech.ac.kr</a>
+    </div>
+
+    <!-- ===================== LINK BUTTONS ===================== -->
+    <div class="buttons is-centered mt-5">
+      <a class="button is-dark is-rounded" href="#" aria-label="Paper PDF — coming soon" aria-disabled="true" title="Paper PDF (coming soon)">
+        <span class="icon"><i class="fas fa-file-pdf"></i></span>
+        <span>Paper</span>
+      </a>
+      <a class="button is-dark is-rounded" href="https://arxiv.org/abs/2607.00647" target="_blank" rel="noopener" aria-label="arXiv preprint">
+        <span class="icon"><i class="ai ai-arxiv"></i></span>
+        <span>arXiv</span>
+      </a>
+      <a class="button is-dark is-rounded" href="https://github.com/ManLuML/on-manifold-tfg" target="_blank" rel="noopener">
+        <span class="icon"><i class="fab fa-github"></i></span>
+        <span>Code</span>
+      </a>
+      <a class="button is-dark is-rounded" href="#bibtex">
+        <span class="icon"><i class="fas fa-quote-right"></i></span>
+        <span>BibTeX</span>
+      </a>
+    </div>
+    <p class="is-size-7 has-text-grey">ECCV proceedings link coming soon.</p>
+
+    <!-- TL;DR -->
+    <div class="tldr-box content">
+      <p class="mb-0">
+        <b>TL;DR.</b> The diffusion prediction target ($x$ vs. $v$ vs. $\epsilon$) sets a strict
+        <i>error-amplification hierarchy</i> that decides whether training-free guidance keeps samples on the
+        data manifold: <span class="pred-x">$x$-prediction</span> fails gracefully,
+        <span class="pred-eps">$\epsilon$-prediction</span> catastrophically.
+      </p>
+    </div>
+  </div>
+</header>
+
+<hr class="thin">
+
+<main id="main-content">
+
+<!-- ===================== TEASER ===================== -->
+<section class="section">
+  <div class="container is-max-desktop has-text-centered">
+    <figure class="image img-card">
+      <picture>
+        <source srcset="static/images/teaser.webp" type="image/webp">
+        <img src="static/images/teaser.png" width="3047" height="1164" fetchpriority="high" decoding="async"
+             alt="Teaser: (a) guidance schematic — without TFG all prediction targets denoise onto the source class on the data manifold; with TFG, x-prediction slides along the manifold to the target class while v/epsilon-prediction departs it; (b) crossed-lines (D=512) samples per prediction target and ImageNet examples — x-prediction stays on-manifold (success), v-prediction fails gracefully on-manifold, epsilon-prediction collapses off-manifold.">
+      </picture>
+    </figure>
+    <p class="figure-caption">
+      <b>The prediction target determines whether training-free guidance stays on-manifold.</b>
+      <b>(a)</b> Without guidance, every target denoises $z_t$ onto the source class $\mathcal{M}_s \subset \mathcal{M}$. With TFG,
+      $x$-prediction slides along the manifold $\mathcal{M}$ to the target class $\mathcal{M}_t$, while $v/\epsilon$-prediction departs it.
+      <b>(b)</b> Crossed-lines ($D{=}512$, top) and ImageNet examples (bottom): $x$-prediction preserves structure and stays on-manifold,
+      while $\epsilon$-prediction collapses off-manifold with catastrophic artifacts.
+    </p>
+  </div>
+</section>
+
+<hr class="thin">
+
+<!-- ===================== ABSTRACT ===================== -->
+<section class="section" id="abstract">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Abstract</h2>
+    <div class="content is-medium has-text-justified">
+      <p>
+        Training-free guidance (TFG) steers diffusion models without retraining, but strong guidance risks
+        driving samples off-manifold. The resulting catastrophic failures&mdash;collapsed, artifact-ridden
+        images&mdash;differ from graceful failures, where guidance misses the target but images remain realistic.
+        We trace this distinction to the prediction target: all TFG methods compute guidance from a clean-data
+        estimate $\hat{x}$, so its fidelity governs manifold preservation. We prove a strict error amplification
+        hierarchy: $\epsilon$-prediction's recovery formula divides by $t$, amplifying errors unboundedly at high
+        noise; $v$-prediction incurs bounded amplification; $x$-prediction incurs none. On ImageNet
+        256&times;256, we evaluate four pretrained Diffusion Transformers spanning all three targets. At matched
+        classifier accuracy, guided-class FID (Child FID) reveals a 5.2-point gap between $x$- and
+        $\epsilon$-prediction (<b>32.9</b> vs.&nbsp;<b>38.1</b>)&mdash;manifold damage invisible to standard
+        evaluation. This extends to style transfer, establishing $x$-prediction as the target that keeps guidance
+        failures graceful rather than catastrophic.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="thin">
+
+<!-- ===================== KEY IDEA ===================== -->
+<section class="section" id="method">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Key idea</h2>
+    <div class="key-idea-box content is-medium">
+      <p>
+        Every TFG method &mdash; DPS, FreeDoM, TFG, LGD, and the rest &mdash; computes its guidance signal from a
+        single clean-data estimate $\hat{x}$ recovered from the noisy state $z_t$. <b>How that estimate is recovered
+        depends entirely on the prediction target</b>, and the recovery formula determines how much network error is
+        amplified before it reaches the guidance term.
+      </p>
+      <p>We prove a <b>strict error-amplification hierarchy</b>:</p>
+      <ul>
+        <li><span class="pred-eps">$\epsilon$-prediction</span>: $\hat{x}=\frac{z_t-(1-t)\epsilon_\theta}{t}$ divides
+          by $t$, so error amplification is <b>unbounded</b> as $t\to 0$ (high noise).</li>
+        <li><span class="pred-v">$v$-prediction</span>: $\hat{x}=z_t+(1-t)v_\theta$ scales error by $(1-t)$, giving
+          <b>bounded</b> amplification.</li>
+        <li><span class="pred-x">$x$-prediction</span>: $\hat{x}=x_\theta$ is read directly, so guidance inherits
+          <b>no</b> amplification.</li>
+      </ul>
+      <p>
+        This amplification is what pushes guided samples off the data manifold. The effect is invisible to standard
+        FID, which averages over all classes, but it surfaces under <b>guided-class FID (Child FID)</b> evaluated at
+        matched classifier accuracy: on fine-grained ImageNet generation we measure a
+        <span class="stat-gap">5.2-point gap</span> between $x$- and $\epsilon$-prediction
+        (<span class="pred-x">$x$-pred 32.9</span> vs.&nbsp;<span class="pred-eps">$\epsilon$-pred 38.1</span>). The
+        same ordering holds in the 2D&rarr;512D crossed-lines ablation, inverse problems, and style transfer.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="thin">
+
+<!-- ===================== RESULTS ===================== -->
+<section class="section" id="results">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered mb-6">Results</h2>
+
+    <!-- Headline rho sweeps -->
+    <div class="columns">
+      <div class="column">
+        <figure class="image img-card">
+          <picture>
+            <source srcset="static/images/rho_fid_vs_child_fid.webp" type="image/webp">
+            <img src="static/images/rho_fid_vs_child_fid.png" width="1200" height="863" loading="lazy" decoding="async"
+                 alt="Guided-class FID (Child FID) versus standard FID across guidance strength rho for x, v, and epsilon prediction models.">
+          </picture>
+        </figure>
+        <p class="figure-caption">
+          <b>Child FID vs.&nbsp;parent FID under a guidance-strength ($\rho$) sweep.</b> As DPS guidance strengthens,
+          $x$-prediction (JiT) reaches a markedly lower Child-FID frontier, while $\epsilon$-prediction's (DiT)
+          Child FID stagnates well above it as its parent FID collapses &mdash; the 5.2-point gap at matched
+          validity that standard FID hides.
+        </p>
+      </div>
+      <div class="column">
+        <figure class="image img-card">
+          <picture>
+            <source srcset="static/images/rho_fid_vs_validity.webp" type="image/webp">
+            <img src="static/images/rho_fid_vs_validity.png" width="1200" height="863" loading="lazy" decoding="async"
+                 alt="Classifier validity versus parent FID across guidance strength rho for x, v, and epsilon prediction models.">
+          </picture>
+        </figure>
+        <p class="figure-caption">
+          <b>Validity vs.&nbsp;parent FID under the same $\rho$ sweep.</b> Every model gains validity (accuracy of
+          hitting the guided class) as guidance strengthens, but $\epsilon$-prediction (DiT) pays a steep parent-FID
+          cost for its validity gains.
+        </p>
+      </div>
+    </div>
+
+    <!-- Fine-grained bird visual comparison -->
+    <h3 class="title is-4 mt-6 has-text-centered">Fine-grained bird generation</h3>
+    <p class="has-text-centered has-text-grey-dark mb-5">
+      On-target ($x$-prediction, JiT) versus off-manifold collapse ($\epsilon$-prediction, DiT) under the same DPS guidance.
+    </p>
+    <div class="columns is-multiline vis-grid">
+      <div class="column is-half">
+        <figure class="image img-card">
+          <picture>
+            <source srcset="static/images/vis_on_jit.webp" type="image/webp">
+            <img src="static/images/vis_on_jit.jpg" width="1600" height="534" loading="lazy" decoding="async"
+                 alt="JiT x-prediction guided bird samples remaining on-manifold and realistic.">
+          </picture>
+        </figure>
+        <p class="figure-caption has-text-centered"><b>JiT ($x$-prediction)</b> &mdash; graceful: realistic birds.</p>
+      </div>
+      <div class="column is-half">
+        <figure class="image img-card">
+          <picture>
+            <source srcset="static/images/vis_off_dit.webp" type="image/webp">
+            <img src="static/images/vis_off_dit.jpg" width="1600" height="534" loading="lazy" decoding="async"
+                 alt="DiT epsilon-prediction guided bird samples showing collapsed, artifact-ridden images.">
+          </picture>
+        </figure>
+        <p class="figure-caption has-text-centered"><b>DiT ($\epsilon$-prediction)</b> &mdash; catastrophic: collapsed, artifact-ridden.</p>
+      </div>
+      <div class="column is-half">
+        <figure class="image img-card">
+          <picture>
+            <source srcset="static/images/vis_off_jit.webp" type="image/webp">
+            <img src="static/images/vis_off_jit.jpg" width="1600" height="534" loading="lazy" decoding="async"
+                 alt="JiT x-prediction samples at the strongest guidance setting, still realistic.">
+          </picture>
+        </figure>
+        <p class="figure-caption has-text-centered"><b>JiT ($x$-prediction)</b> &mdash; strong guidance: visible degradation, yet graceful (diverse, recognizable birds).</p>
+      </div>
+      <div class="column is-half">
+        <figure class="image img-card">
+          <picture>
+            <source srcset="static/images/vis_on_dit.webp" type="image/webp">
+            <img src="static/images/vis_on_dit.jpg" width="1600" height="534" loading="lazy" decoding="async"
+                 alt="DiT epsilon-prediction samples at moderate guidance.">
+          </picture>
+        </figure>
+        <p class="figure-caption has-text-centered"><b>DiT ($\epsilon$-prediction)</b> &mdash; moderate guidance, degradation onset.</p>
+      </div>
+    </div>
+
+    <!-- Style transfer -->
+    <h3 class="title is-4 mt-6 has-text-centered">Style transfer</h3>
+    <div class="columns is-centered">
+      <div class="column is-three-quarters">
+        <figure class="image img-card">
+          <picture>
+            <source srcset="static/images/style_gram_vs_validity.webp" type="image/webp">
+            <img src="static/images/style_gram_vs_validity.png" width="1200" height="863" loading="lazy" decoding="async"
+                 alt="Gram distance (style fidelity) versus content accuracy under CLIP-Gram style guidance for x, v, and epsilon prediction models.">
+          </picture>
+        </figure>
+        <p class="figure-caption has-text-centered">
+          <b>CLIP-Gram style guidance: Gram Distance vs.&nbsp;content accuracy.</b> Stronger style guidance improves
+          style fidelity (lower Gram Distance) at the cost of content accuracy. The prediction-target ordering
+          transfers beyond class guidance: $x$-prediction degrades gracefully, retaining higher content accuracy
+          under strong guidance, while $\epsilon$-prediction drops to the lowest.
+          <em>(Style-transfer code is not part of this release; the figure is shown as a result only.)</em>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="thin">
+
+<!-- ===================== BIBTEX ===================== -->
+<section class="section" id="bibtex">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3">BibTeX</h2>
+    <div class="bibtex-wrap">
+      <button class="button is-small copy-btn" id="copy-bibtex" type="button">
+        <span class="icon is-small"><i class="fas fa-copy"></i></span><span>Copy</span>
+      </button>
+      <pre class="bibtex" id="bibtex-text">@inproceedings{lee2026onmanifold,
+  title     = {Not All Prediction Targets Keep Training-Free Diffusion Guidance on the Manifold},
+  author    = {Lee, Yunsung and Lee, Hyeongmin},
+  booktitle = {European Conference on Computer Vision (ECCV)},
+  year      = {2026}
+}</pre>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<hr class="thin">
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="section" style="padding: 2rem 1.5rem;">
+  <div class="container is-max-desktop has-text-centered content is-small has-text-grey-dark">
+    <p>
+      &copy; 2026 The Authors. Code:
+      <a href="https://github.com/ManLuML/on-manifold-tfg">github.com/ManLuML/on-manifold-tfg</a>.
+      This page is licensed under
+      <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>;
+      template adapted from the
+      <a href="https://github.com/nerfies/nerfies.github.io" target="_blank" rel="noopener">Nerfies</a>
+      academic project page.
+    </p>
+  </div>
+</footer>
+
+<script>
+  // Navbar burger toggle (mobile)
+  document.addEventListener('DOMContentLoaded', function () {
+    var burger = document.querySelector('.navbar-burger');
+    if (burger) {
+      burger.addEventListener('click', function () {
+        var target = document.getElementById(burger.dataset.target);
+        burger.classList.toggle('is-active');
+        if (target) target.classList.toggle('is-active');
+      });
+    }
+    // BibTeX copy
+    var btn = document.getElementById('copy-bibtex');
+    if (btn) {
+      btn.addEventListener('click', function () {
+        var text = document.getElementById('bibtex-text').innerText;
+        navigator.clipboard.writeText(text).then(function () {
+          btn.querySelector('span:last-child').textContent = 'Copied!';
+          setTimeout(function () { btn.querySelector('span:last-child').textContent = 'Copy'; }, 1500);
+        });
+      });
+    }
+  });
+</script>
+
+</body>
+</html>
