@@ -1,0 +1,26 @@
+on-manifold-tfg
+Copyright (c) 2025 Yunsung Lee
+
+This product is licensed under the MIT License (see the LICENSE file).
+
+It incorporates, adapts, or derives from third-party components, each of
+which is provided under its own license. A full list — including upstream
+URLs, licenses, copyright holders, and how each component is used here — is
+in THIRD_PARTY_LICENSES.md, which also reproduces the upstream copyright
+notices and license texts verbatim (see the "Full license texts and
+copyright notices" section there).
+
+NON-COMMERCIAL NOTICE
+---------------------
+Components derived from facebookresearch/DiT (the DiT model wrapper and the
+vendored DDPM diffusion utilities under src/jit_tfg/models/dit/) are licensed
+under Creative Commons Attribution-NonCommercial 4.0 International
+(CC-BY-NC 4.0). Those components, and the pretrained DiT checkpoints, may be
+used for research and other NON-COMMERCIAL purposes only. The MIT license on
+the remainder of this project does not relax that restriction.
+
+Pretrained model checkpoints (JiT, DiT, SiT, PixelFlow) are distributed by
+their respective upstream projects under their own licenses, not by this
+repository. Use of a checkpoint is subject to that model's license.
+
+See THIRD_PARTY_LICENSES.md for details.

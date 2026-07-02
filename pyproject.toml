@@ -1,0 +1,140 @@
+[project]
+name = "on-manifold-tfg"
+version = "0.0.1"
+description = "Code release for 'Not All Prediction Targets Keep Training-Free Diffusion Guidance on the Manifold' (ECCV 2026): comparing x, epsilon, and v prediction targets for training-free diffusion guidance"
+authors = [{ name = "Yunsung Lee" }, { name = "Hyeongmin Lee" }]
+readme = "README.md"
+license = "MIT"
+keywords = [
+    "diffusion-models",
+    "training-free-guidance",
+    "prediction-target",
+    "flow-matching",
+    "eccv-2026",
+]
+requires-python = "~=3.11"
+classifiers = [
+    "Intended Audience :: Developers",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "torch>=2.9.1",
+    "torchvision",
+    "numpy",
+    "opencv-python",
+    "timm",
+    "tensorboard",
+    "scipy",
+    "einops",
+    "gdown",
+    "pyyaml",
+    "datasets>=2.0,<3.0",
+    "huggingface-hub",
+    "transformers>=4.40.0",
+    "pillow",
+    "matplotlib",
+    "tqdm",
+    "torch-fidelity @ git+https://github.com/LTH14/torch-fidelity.git@master",
+    "diffusers>=0.36.0",
+    "omegaconf>=2.3.0",
+    "torchdiffeq>=0.2.3",
+    "torchmetrics[image]>=1.0.0",
+]
+
+[project.urls]
+Homepage = "https://ManLuML.github.io/on-manifold-tfg/"
+Repository = "https://github.com/ManLuML/on-manifold-tfg"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "ty>=0.0.1a32",
+    "ruff>=0.14.8",
+    "pre-commit>=4.5.1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/jit_tfg"]
+
+[tool.ty.environment]
+python = "./.venv"
+python-version = "3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+fix = true
+
+[tool.ruff.lint]
+select = [
+    # flake8-2020
+    "YTT",
+    # flake8-bandit
+    "S",
+    # flake8-bugbear
+    "B",
+    # flake8-builtins
+    "A",
+    # flake8-comprehensions
+    "C4",
+    # flake8-debugger
+    "T10",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+    # mccabe
+    "C90",
+    # pycodestyle
+    "E", "W",
+    # pyflakes
+    "F",
+    # pygrep-hooks
+    "PGH",
+    # pyupgrade
+    "UP",
+    # ruff
+    "RUF",
+    # tryceratops
+    "TRY",
+]
+ignore = [
+    "E501", # Line too long
+    "E731", # Do not assign lambda
+    "F401", # Unused import
+    "F841", # Unused variable
+    "RUF001", # Ambiguous unicode character in docstring
+    "RUF002", # Ambiguous unicode character in docstring
+    "RUF003", # Ambiguous unicode character in comment
+    "TRY003", # Avoid specifying long messages outside the exception class
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]
+"experiments/*" = ["E", "W", "F", "I", "SIM", "RUF", "C901", "S", "B"]  # Very relaxed for experiments
+"spiral_test/*" = ["E", "W", "F", "I", "SIM", "RUF", "C901", "TRY"]  # Relaxed for spiral test
+"src/jit_tfg/models/dit/*" = ["S101", "SIM108"]  # Allow asserts and if-else blocks in DiT module
+"src/jit_tfg/models/sit/*" = ["S101", "SIM108", "C901"]  # Allow asserts, if-else blocks, and complex loading in SiT module
+"src/jit_tfg/models/pixelflow/*" = ["S101", "B905"]  # Allow asserts and zip strict in ported PixelFlow model code
+"src/jit_tfg/tfg/guiders/*" = ["SIM108"]  # Allow if-else blocks for readability
+"src/jit_tfg/tfg/unified_sampler.py" = ["S101", "C901"]  # Allow asserts for validation and complex sampling logic
+"src/jit_tfg/evaluation/*" = ["S101", "RUF012", "B905", "C901"]  # Allow asserts, class constants, zip strict, complexity in evaluation
+
+[tool.ruff.format]
+preview = true
