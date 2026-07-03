@@ -5,7 +5,7 @@
 [![ECCV 2026 — Accepted](https://img.shields.io/badge/ECCV%202026-Accepted-brightgreen)](#citation)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-[**Paper**](#) (coming soon) &nbsp;·&nbsp; [**arXiv**](https://arxiv.org/abs/2607.00647) &nbsp;·&nbsp; [**Project Page**](https://ManLuML.github.io/on-manifold-tfg) &nbsp;·&nbsp; [**Code**](https://github.com/ManLuML/on-manifold-tfg)
+[**arXiv**](https://arxiv.org/abs/2607.00647) &nbsp;·&nbsp; [**Project Page**](https://ManLuML.github.io/on-manifold-tfg) &nbsp;·&nbsp; [**Code**](https://github.com/ManLuML/on-manifold-tfg)
 
 > Authors: **Yunsung Lee**, **Hyeongmin Lee**
 
