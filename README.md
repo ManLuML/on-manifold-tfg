@@ -100,14 +100,23 @@ uv run python scripts/download_fid_stats.py
 
 This populates `src/jit_tfg/evaluation/generation/fid_stats/` (`imagenet/in256_stats.npz`, `finegrained/{parent,child}_fid_stats.npz`). The stats are hosted on the HuggingFace Hub dataset repo [`ManLuML/onmanifold-tfg-fid-stats`](https://huggingface.co/datasets/ManLuML/onmanifold-tfg-fid-stats) and fetched automatically by the script. Until you download the stats, runs without these files print a warning and report FID as `0.0`; validity and IS are unaffected.
 
-### Benchmark datasets — coming soon
+### Benchmark datasets
 
-Beyond the code in this repository, we will release the two fine-grained benchmarks from the paper as standalone HuggingFace datasets:
+The two fine-grained benchmarks from the paper are released as standalone HuggingFace datasets. Each pairs the source images with the parent–child hierarchy that defines the benchmark, and ships its mapping JSON alongside.
 
-- **Bird benchmark** — the 143-species / 30-parent-class hierarchy used for the headline C-FID results. The species → ImageNet-parent mapping already ships here (`experiments/finegrained_bird_mapping.json`); the curated per-species reference images behind the C-FID statistics will follow as a dataset.
-- **Butterfly benchmark** — the 34-species / 6-parent-class second fine-grained domain from the appendix robustness study, together with its experiment configuration.
+| Dataset | `benchmark` config | `full` config |
+|---|---|---|
+| [**Bird**](https://huggingface.co/datasets/ManLuML/onmanifold-tfg-bird-benchmark) — 143 species under 30 ImageNet parents | 24,439 images / 143 species | 89,885 / 525 (complete source snapshot) |
+| [**Butterfly**](https://huggingface.co/datasets/ManLuML/onmanifold-tfg-butterfly-benchmark) — 34 species under 6 ImageNet parents | 4,781 / 34 | 13,594 / 100 |
 
-Links will be added here once the datasets are up.
+```python
+from datasets import load_dataset
+
+ds = load_dataset("ManLuML/onmanifold-tfg-bird-benchmark", "benchmark", split="train")
+ds[0]["label_name"], ds[0]["imagenet_parent_name"]   # ('ABYSSINIAN GROUND HORNBILL', 'hornbill')
+```
+
+Use `benchmark` for the generation targets; `full` is the complete upstream snapshot the subset was drawn from. Label indices are shared between the two configs and match `experiments/finegrained_bird_mapping.json` in this repository. Both datasets are CC0, inherited from Gerald Piosenka's source data.
 
 ---
 
