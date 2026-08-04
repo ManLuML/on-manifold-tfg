@@ -100,6 +100,18 @@ uv run python scripts/download_fid_stats.py
 
 This populates `src/jit_tfg/evaluation/generation/fid_stats/` (`imagenet/in256_stats.npz`, `finegrained/{parent,child}_fid_stats.npz`). The stats are hosted on the HuggingFace Hub dataset repo [`ManLuML/onmanifold-tfg-fid-stats`](https://huggingface.co/datasets/ManLuML/onmanifold-tfg-fid-stats) and fetched automatically by the script. Until you download the stats, runs without these files print a warning and report FID as `0.0`; validity and IS are unaffected.
 
+Each `.npz` holds `mu` (2048,) and `sigma` (2048, 2048) Inception-V3 pool3 features over the following reference sets:
+
+| File | Metric | Reference distribution |
+|------|--------|------------------------|
+| `finegrained/child_fid_stats.npz` | Child-FID (C-FID) | the 143 benchmark bird species — 64 train images per species, seed 42 (9,152 images) |
+| `finegrained/parent_fid_stats.npz` | Parent-FID (P-FID) | the 30 ImageNet bird parent classes, class-balanced (9,152 images) |
+| `imagenet/in256_stats.npz` | CFG-only FID on ImageNet 256×256 | ImageNet-1K 256×256, as distributed with the official JiT release |
+
+These are the exact reference sets behind every number in the paper. Where the paper's prose describes them more broadly — C-FID against "the full bird species dataset", P-FID against "the full ImageNet marginal" — the table above is the precise specification.
+
+`imagenet/in256_stats.npz` is byte-identical to `fid_stats/jit_in256_stats.npz` from [LTH14/JiT](https://github.com/LTH14/JiT) (MIT License, © 2025 Tianhong Li), redistributed unchanged so that ImageNet FID is measured against the same reference as the JiT baselines. The fine-grained statistics are ours.
+
 ### Benchmark datasets
 
 The two fine-grained benchmarks from the paper are released as standalone HuggingFace datasets. Each pairs the source images with the parent–child hierarchy that defines the benchmark, and ships its mapping JSON alongside.
