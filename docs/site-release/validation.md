@@ -15,7 +15,7 @@ Release candidate verified on 2026-09-01 in Asia/Seoul. Production fields are ap
 | Artifact | Files | Size | `index.html` SHA-256 | 404 SHA-256 | Social-card SHA-256 |
 | --- | ---: | ---: | --- | --- | --- |
 | ManLuML root | 37 | 2.3 MB | `fe6458c24c38a5786e061ca32fc65cfebd4d2cd55b07d79787b75f0fe32b71bf` | `d900ca92004ea8f52bbcb02c28b1453f05a9a80c16f219cfcb363d21e2440833` | `8408297a1d46fae70b9413d2c8c660f91bf38a002f3ce460d10320c0fa3084f6` |
-| On-Manifold TFG | 258 | 44.7 MB | `d8d54002a448320e672fcced183484002ba337a207e0f26fd4589423b88d9798` | `56fd249dec86def5cdd7b2e4ea11125b229b07592c3586c3be12aac880d011cd` | `0ba6afd2921b9d4e2b26dc449ffb9f83ce491617cc2f7670ead490e604acbfa2` |
+| On-Manifold TFG | 258 | 44.7 MB | `7e45ab2430d18ab70e0538f291e255598e6d1b6fbb56744826d83d4aff7b5f1f` | `56fd249dec86def5cdd7b2e4ea11125b229b07592c3586c3be12aac880d011cd` | `0ba6afd2921b9d4e2b26dc449ffb9f83ce491617cc2f7670ead490e604acbfa2` |
 
 Both `npm test` commands pass from locked dependencies. Root: seven manifest/unit assertions and six browser tests. Project: eight asset/slide/citation assertions and fifteen browser tests. Astro reports zero type/schema errors, warnings, or hints. Dependency audit reports zero vulnerabilities. Deterministic-integrity checks cover 25 root inputs/outputs and 262 project inputs/outputs, including every generated figure variant, mobile comparison crop, social card, license, complete presentation asset, and generator source.
 
@@ -30,7 +30,7 @@ Both `npm test` commands pass from locked dependencies. Root: seven manifest/uni
 - Compatibility: `#abstract`, `#method`, `#results`, and `#bibtex` exist; all 18 legacy `static/images/*` URLs return an image response in the production artifact server. `/slides/` serves the complete tested 17-slide presentation (index SHA-256 `846aa170e3d7678f496e00b7c04f22a271aabd80384f97cb5416876041147892`) with its isolated, author-approved presentation assets.
 - Metadata: unique titles/descriptions, absolute canonicals, Open Graph/X fields, 1200×630 cards, root Organization/WebSite JSON-LD, project ScholarlyArticle/citation metadata, sitemap, robots files, favicons, and noindexed 404 pages pass assertions.
 - Links: every independently hosted public resource returned HTTP 200 in the prelaunch check, including the official ECCV poster record, arXiv, GitHub profiles/repository, the immutable legacy snapshot, and all three Hugging Face resources. Dedicated post-deployment workflow checks verify both site origins and bidirectional root/project navigation.
-- Lab performance across the final scroll-first candidate runs: root metrics remain unchanged; project LCP is 68–96 ms and CLS 0.0000–0.0015. These are local Chromium lab values, not field p75 data.
+- Lab performance across the final scroll-first candidate runs: root metrics remain unchanged; project LCP is 68–96 ms and CLS 0.0000–0.0015. Latin and Greek Inter subsets are preloaded before first paint to avoid cross-run font-swap shifts. These are local Chromium lab values, not field p75 data.
 - Visual evidence: committed 320px baselines cover the first viewport, text-only affiliations, and a legible mobile failure crop. Desktop captures cover the two-line hero, benchmark definition, scroll-native failure sequence, balanced formulas, and the paired Figure 1(a)/dimension evidence layout.
 
 ## Rollback restoration evidence

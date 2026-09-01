@@ -42,6 +42,9 @@ const required = [
   '93.3%', '21.5%', '0.5%', '32.9', '34.7', '38.1', '9,152',
 ];
 for (const value of required) if (!html.includes(value)) throw new Error(`Missing built assertion: ${value}`);
+for (const subset of ['inter-latin-wght-normal', 'inter-greek-wght-normal']) {
+  if (!new RegExp(`<link rel="preload"[^>]+${subset}[^>]+as="font"`).test(html)) throw new Error(`Missing first-view font preload: ${subset}`);
+}
 if (/[\u3131-\u318E\uAC00-\uD7A3]/.test(html)) throw new Error('Built HTML must remain English-only.');
 if (/<(?:script|img)[^>]+src="https?:\/\//.test(html) || /<link[^>]+rel="stylesheet"[^>]+href="https?:\/\//.test(html)) {
   throw new Error('Runtime CDN dependency found.');

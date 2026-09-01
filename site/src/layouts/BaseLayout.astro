@@ -1,5 +1,7 @@
 ---
 import '@fontsource-variable/inter';
+import interGreekUrl from '@fontsource-variable/inter/files/inter-greek-wght-normal.woff2?url';
+import interLatinUrl from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 import '../styles/tokens.css';
 
 interface Props {
@@ -48,6 +50,8 @@ const structuredData = {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
+    <link rel="preload" href={interLatinUrl} as="font" type="font/woff2" crossorigin="anonymous" />
+    <link rel="preload" href={interGreekUrl} as="font" type="font/woff2" crossorigin="anonymous" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
