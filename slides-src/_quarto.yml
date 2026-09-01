@@ -1,0 +1,16 @@
+project:
+  type: default
+
+format:
+  revealjs:
+    width: 1280
+    height: 720
+    margin: 0
+    center: false
+    auto-stretch: false
+    html-math-method:
+      method: katex
+      url: "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/"
+    include-in-header:
+      - text: '<link rel="stylesheet" href="../slides/fonts/pretendard.css">'
+      - text: '<link rel="canonical" href="https://manluml.github.io/on-manifold-tfg/slides/">'
