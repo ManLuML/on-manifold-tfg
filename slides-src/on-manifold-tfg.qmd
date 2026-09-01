@@ -233,7 +233,6 @@ But now a clean image exists at every step · exactly what the classifier needs.
   <div class="guidance-sequence">
     <header class="guidance-sequence-header">
       <h2 class="font-display whitespace-nowrap tracking-tight font-semibold text-ink leading-tight">Do prediction targets decide how guidance fails?</h2>
-      <p class="text-ink-soft">On-manifold = a realistic parent-class sample; exact target correctness is a separate question.</p>
     </header>
 
     <figure class="guidance-sequence-stage" aria-label="Google Slides visualization advancing through pages 5, 6, 7, and 4">
@@ -242,6 +241,13 @@ But now a clean image exists at every step · exactly what the classifier needs.
       <img src="../slides/assets/guidance-sequence-07-graceful.png" alt="Page 7: v-prediction follows the purple parent-class region to a graceful high-quality blue macaw" class="guidance-sequence-frame fragment current-visible" data-fragment-index="1">
       <img src="../slides/assets/guidance-sequence-04-combined.png" alt="Page 4: combined green success, red catastrophic failure, and purple graceful failure connections" class="guidance-sequence-frame fragment fade-in" data-fragment-index="2">
     </figure>
+
+    <div class="guidance-sequence-captions">
+      <p class="guidance-sequence-caption guidance-sequence-caption-success"><span>Success</span> · target class ✓ · image quality ✓ — a high-quality red macaw from the requested class.</p>
+      <p class="guidance-sequence-caption guidance-sequence-caption-catastrophic frag-appear fragment" data-fragment-index="0"><span>Catastrophic failure</span> · target class ✕ · parent class ✕ · image quality ✕ — only a reddish artifact, not a recognizable parrot.</p>
+      <p class="guidance-sequence-caption guidance-sequence-caption-graceful frag-appear fragment" data-fragment-index="1"><span>Graceful failure</span> · target class ✕ · parent class ✓ · image quality ✓ — a high-quality blue macaw from the parrot parent class.</p>
+      <p class="guidance-sequence-caption guidance-sequence-caption-definition frag-appear fragment" data-fragment-index="2"><span>On-manifold = realistic under the data distribution; here, a recognizable parrot—not necessarily the target class.</span></p>
+    </div>
   </div>
 </div>
 ```
