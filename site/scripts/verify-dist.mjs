@@ -5,8 +5,8 @@ import sharp from 'sharp';
 
 const dist = path.resolve('dist');
 const html = await readFile(path.join(dist, 'index.html'), 'utf8');
-const description = 'Prediction target determines whether training-free guidance fails gracefully or catastrophically. Explore the mechanism, realistic TFG benchmark, controlled evidence, and released resources.';
-const pageTitle = 'Not All Prediction Targets Keep Training-Free Diffusion Guidance on the Manifold — ECCV 2026';
+const description = 'Prediction target determines whether training-free guidance fails gracefully or catastrophically. This page documents the mechanism, benchmark, controlled evidence, and released resources.';
+const pageTitle = 'Not All Prediction Targets Keep Training-Free Diffusion Guidance on the Manifold | ECCV 2026';
 const required = [
   '<html lang="en">',
   '<link rel="canonical" href="https://manluml.github.io/on-manifold-tfg/">',
@@ -32,9 +32,9 @@ const required = [
   'id="method"',
   'id="results"',
   'id="bibtex"',
-  'TFG robustness ranking',
+  'Gradient-based TFG robustness',
   'most robust',
-  'Steer a pretrained model. Keep the result real.',
+  'Can guidance hit the target and keep the image realistic?',
   'Computer Vision -- ECCV 2026',
   'To appear',
   'media/figures/figure-1a-960.png',
@@ -53,6 +53,7 @@ if (/Republic of Korea|media\/affiliations|maum-ai\.png|seoultech\.png/i.test(ht
 if (/x\s*&lt;\s*v\s*&lt;\s*ε/i.test(html)) throw new Error('Ambiguous ranking found.');
 if (/camera-ready|Scope and limitations|citation_version/i.test(html)) throw new Error('Removed project-page framing returned.');
 if (/role="tab"|role="tabpanel"|type="range"/i.test(html)) throw new Error('Removed explanatory interactions returned.');
+if (/—|–|makes that promise measurable|points in the same direction|Read the sequence, then test the cause|Broadly yes/i.test(html)) throw new Error('AI-style prose regression found.');
 const card = await sharp(path.join(dist, 'og/project-card.png')).metadata();
 if (card.width !== 1200 || card.height !== 630) throw new Error('Project social card must be 1200×630.');
 const compatibility = [

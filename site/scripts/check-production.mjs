@@ -29,7 +29,7 @@ async function fetchProduction(url, accepts = () => true) {
 
 const [{ response: rootResponse, html: rootHtml }, { response: projectResponse, html: projectHtml }] = await Promise.all([
   fetchProduction(rootUrl),
-  fetchProduction(projectUrl, (html) => html.includes('Steer a pretrained model. Keep the result real.')
+  fetchProduction(projectUrl, (html) => html.includes('Can guidance hit the target and keep the image realistic?')
     && html.includes('jit-failure-mobile-640')
     && html.includes('Computer Vision -- ECCV 2026')
     && !/role="tab"|role="tabpanel"|type="range"|Scope and limitations|camera-ready/i.test(html)),

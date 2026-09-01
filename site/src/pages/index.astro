@@ -11,8 +11,8 @@ if (!entry) throw new Error('Project content is missing.');
 
 const project = entry.data;
 const base = import.meta.env.BASE_URL;
-const pageTitle = `${project.title} — ECCV 2026`;
-const pageDescription = 'Prediction target determines whether training-free guidance fails gracefully or catastrophically. Explore the mechanism, realistic TFG benchmark, controlled evidence, and released resources.';
+const pageTitle = `${project.title} | ECCV 2026`;
+const pageDescription = 'Prediction target determines whether training-free guidance fails gracefully or catastrophically. This page documents the mechanism, benchmark, controlled evidence, and released resources.';
 const titleParts = project.title.split('Training-Free');
 ---
 
@@ -69,22 +69,22 @@ const titleParts = project.title.split('Training-Free');
         </div>
 
         <aside class="hero-thesis" aria-label="Headline result">
-          <p class="thesis-label">TFG robustness ranking</p>
+          <p class="thesis-label">Gradient-based TFG robustness</p>
           <ol class="robustness-ranking" aria-label="Prediction targets ranked from most to least robust for training-free guidance">
             <li class="x"><span>1</span><strong>x-prediction</strong><em>most robust</em></li>
             <li class="v"><span>2</span><strong>v-prediction</strong></li>
             <li class="epsilon"><span>3</span><strong>ε-prediction</strong><em>least robust</em></li>
           </ol>
-          <p>Direct clean-image prediction keeps guidance stable where global structure is set. Indirect recovery becomes progressively less reliable at high noise.</p>
+          <p>For the gradient-based methods studied here, direct x-prediction avoids recovery amplification during early steps, when global structure is set. v-recovery stays bounded, while ε-recovery can amplify error at high noise.</p>
         </aside>
       </div>
     </header>
 
     <section class="thesis-section" id="abstract" aria-labelledby="thesis-heading">
       <div class="section-intro">
-        <p class="kicker">The thirty-second thesis</p>
-        <h2 id="thesis-heading">The target decides how failure looks.</h2>
-        <p class="thesis-lede">Training-free guidance acts through an estimate of the clean image. When that estimate is direct, a miss can stay realistic. When recovery divides error by a nearly zero time value, a miss can become an off-manifold collapse.</p>
+        <p class="kicker">In one sentence</p>
+        <h2 id="thesis-heading">Prediction target changes the failure mode.</h2>
+        <p class="thesis-lede">The gradient-based TFG methods studied here act through an estimate of the clean image. With direct x-prediction, guidance can miss the target while the sample remains realistic. For ε-prediction, clean-image recovery multiplies prediction error by <math><mrow><mo>(</mo><mn>1</mn><mo>−</mo><mi>t</mi><mo>)</mo><mo>/</mo><mi>t</mi></mrow></math>, which diverges as <math><mrow><mi>t</mi><mo>→</mo><mn>0</mn></mrow></math> and can send the sample off the manifold.</p>
       </div>
 
       <figure class="teaser-figure">
@@ -102,56 +102,56 @@ const titleParts = project.title.split('Training-Free');
             alt="Diagram and examples showing x-prediction moving along the data manifold, epsilon-prediction collapsing off it, and v-prediction failing more gracefully"
           />
         </picture>
-        <figcaption>Guidance can succeed, fail gracefully while staying realistic, or fail catastrophically by leaving the data manifold. The paper traces that difference to prediction target.</figcaption>
+        <figcaption>A guided sample may hit the target, miss while remaining realistic, or leave the data manifold entirely. Prediction target changes which failure occurs.</figcaption>
       </figure>
     </section>
 
     <section class="content-section benchmark-section" id="benchmark" aria-labelledby="benchmark-heading">
       <div class="section-intro">
-        <p class="kicker">01 · A benchmark for the real task</p>
-        <h2 id="benchmark-heading">Steer a pretrained model. Keep the result real.</h2>
-        <p class="thesis-lede">Training-free guidance promises new control without retraining. Our benchmark makes that promise measurable: a pretrained ImageNet model supplies a coarse bird class, while an external guide asks for one of 143 fine-grained species. Success means reaching the species without leaving its visual distribution.</p>
+        <p class="kicker">01 · A practical TFG benchmark</p>
+        <h2 id="benchmark-heading">Can guidance hit the target and keep the image realistic?</h2>
+        <p class="thesis-lede">Training-free guidance steers a pretrained model at inference time without updating its weights. In our benchmark, the model starts from one of 30 ImageNet bird classes and an external guide requests one of 143 species. The benchmark measures whether guidance reaches the requested species and whether the generated distribution remains realistic.</p>
       </div>
 
       <ol class="task-flow" aria-label="Realistic training-free guidance evaluation task">
-        <li><span>1</span><div><h3>Coarse prior</h3><p>CFG selects one of 30 ImageNet parent classes that the frozen model already knows.</p></div></li>
-        <li><span>2</span><div><h3>Fine-grained request</h3><p>Training-free guidance targets one of 143 child species without updating model weights.</p></div></li>
-        <li><span>3</span><div><h3>Independent check</h3><p>A different classifier measures validity; Child FID and Precision/Recall measure realism and coverage.</p></div></li>
-        <li><span>4</span><div><h3>Full stress test</h3><p>Guidance strength is swept across Pareto frontiers instead of selecting one favorable setting.</p></div></li>
+        <li><span>1</span><div><h3>Parent class</h3><p>CFG selects one of 30 ImageNet bird classes already represented in the frozen model.</p></div></li>
+        <li><span>2</span><div><h3>Species target</h3><p>The external guide requests one of 143 child species. The model weights do not change.</p></div></li>
+        <li><span>3</span><div><h3>Separate evaluation</h3><p>A second classifier measures validity. Child FID and Precision/Recall measure realism and coverage.</p></div></li>
+        <li><span>4</span><div><h3>Guidance sweep</h3><p>We evaluate the trade-off across guidance strengths rather than report one selected setting.</p></div></li>
       </ol>
 
       <dl class="benchmark-facts" aria-label="Benchmark scale and coverage">
         <div><dt>Fine-grained targets</dt><dd>143 species</dd></div>
         <div><dt>Coarse priors</dt><dd>30 parents</dd></div>
         <div><dt>Every operating point</dt><dd>9,152 images</dd></div>
-        <div><dt>Evaluation coverage</dt><dd>6 configs · 3 targets · 2 spaces</dd></div>
+        <div><dt>Model coverage</dt><dd>6 configs · 3 targets · 2 spaces</dd></div>
       </dl>
-      <p class="benchmark-definition"><strong>Child FID</strong> compares the pooled guided distribution across all 143 targets with the full fine-grained bird reference distribution. It catches classifier-valid samples that drift away from realistic bird imagery.</p>
+      <p class="benchmark-definition"><strong>Child FID</strong> compares all 9,152 guided samples, pooled across 143 targets, with the full fine-grained bird reference set. The pooled score rises when classifier-valid outputs drift from realistic bird imagery.</p>
     </section>
 
     <section class="content-section failure-section" id="results" aria-labelledby="failure-heading">
       <div class="section-intro">
-        <p class="kicker">02 · The visible failure</p>
+        <p class="kicker">02 · What failure looks like</p>
         <h2 id="failure-heading">A wrong bird can still look like a bird.</h2>
-        <p class="thesis-lede">Validity asks whether a classifier accepts the target. It does not ask whether the image remains realistic. The distinction becomes obvious at stronger guidance: a graceful miss preserves coherent structure; a catastrophic miss becomes an artifact that merely excites the classifier.</p>
+        <p class="thesis-lede">Validity only asks whether the evaluation classifier predicts the requested species. Under stronger guidance, a graceful miss remains coherent; a catastrophic miss becomes an artifact that activates the classifier.</p>
       </div>
       <FailureSequence />
     </section>
 
     <section class="content-section method-section" id="method" aria-labelledby="method-heading">
       <div class="section-intro">
-        <p class="kicker">03 · Why the target matters</p>
-        <h2 id="method-heading">The recovery formula decides whether error stays bounded.</h2>
-        <p class="thesis-lede">In the paper’s flow-matching convention, <math><mrow><msub><mi>z</mi><mi>t</mi></msub><mo>=</mo><mi>t</mi><mi>x</mi><mo>+</mo><mo>(</mo><mn>1</mn><mo>−</mo><mi>t</mi><mo>)</mo><mi>ε</mi></mrow></math>. All three targets can recover a clean image estimate, but only ε-recovery divides by t.</p>
+        <p class="kicker">03 · Why targets differ</p>
+        <h2 id="method-heading">Recovery changes the size of prediction error.</h2>
+        <p class="thesis-lede">The paper uses the flow-matching convention <math><mrow><msub><mi>z</mi><mi>t</mi></msub><mo>=</mo><mi>t</mi><mi>x</mi><mo>+</mo><mo>(</mo><mn>1</mn><mo>−</mo><mi>t</mi><mo>)</mo><mi>ε</mi></mrow></math>. Each target can produce a clean-image estimate. ε-prediction is the only one whose recovery formula divides by t.</p>
       </div>
       <RecoveryMechanism />
     </section>
 
     <section class="content-section controlled-section" aria-labelledby="controlled-heading">
       <div class="section-intro">
-        <p class="kicker">04 · Controlled evidence</p>
-        <h2 id="controlled-heading">Hold the model fixed. Change the target.</h2>
-        <p class="thesis-lede">The crossed-lines study is the clean attribution test: identical residual MLPs, identical data, identical training budget, identical guidance, and only the prediction objective changed. As ambient dimension rises, the gap opens sharply.</p>
+        <p class="kicker">04 · Controlled attribution</p>
+        <h2 id="controlled-heading">Holding the model fixed isolates the target.</h2>
+        <p class="thesis-lede">The crossed-lines study uses the same residual MLP architecture, data, training budget, guidance, and sampling for all three prediction objectives. The gap grows with ambient dimension.</p>
       </div>
 
       <div class="controlled-grid">
@@ -162,7 +162,7 @@ const titleParts = project.title.split('Training-Free');
           width={1400}
           height={1768}
           alt="Five rows of crossed-lines results from dimension 2 through 512; x-prediction stays concentrated on the target line while v-prediction spreads and epsilon-prediction largely leaves the line at high dimension"
-          caption="Crossed-lines under DPS guidance with strength 10 and 100 Euler steps. Each target uses the same 256-hidden, five-block residual MLP design; the D=512 row makes the robustness ordering unmistakable."
+          caption="Crossed-lines under DPS guidance with strength 10 and 100 Euler steps. Each target uses the same 256-hidden, five-block residual MLP design. At D=512, the on-manifold rates are 93.3%, 21.5%, and 0.5% for x-, v-, and ε-prediction."
         />
 
         <div class="controlled-copy">
@@ -181,19 +181,19 @@ const titleParts = project.title.split('Training-Free');
           <div class="control-lines" aria-label="Converging controls">
             <article>
               <p class="control-number">1</p>
-              <div><h3>Fully controlled toy study</h3><p>Three identical networks on crossed lines isolate the prediction objective across D ∈ &#123;2, 8, 32, 128, 512&#125;.</p></div>
+              <div><h3>Matched networks</h3><p>Three residual MLPs share the same architecture, data, and training setup across D ∈ &#123;2, 8, 32, 128, 512&#125;. Only the prediction target changes.</p></div>
             </article>
             <article>
               <p class="control-number">2</p>
-              <div><h3>Closer latent-space pair</h3><p>DiT and SiT keep architecture family, scale, training data, and operating space much closer than the full pretrained comparison; their ordering is consistent with the target effect.</p></div>
+              <div><h3>Latent-space control</h3><p>DiT and SiT share their architecture family, scale, training data, and operating space. Their ordering is consistent with the target effect.</p></div>
             </article>
             <article>
               <p class="control-number">3</p>
-              <div><h3>Capacity reversed</h3><p>JiT-B has 131M diffusion parameters yet reaches C-FID 31.3, ahead of 675M-parameter DiT at 36.7 and SiT at 34.4.</p></div>
+              <div><h3>Smaller x-prediction model</h3><p>JiT-B has 131M diffusion parameters yet reaches C-FID 31.3, ahead of 675M-parameter DiT at 36.7 and SiT at 34.4.</p></div>
             </article>
             <article>
               <p class="control-number">4</p>
-              <div><h3>Within pixel space</h3><p>JiT and PixelFlow both avoid a latent VAE, providing a complementary operating-space control.</p></div>
+              <div><h3>Pixel-space control</h3><p>JiT and PixelFlow both avoid a latent VAE, which provides a complementary comparison within pixel space.</p></div>
             </article>
           </div>
         </div>
@@ -204,7 +204,7 @@ const titleParts = project.title.split('Training-Free');
       <div class="section-intro">
         <p class="kicker">05 · Real-image evidence</p>
         <h2 id="real-heading">Classifier validity can hide manifold damage.</h2>
-        <p class="thesis-lede"><strong>Child FID</strong> compares the pooled guided distribution across all 143 targets with the full fine-grained bird reference distribution. It exposes classifier-valid samples whose appearance has drifted away from realistic bird imagery.</p>
+        <p class="thesis-lede"><strong>Child FID</strong> compares the pooled guided distribution across all 143 targets with the full fine-grained bird reference set. The score worsens when classifier-valid outputs drift from realistic bird imagery.</p>
       </div>
 
       <div class="metric-callouts" aria-label="Matched validity Child FID results">
@@ -214,7 +214,7 @@ const titleParts = project.title.split('Training-Free');
         <article class="gap"><p>x → ε gap</p><strong>5.2</strong><span>points at matched validity</span></article>
       </div>
 
-      <p class="sample-scale"><strong>Benchmark scale:</strong> 143 bird species nested under 30 ImageNet parents; every plotted point contains 9,152 generated images (64 per species). The matched operating points are all near 26.6% validity.</p>
+      <p class="sample-scale"><strong>Benchmark scale:</strong> 143 bird species are nested under 30 ImageNet parents. Every plotted point contains 9,152 generated images, with 64 samples per species. The matched operating points are all near 26.6% validity.</p>
 
       <div class="plot-grid">
         <ResponsiveFigure
@@ -253,30 +253,30 @@ const titleParts = project.title.split('Training-Free');
     <section class="content-section broader-section" aria-labelledby="broader-heading">
       <div class="section-intro">
         <p class="kicker">06 · Broader validation</p>
-        <h2 id="broader-heading">Does the ordering persist?</h2>
-        <p class="thesis-lede">Across guidance rules, domains, and metrics, the evidence points in the same direction—with qualifications where separation is weaker.</p>
+        <h2 id="broader-heading">The pattern repeats, with a smaller gap in style transfer.</h2>
+        <p class="thesis-lede">We test two more guidance rules, a second fine-grained domain, style transfer, Precision/Recall, and inverse problems.</p>
       </div>
 
       <div class="validation-grid">
         <article class="validation-card">
           <ResponsiveFigure slug="lgd" widths={[640, 960]} fallback="png" width={960} height={693} alt="LGD bird benchmark frontier with JiT-H x-prediction attaining the lowest Child FID" caption="LGD on the fine-grained bird benchmark." />
-          <h3>LGD</h3><p class="answer">Yes. JiT-H retains the lowest C-FID frontier.</p><a href={project.links.paper}>Paper details ↗</a>
+          <h3>LGD</h3><p class="answer">JiT-H retains the lowest C-FID frontier.</p><a href={project.links.paper}>Paper details ↗</a>
         </article>
         <article class="validation-card">
           <ResponsiveFigure slug="freedom" widths={[640, 960]} fallback="png" width={960} height={694} alt="FreeDoM bird benchmark frontier with JiT-H x-prediction attaining the lowest Child FID" caption="FreeDoM on the fine-grained bird benchmark." />
-          <h3>FreeDoM</h3><p class="answer">Yes. The DPS ordering persists under a second guidance family.</p><a href={project.links.paper}>Paper details ↗</a>
+          <h3>FreeDoM</h3><p class="answer">JiT-H again has the lowest C-FID frontier.</p><a href={project.links.paper}>Paper details ↗</a>
         </article>
         <article class="validation-card">
           <ResponsiveFigure slug="butterfly" widths={[640, 960]} fallback="png" width={960} height={696} alt="Butterfly benchmark P-FID versus Child FID plot, with JiT-H x-prediction on the lowest frontier" caption="Thirty-four butterfly species under six ImageNet parents." />
-          <h3>Butterfly benchmark</h3><p class="answer">Yes. The robustness ordering carries to a second fine-grained domain.</p><a href={project.links.datasets[1].url}>Butterfly data ↗</a>
+          <h3>Butterfly benchmark</h3><p class="answer">The x, v, ε ordering also appears across 34 butterfly species.</p><a href={project.links.datasets[1].url}>Butterfly data ↗</a>
         </article>
         <article class="validation-card">
           <ResponsiveFigure slug="style" widths={[640, 960]} fallback="png" width={960} height={693} alt="Style-transfer plot of Gram loss against content validity; x-prediction retains content accuracy more strongly at high guidance" caption="Four WikiArt styles by 100 ImageNet classes, 400 images per setting." />
-          <h3>Style transfer</h3><p class="answer">Broadly yes, but the models separate less sharply than on birds. At ρ=10, JiT-H retains 80% content accuracy while DiT falls to 1.5%.</p><a href={project.links.paper}>Paper details ↗</a>
+          <h3>Style transfer</h3><p class="answer">The separation is smaller than on birds. At ρ=10, JiT-H retains 80% content accuracy while DiT falls to 1.5%.</p><a href={project.links.paper}>Paper details ↗</a>
         </article>
         <article class="validation-card">
           <ResponsiveFigure slug="precision-recall" widths={[640, 960]} fallback="png" width={960} height={675} alt="Precision versus recall plot; JiT-H reaches recall 0.59 while DiT remains near 0.49 and loses precision under stronger guidance" caption="PRDC separates fidelity from coverage and exposes mode-collapse behavior." />
-          <h3>Precision and recall</h3><p class="answer">Yes. JiT-H reaches 0.59 recall; DiT peaks at 0.24 precision but remains around 0.49 recall and loses precision as guidance strengthens.</p><a href={project.links.paper}>Paper details ↗</a>
+          <h3>Precision and recall</h3><p class="answer">JiT-H reaches 0.59 recall. DiT peaks at 0.24 precision, stays near 0.49 recall, and loses precision as guidance strengthens.</p><a href={project.links.paper}>Paper details ↗</a>
         </article>
         <article class="validation-card inverse-card">
           <div class="inverse-table table-scroll" tabindex="0" aria-label="Inverse problem LPIPS results, horizontally scrollable">
@@ -286,7 +286,7 @@ const titleParts = project.title.split('Training-Free');
               <tbody><tr><th scope="row">Gaussian deblur</th><td>0.2140</td><td>16</td></tr><tr><th scope="row">4× super-resolution</th><td>0.1886</td><td>24</td></tr></tbody>
             </table>
           </div>
-          <h3>Inverse problems</h3><p class="answer">The wider stability range persists in LPIPS. No model beats the degraded-input PSNR baseline, so the claim is perceptual rather than a universal reconstruction win.</p><a href={project.links.code}>Reproduction code ↗</a>
+          <h3>Inverse problems</h3><p class="answer">x-prediction reaches the best LPIPS among the evaluated models on both tasks and remains stable over a wider range of ρ. No model beats the degraded-input PSNR baseline, so the result is perceptual rather than a universal reconstruction win.</p><a href={project.links.code}>Reproduction code ↗</a>
         </article>
       </div>
     </section>
@@ -294,12 +294,12 @@ const titleParts = project.title.split('Training-Free');
     <section class="content-section resources-section" id="resources" aria-labelledby="resources-heading">
       <div class="section-intro">
         <p class="kicker">Resources and citation</p>
-        <h2 id="resources-heading">Follow every claim back to its source.</h2>
+        <h2 id="resources-heading">Paper, code, data, and citation.</h2>
       </div>
 
       <div class="resources-grid">
-        <article><p class="resource-type">Paper</p><h3>ECCV 2026 · accepted</h3><p>The official ECCV listing confirms the title and authors. The public manuscript is available on arXiv.</p><a href={project.links.official}>View the ECCV record ↗</a><a href={project.links.paper}>Open the PDF ↗</a><a href={project.links.paperAbstract}>View the arXiv record ↗</a></article>
-        <article><p class="resource-type">Code</p><h3>Evaluation and inference</h3><p>Reproduce the crossed-lines study, bird benchmark, and inverse-problem evaluations.</p><a href={project.links.code}>Open the repository ↗</a></article>
+        <article><p class="resource-type">Paper</p><h3>ECCV 2026 · accepted</h3><p>ECCV's official listing confirms the title and authors. The manuscript is available on arXiv.</p><a href={project.links.official}>View the ECCV record ↗</a><a href={project.links.paper}>Open the PDF ↗</a><a href={project.links.paperAbstract}>View the arXiv record ↗</a></article>
+        <article><p class="resource-type">Code</p><h3>Evaluation and inference</h3><p>The repository contains the crossed-lines study, bird benchmark, and inverse-problem evaluations.</p><a href={project.links.code}>Open the repository ↗</a></article>
         <article class="datasets"><p class="resource-type">Data</p><h3>Published benchmark resources</h3><ul>{project.links.datasets.map((dataset) => <li><a href={dataset.url}>{dataset.label} ↗</a></li>)}</ul></article>
       </div>
 
@@ -310,13 +310,13 @@ const titleParts = project.title.split('Training-Free');
         </div>
         <button type="button" data-copy-bibtex aria-describedby="copy-status">Copy BibTeX</button>
         <pre id="bibtex-text" tabindex="0" aria-label="BibTeX citation, horizontally scrollable"><code>{citationBibtex}</code></pre>
-        <p class="citation-source">ECCV confirms the title, authors, and acceptance. Springer has not yet published this paper’s volume, pages, or DOI, so those fields are intentionally omitted and the entry is marked “To appear.”</p>
-        <p id="copy-status" class="copy-status" role="status" aria-live="polite">Select the citation directly if copying is unavailable.</p>
+        <p class="citation-source">ECCV confirms the title, authors, and acceptance. The paper does not yet have a public Springer volume, page range, or DOI, so the citation omits those fields and uses "To appear."</p>
+        <p id="copy-status" class="copy-status" role="status" aria-live="polite">If clipboard access is unavailable, select and copy the citation directly.</p>
       </div>
 
       <aside class="rights-note" aria-label="Rights and attribution">
-        <h3>Rights are separated by material.</h3>
-        <p>Website code is covered by this repository’s code license. Paper text and author figures are © 2026 Yunsung Lee and Hyeongmin Lee and are used on the authors’ project page. The ManLuML mascot is a separate brand asset. Affiliations on this project page are presented as text only; this page uses no institution logo files. Self-hosted Inter is distributed under the <a href={`${base}licenses/inter-OFL.txt`}>SIL Open Font License 1.1</a>.</p>
+        <h3>Rights and licenses</h3>
+        <p>The repository license covers the website code. Paper text and figures remain © 2026 Yunsung Lee and Hyeongmin Lee. The ManLuML mascot is a separate brand asset. This project page presents affiliations as text and includes no institution logo files. Self-hosted Inter is distributed under the <a href={`${base}licenses/inter-OFL.txt`}>SIL Open Font License 1.1</a>.</p>
       </aside>
     </section>
   </main>

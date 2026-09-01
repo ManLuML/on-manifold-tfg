@@ -51,7 +51,7 @@ test('project metadata, claims, resources, and text-only affiliations are comple
   await expect(page.getByText('21.5%', { exact: true }).first()).toBeVisible();
   await expect(page.getByText('0.5%', { exact: true }).first()).toBeVisible();
   await expect(page.getByText('9,152 generated images')).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Steer a pretrained model. Keep the result real.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Can guidance hit the target and keep the image realistic?' })).toBeVisible();
   await expect(page.getByText('Scope and limitations')).toHaveCount(0);
   await expect(page.getByText(/Camera-ready/i)).toHaveCount(0);
   expect(externalRuntimeRequests).toEqual([]);
@@ -75,7 +75,7 @@ test('failure and mechanism stories are scroll-native and complete', async ({ pa
   await expect(page.locator('.failure-band')).toHaveCount(3);
   for (const band of await page.locator('.failure-band').all()) await expect(band).toBeVisible();
   await expect(page.locator('.recovery-rows article')).toHaveCount(3);
-  await expect(page.getByText('The clean endpoint t=1 is not a robustness comparison')).toBeVisible();
+  await expect(page.getByText('That endpoint does not rank robustness.')).toBeVisible();
 });
 
 test('formula and manifold figure visual baselines remain balanced', async ({ page }) => {
@@ -134,6 +134,7 @@ test('accessibility, English-only output, and reduced motion pass', async ({ pag
   expect(results.violations).toEqual([]);
   const publicText = [await page.locator('body').innerText(), await page.title()].join('\n');
   expect(publicText).not.toMatch(/[\u3131-\u318E\uAC00-\uD7A3]/);
+  expect(publicText).not.toMatch(/[—–]|makes that promise measurable|points in the same direction|Read the sequence, then test the cause|Broadly yes/i);
   expect(await page.locator('html').evaluate((element) => getComputedStyle(element).scrollBehavior)).toBe('auto');
 });
 
@@ -171,7 +172,7 @@ test('mobile failure sequence keeps individual samples legible', async ({ page }
     await target.decode();
   });
   expect(await image.evaluate((element) => (element as HTMLImageElement).currentSrc)).toContain('jit-failure-mobile-640');
-  await expect(page.locator('.failure-band.x')).toHaveScreenshot('project-failure-x-320.png');
+  await expect(page.locator('.failure-band.x picture')).toHaveScreenshot('project-failure-x-320.png');
 });
 
 test('200% text sizing reflows without clipped content', async ({ page }) => {

@@ -5,14 +5,14 @@ const base = import.meta.env.BASE_URL;
 <div class="recovery-mechanism">
   <div class="time-focus">
     <div>
-      <p class="eyebrow">Where the failure begins</p>
-      <h3>The earliest, noisiest steps set global structure.</h3>
-      <p>TFG needs a clean-image estimate before the image is clean. This is exactly where ε-recovery is singular and the manifold-restoring force is weakest.</p>
+      <p class="eyebrow">The high-noise regime</p>
+      <h3>Early denoising steps determine global structure.</h3>
+      <p>TFG needs a clean-image estimate at these steps, even though the current state is still noisy. ε-recovery is singular here, while the manifold-restoring force is weak.</p>
     </div>
     <div class="time-axis" role="img" aria-label="Sampling runs from high noise near t equals zero to clean data at t equals one; the paper focuses on the early high-noise region">
       <div class="axis-labels"><strong>High noise · t → 0</strong><span>Clean data · t → 1</span></div>
       <div class="axis-track"><span></span></div>
-      <p>Critical guidance regime</p>
+      <p>Guidance is most vulnerable here</p>
     </div>
   </div>
 
@@ -21,13 +21,13 @@ const base = import.meta.env.BASE_URL;
       <div class="target"><span>x</span><strong>Direct</strong></div>
       <div class="formula-visual" aria-hidden="true"><span class="norm">‖</span><span>x̂<sup>(x)</sup> − x</span><span class="norm">‖</span><span>= δ<sub>x</sub></span></div>
       <math class="sr-math"><mrow><mo>‖</mo><msup><mover><mi>x</mi><mo>^</mo></mover><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow></msup><mo>−</mo><mi>x</mi><mo>‖</mo><mo>=</mo><msub><mi>δ</mi><mi>x</mi></msub></mrow></math>
-      <p>No singular recovery factor.</p>
+      <p>Direct prediction adds no recovery multiplier.</p>
     </article>
     <article class="v">
       <div class="target"><span>v</span><strong>Bounded</strong></div>
       <div class="formula-visual" aria-hidden="true"><span class="norm">‖</span><span>x̂<sup>(v)</sup> − x</span><span class="norm">‖</span><span>= (1 − t)δ<sub>v</sub></span></div>
       <math class="sr-math"><mrow><mo>‖</mo><msup><mover><mi>x</mi><mo>^</mo></mover><mrow><mo>(</mo><mi>v</mi><mo>)</mo></mrow></msup><mo>−</mo><mi>x</mi><mo>‖</mo><mo>=</mo><mo>(</mo><mn>1</mn><mo>−</mo><mi>t</mi><mo>)</mo><msub><mi>δ</mi><mi>v</mi></msub></mrow></math>
-      <p>The multiplier never exceeds one.</p>
+      <p>Its multiplier is at most one.</p>
     </article>
     <article class="epsilon">
       <div class="target"><span>ε</span><strong>Singular</strong></div>
@@ -37,7 +37,7 @@ const base = import.meta.env.BASE_URL;
     </article>
   </div>
 
-  <p class="coefficient-note"><strong>These are recovery multipliers, not equal-error measurements.</strong> The base errors δ<sub>x</sub>(t), δ<sub>v</sub>(t), and δ<sub>ε</sub>(t) differ. The clean endpoint t=1 is not a robustness comparison: z<sub>1</sub>=x, so v- and ε-recovery return the already-clean state without using their predictions.</p>
+  <p class="coefficient-note">Recovery multipliers should not be read as equal-error measurements. The base errors δ<sub>x</sub>(t), δ<sub>v</sub>(t), and δ<sub>ε</sub>(t) differ. At t=1, z<sub>1</sub>=x, so v- and ε-recovery return the clean state without using their predicted targets. That endpoint does not rank robustness.</p>
 
   <div class="manifold-evidence-grid">
     <figure class="manifold-figure">
@@ -46,7 +46,7 @@ const base = import.meta.env.BASE_URL;
         <source type="image/webp" srcset={`${base}media/figures/figure-1a-720.webp 720w, ${base}media/figures/figure-1a-960.webp 960w`} sizes="(max-width: 860px) calc(100vw - 2rem), 520px" />
         <img src={`${base}media/figures/figure-1a-960.png`} srcset={`${base}media/figures/figure-1a-720.png 720w, ${base}media/figures/figure-1a-960.png 960w`} sizes="(max-width: 860px) calc(100vw - 2rem), 520px" width="960" height="1068" loading="lazy" decoding="async" alt="Paper Figure 1(a): x-prediction follows the data manifold from a noisy state toward the target region, while v- and epsilon-prediction can depart from the manifold" />
       </picture>
-      <figcaption><strong>Mechanism.</strong> Guidance acts through the recovered clean image. Direct x-prediction follows the manifold toward the target; unstable indirect recovery can send the trajectory away from it.</figcaption>
+      <figcaption>Guidance acts through the recovered clean image. Direct x-prediction follows the manifold toward the target. An unstable recovered estimate can send the trajectory away from it.</figcaption>
     </figure>
 
     <div class="dimension-evidence">
@@ -56,14 +56,14 @@ const base = import.meta.env.BASE_URL;
           <source type="image/webp" srcset={`${base}media/figures/onmanifold-vs-dim-720.webp 720w`} sizes="(max-width: 860px) calc(100vw - 2rem), 560px" />
           <img src={`${base}media/figures/onmanifold-vs-dim-720.png`} width="720" height="532" loading="lazy" decoding="async" alt="On-manifold rate versus ambient dimension; x-prediction stays high while v-prediction declines and epsilon-prediction approaches zero" />
         </picture>
-        <figcaption><strong>Controlled evidence.</strong> Identical networks, data, training, guidance, and sampling; only the prediction objective changes.</figcaption>
+        <figcaption>The networks, data, training, guidance, and sampling are identical. Only the prediction objective changes.</figcaption>
       </figure>
       <dl aria-label="On-manifold rate at ambient dimension 512">
         <div class="x"><dt>x-prediction</dt><dd>93.3%</dd></div>
         <div class="v"><dt>v-prediction</dt><dd>21.5%</dd></div>
         <div class="epsilon"><dt>ε-prediction</dt><dd>0.5%</dd></div>
       </dl>
-      <p class="result-note">On-manifold rate at D=512. The empirical ordering is measured; it is not inferred by pretending the three base errors are equal.</p>
+      <p class="result-note">These are the measured on-manifold rates at D=512. The comparison does not assume equal base errors.</p>
     </div>
   </div>
 </div>
@@ -83,7 +83,7 @@ const base = import.meta.env.BASE_URL;
   .axis-track span { position: absolute; inset: -0.22rem auto -0.22rem 26%; border-left: 2px solid var(--error); }
   .time-axis > p { margin: 0.55rem 0 0; color: var(--error); font-size: 0.76rem; font-weight: 760; }
   .recovery-rows { margin-top: 2rem; }
-  .recovery-rows article { display: grid; grid-template-columns: 9rem minmax(0, 1fr) minmax(12rem, 0.42fr); gap: 1.25rem; align-items: center; padding: 1.15rem 0; border-top: 2px solid var(--navy); }
+  .recovery-rows article { display: grid; grid-template-columns: 9rem minmax(0, 1fr) minmax(12rem, 0.42fr); height: 5.625rem; gap: 1.25rem; align-items: center; padding: 1.15rem 0; border-top: 2px solid var(--navy); }
   .recovery-rows article.v { border-top-color: var(--cyan-dark); }
   .recovery-rows article.epsilon { border-top-color: var(--error); }
   .target { display: flex; align-items: baseline; gap: 0.65rem; }
@@ -113,7 +113,7 @@ const base = import.meta.env.BASE_URL;
 
   @media (max-width: 860px) {
     .time-focus, .manifold-evidence-grid { grid-template-columns: minmax(0, 1fr); }
-    .recovery-rows article { grid-template-columns: 7rem minmax(0, 1fr); }
+    .recovery-rows article { grid-template-columns: 7rem minmax(0, 1fr); height: auto; }
     .recovery-rows article > p { grid-column: 2; }
   }
   @media (max-width: 560px) {

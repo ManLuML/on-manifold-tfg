@@ -18,6 +18,10 @@ The hero gives the paper title the full content width at a reduced display size,
 
 The BibTeX is independently audited against the official ECCV accepted-paper/poster records, Springer’s ECCV 2026 proceedings-title convention, arXiv, and Crossref. Because paper-level Springer metadata is not public, the provisional entry uses `booktitle = {Computer Vision -- ECCV 2026}` and `note = {To appear}` while intentionally omitting DOI, pages, volume, proceedings part, ISBN, editors, publisher, address, and month.
 
+## Implementation addendum — prose review
+
+The final public copy is reviewed with the Humanizer skill. The pass removes generic sales language, repeated “Yes.” openings, vague evidence summaries, dramatic fragments, and em/en dashes. It keeps the accepted-paper abstract and BibTeX byte-for-byte unchanged and preserves all scientific formulas, numeric results, evaluation units, cross-model qualifiers, resource URLs, and rights statements. Child FID remains explicitly distribution-level: one pooled comparison using all 9,152 guided samples across 143 targets.
+
 ## 1. Outcome
 
 Build two coordinated, English-only GitHub Pages experiences:

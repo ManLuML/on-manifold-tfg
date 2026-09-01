@@ -10,7 +10,7 @@ const targets = [
     outcome: 'Mostly realistic misses',
     slug: 'jit-failure-grid',
     alt: 'Grid of JiT x-prediction bird samples under strong guidance; most remain coherent natural birds even when some miss the requested species',
-    copy: 'Strong guidance can miss the requested species, yet the samples still look like plausible birds. The failure stays graceful because visual structure survives.',
+    copy: 'Strong guidance may miss the requested species while still producing a plausible bird. The image is wrong for the target, but its structure survives.',
   },
   {
     id: 'v',
@@ -21,7 +21,7 @@ const targets = [
     outcome: 'Visible degradation',
     slug: 'sit-failure-grid',
     alt: 'Grid of SiT v-prediction bird samples under strong guidance; structure is less stable than x-prediction but more coherent than epsilon-prediction',
-    copy: 'The clean-image estimate is recovered with a bounded multiplier. Samples occupy the middle ground: recognizable more often than ε-prediction, but less stable than x-prediction.',
+    copy: 'v-prediction recovers the clean image with a bounded multiplier. Its samples remain recognizable more often than ε-prediction samples, but they degrade more than x-prediction samples.',
   },
   {
     id: 'epsilon',
@@ -32,7 +32,7 @@ const targets = [
     outcome: 'Severe off-manifold artifacts',
     slug: 'dit-failure-grid',
     alt: 'Grid of DiT epsilon-prediction bird samples under strong guidance; many contain severe artifacts and collapsed bird-like textures',
-    copy: 'Early recovery errors can be amplified without bound. Under strong guidance, classifier-friendly textures replace coherent anatomy and the failure becomes catastrophic.',
+    copy: 'Early recovery errors can grow without bound. Under strong guidance, classifier-friendly textures replace coherent bird anatomy.',
   },
 ];
 ---
@@ -70,7 +70,7 @@ const targets = [
   ))}
 </ol>
 
-<p class="sequence-note"><strong>Read the sequence, then test the cause.</strong> These pretrained models make the failure ordering visible. The controlled studies below separate prediction target from architecture, capacity, and operating space.</p>
+<p class="sequence-note">These grids show the failure modes of pretrained models. Because the models also differ in architecture, capacity, and operating space, the controlled studies below test the prediction target directly.</p>
 
 <style>
   .failure-sequence { margin: 2.5rem 0 0; padding: 0; list-style: none; }
