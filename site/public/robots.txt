@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /on-manifold-tfg/
+
+Sitemap: https://manluml.github.io/on-manifold-tfg/sitemap-index.xml

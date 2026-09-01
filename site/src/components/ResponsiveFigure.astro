@@ -1,0 +1,54 @@
+---
+interface Props {
+  slug: string;
+  widths: number[];
+  fallback: 'png' | 'jpg';
+  width: number;
+  height: number;
+  alt: string;
+  caption: string;
+  loading?: 'eager' | 'lazy';
+  class?: string;
+}
+
+const {
+  slug,
+  widths,
+  fallback,
+  width,
+  height,
+  alt,
+  caption,
+  loading = 'lazy',
+  class: className = '',
+} = Astro.props;
+
+const base = import.meta.env.BASE_URL;
+const largest = Math.max(...widths);
+const srcset = (extension: string) => widths.map((item) => `${base}media/figures/${slug}-${item}.${extension} ${item}w`).join(', ');
+---
+
+<figure class:list={['responsive-figure', className]}>
+  <picture>
+    <source type="image/avif" srcset={srcset('avif')} sizes="(max-width: 760px) calc(100vw - 2rem), 1120px" />
+    <source type="image/webp" srcset={srcset('webp')} sizes="(max-width: 760px) calc(100vw - 2rem), 1120px" />
+    <img
+      src={`${base}media/figures/${slug}-${largest}.${fallback}`}
+      srcset={srcset(fallback)}
+      sizes="(max-width: 760px) calc(100vw - 2rem), 1120px"
+      width={width}
+      height={height}
+      loading={loading}
+      decoding="async"
+      alt={alt}
+    />
+  </picture>
+  <figcaption>{caption}</figcaption>
+</figure>
+
+<style>
+  .responsive-figure { margin: 0; }
+  picture { display: block; overflow: hidden; border: 1px solid var(--line); border-radius: 0; background: white; }
+  img { width: 100%; }
+  figcaption { max-width: 62rem; margin: 0.85rem 0 0; color: var(--slate); font-size: 0.88rem; line-height: 1.55; }
+</style>

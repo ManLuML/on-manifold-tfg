@@ -1,0 +1,91 @@
+---
+import '@fontsource-variable/inter';
+import '../styles/tokens.css';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  abstract?: string;
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description,
+  canonical = 'https://manluml.github.io/on-manifold-tfg/',
+  abstract = description,
+  noindex = false,
+} = Astro.props;
+
+const base = import.meta.env.BASE_URL;
+const socialImage = 'https://manluml.github.io/on-manifold-tfg/og/project-card.png';
+const paperUrl = 'https://arxiv.org/pdf/2607.00647';
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'ScholarlyArticle',
+  headline: 'Not All Prediction Targets Keep Training-Free Diffusion Guidance on the Manifold',
+  name: 'Not All Prediction Targets Keep Training-Free Diffusion Guidance on the Manifold',
+  abstract,
+  url: canonical,
+  image: socialImage,
+  datePublished: '2026-07-01',
+  dateModified: '2026-09-01',
+  version: 'Accepted camera-ready source reviewed at commit 22954ee7f9f7d0e58d61db34474f3d6a15ec8a07',
+  author: [
+    { '@type': 'Person', name: 'Yunsung Lee', url: 'https://github.com/alohays', affiliation: { '@type': 'Organization', name: 'Maum AI' } },
+    { '@type': 'Person', name: 'Hyeongmin Lee', url: 'https://hyeongminlee.github.io/', affiliation: { '@type': 'CollegeOrUniversity', name: 'Seoul National University of Science and Technology' } },
+  ],
+  isPartOf: { '@type': 'PublicationIssue', name: 'European Conference on Computer Vision (ECCV) 2026' },
+  associatedMedia: { '@type': 'MediaObject', name: 'Public arXiv v1 preprint (2026-07-01)', contentUrl: paperUrl, encodingFormat: 'application/pdf' },
+  inLanguage: 'en',
+  sameAs: ['https://arxiv.org/abs/2607.00647', 'https://github.com/ManLuML/on-manifold-tfg'],
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href={`${base}brand/manluml-mascot.svg`} />
+    <link rel="icon" type="image/png" sizes="32x32" href={`${base}brand/manluml-mascot-32.png`} />
+    <link rel="apple-touch-icon" sizes="180x180" href={`${base}brand/manluml-mascot-180.png`} />
+    {noindex && <meta name="robots" content="noindex,follow" />}
+    <meta property="og:type" content={noindex ? 'website' : 'article'} />
+    <meta property="og:site_name" content="ManLuML" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {!noindex && (
+      <>
+        <meta property="og:image" content={socialImage} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="Paper title, authors, venue, and an author-owned research visual" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content={socialImage} />
+        <meta name="twitter:image:alt" content="Paper title, authors, venue, and an author-owned research visual" />
+        <meta name="citation_title" content="Not All Prediction Targets Keep Training-Free Diffusion Guidance on the Manifold" />
+        <meta name="citation_author" content="Yunsung Lee" />
+        <meta name="citation_author" content="Hyeongmin Lee" />
+        <meta name="citation_publication_date" content="2026" />
+        <meta name="citation_conference_title" content="European Conference on Computer Vision (ECCV)" />
+        <meta name="citation_pdf_url" content={paperUrl} />
+        <meta name="citation_abstract" content={abstract} />
+        <meta name="citation_version" content="Accepted camera-ready source; public PDF is arXiv v1" />
+        <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+      </>
+    )}
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <slot />
+  </body>
+</html>

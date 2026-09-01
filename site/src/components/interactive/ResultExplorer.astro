@@ -1,0 +1,163 @@
+---
+const base = import.meta.env.BASE_URL;
+const targets = [
+  {
+    id: 'x',
+    label: 'x-prediction',
+    model: 'JiT-H/16 · pixel space',
+    outcome: 'Graceful failure',
+    tone: 'x',
+    slug: 'jit-failure-grid',
+    alt: 'Grid of JiT x-prediction bird samples at a strong guidance setting; most remain recognizable natural birds even when some do not match the requested species',
+    copy: 'At aggressive guidance, x-prediction can miss the requested fine-grained class while samples still look like coherent birds. That is the graceful failure mode.',
+  },
+  {
+    id: 'v',
+    label: 'v-prediction',
+    model: 'SiT-XL/2 · latent space',
+    outcome: 'Intermediate degradation',
+    tone: 'v',
+    slug: 'sit-failure-grid',
+    alt: 'Grid of SiT v-prediction bird samples at a strong guidance setting; structure is less stable than x-prediction but the collapse is less severe than epsilon-prediction',
+    copy: 'v-prediction incurs bounded recovery amplification. Its strong-guidance samples occupy the middle ground: more degradation than x-prediction, less catastrophic collapse than ε-prediction.',
+  },
+  {
+    id: 'epsilon',
+    label: 'ε-prediction',
+    model: 'DiT-XL/2 · latent space',
+    outcome: 'Catastrophic failure',
+    tone: 'epsilon',
+    slug: 'dit-failure-grid',
+    alt: 'Grid of DiT epsilon-prediction bird samples at a strong guidance setting; many samples contain severe artifacts and collapsed, unrealistic bird-like textures',
+    copy: 'When the clean-image estimate is recovered through division by t, early-step errors can become extreme. Strong guidance then produces classifier-fooling textures and obvious off-manifold artifacts.',
+  },
+];
+---
+
+<div class="result-explorer" data-result-explorer>
+  <div class="explorer-intro">
+    <p class="interaction-label">Interactive comparison</p>
+    <p>Choose a prediction target. The complete comparison remains below in the initial HTML when scripting is unavailable.</p>
+  </div>
+
+  <div class="tabs" role="tablist" aria-label="Prediction target comparison">
+    {targets.map((target, index) => (
+      <button
+        type="button"
+        role="tab"
+        id={`tab-${target.id}`}
+        aria-controls={`panel-${target.id}`}
+        aria-selected={index === 0 ? 'true' : 'false'}
+        tabindex={index === 0 ? 0 : -1}
+        data-tab={target.id}
+      >
+        <span class:list={['tab-symbol', target.tone]}>{target.id === 'epsilon' ? 'ε' : target.id}</span>
+        <span>{target.label}</span>
+      </button>
+    ))}
+  </div>
+
+  <div class="panels">
+    {targets.map((target) => (
+      <section
+        class:list={['result-panel', target.tone]}
+        id={`panel-${target.id}`}
+        role="tabpanel"
+        aria-labelledby={`tab-${target.id}`}
+        data-panel={target.id}
+      >
+        <div class="panel-copy">
+          <p class="model">{target.model}</p>
+          <h3>{target.outcome}</h3>
+          <p>{target.copy}</p>
+        </div>
+        <picture>
+          <source type="image/avif" srcset={`${base}media/figures/${target.slug}-720.avif 720w, ${base}media/figures/${target.slug}-1400.avif 1400w, ${base}media/figures/${target.slug}-2200.avif 2200w`} sizes="(max-width: 760px) calc(100vw - 2rem), 1100px" />
+          <source type="image/webp" srcset={`${base}media/figures/${target.slug}-720.webp 720w, ${base}media/figures/${target.slug}-1400.webp 1400w, ${base}media/figures/${target.slug}-2200.webp 2200w`} sizes="(max-width: 760px) calc(100vw - 2rem), 1100px" />
+          <img
+            src={`${base}media/figures/${target.slug}-1400.jpg`}
+            srcset={`${base}media/figures/${target.slug}-720.jpg 720w, ${base}media/figures/${target.slug}-1400.jpg 1400w, ${base}media/figures/${target.slug}-2200.jpg 2200w`}
+            sizes="(max-width: 760px) calc(100vw - 2rem), 1100px"
+            width="1400"
+            height="468"
+            loading="lazy"
+            decoding="async"
+            alt={target.alt}
+          />
+        </picture>
+      </section>
+    ))}
+  </div>
+
+  <div class="static-summary">
+    <p><strong>Static summary.</strong> Under strong guidance, the visible ordering is x-prediction’s mostly realistic misses, v-prediction’s intermediate degradation, then ε-prediction’s severe artifacts. These pretrained models are not a fully controlled comparison; the page tests attribution separately below.</p>
+  </div>
+</div>
+
+<script>
+  const explorers = document.querySelectorAll<HTMLElement>('[data-result-explorer]');
+
+  for (const explorer of explorers) {
+    const tabs = Array.from(explorer.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const panels = Array.from(explorer.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
+    explorer.dataset.enhanced = 'true';
+
+    const select = (nextIndex: number, focus = true) => {
+      tabs.forEach((tab, index) => {
+        const selected = index === nextIndex;
+        tab.setAttribute('aria-selected', String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+        panels[index].hidden = !selected;
+      });
+      if (focus) tabs[nextIndex].focus();
+    };
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => select(index, false));
+      tab.addEventListener('keydown', (event) => {
+        let next = index;
+        if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
+        else if (event.key === 'ArrowLeft') next = (index - 1 + tabs.length) % tabs.length;
+        else if (event.key === 'Home') next = 0;
+        else if (event.key === 'End') next = tabs.length - 1;
+        else return;
+        event.preventDefault();
+        select(next);
+      });
+    });
+
+    select(0, false);
+  }
+</script>
+
+<style>
+  .result-explorer { margin-top: 2rem; }
+  .explorer-intro { max-width: 48rem; color: var(--slate); }
+  .interaction-label { margin-bottom: 0.35rem; color: var(--navy); font-size: 0.72rem; font-weight: 850; letter-spacing: 0.14em; text-transform: uppercase; }
+  .explorer-intro p:last-child { margin-top: 0; }
+  .tabs { display: none; gap: 1.4rem; margin: 1.5rem 0 0; border-bottom: 1px solid var(--line); }
+  [data-enhanced='true'] .tabs { display: flex; }
+  .tabs button { display: inline-flex; min-height: 3rem; align-items: center; gap: 0.45rem; margin-bottom: -1px; padding: 0.55rem 0.1rem; border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: transparent; color: var(--slate); cursor: pointer; }
+  .tabs button[aria-selected='true'] { border-bottom-color: var(--navy); color: var(--navy-dark); }
+  .tab-symbol { color: var(--navy); font-size: 1.1rem; font-weight: 700; }
+  .tab-symbol.v { color: var(--cyan-dark); }
+  .tab-symbol.epsilon { color: var(--error); }
+  .result-panel { margin-top: 0; padding: 1.5rem 0 0; border: 0; border-top: 2px solid var(--navy); border-radius: 0; background: transparent; }
+  .result-panel.v { border-top-color: var(--cyan-dark); }
+  .result-panel.epsilon { border-top-color: var(--error); }
+  .panel-copy { max-width: 52rem; margin-bottom: 1.25rem; }
+  .model { margin: 0; color: var(--muted); font-size: 0.78rem; font-weight: 780; letter-spacing: 0.08em; text-transform: uppercase; }
+  h3 { margin: 0.35rem 0; font-size: clamp(1.5rem, 3vw, 2.3rem); letter-spacing: -0.035em; }
+  .panel-copy p:last-child { margin-bottom: 0; color: var(--slate); }
+  picture { display: block; overflow: hidden; border: 1px solid var(--line); border-radius: 0; background: #edf1f6; }
+  img { width: 100%; }
+  .static-summary { margin-top: 1rem; padding: 0.8rem 0 0; border-top: 1px solid var(--line); color: var(--slate); font-size: 0.88rem; }
+  .static-summary p { margin: 0; }
+  [hidden] { display: none !important; }
+
+  @media (max-width: 560px) {
+    .tabs { display: none; grid-template-columns: 1fr; }
+    [data-enhanced='true'] .tabs { display: grid; }
+    .tabs button { justify-content: center; }
+  }
+</style>

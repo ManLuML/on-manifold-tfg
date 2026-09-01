@@ -1,0 +1,30 @@
+title: Not All Prediction Targets Keep Training-Free Diffusion Guidance on the Manifold
+shortTitle: On-Manifold TFG
+venue: ECCV 2026
+year: 2026
+abstract: >-
+  Training-free guidance (TFG) steers diffusion models without retraining, but strong guidance risks driving samples off-manifold. The resulting catastrophic failures (collapsed, artifact-ridden images) differ from graceful failures, where guidance misses the target but images remain realistic. We trace this distinction to the prediction target: all TFG methods compute guidance from a clean-data estimate x̂, so its fidelity governs manifold preservation. We prove a strict error amplification hierarchy: ε-prediction's recovery formula divides by t, amplifying errors unboundedly at high noise; v-prediction incurs bounded amplification; x-prediction incurs none. On ImageNet 256×256, we evaluate four pretrained Diffusion Transformers spanning all three targets. At matched classifier accuracy, guided-class FID (Child FID) reveals a 5.2-point gap between x- and ε-prediction (32.9 vs. 38.1): manifold damage invisible to standard evaluation. This extends to style transfer, establishing x-prediction as the target that keeps guidance failures graceful rather than catastrophic. Code is available at https://github.com/ManLuML/on-manifold-tfg.
+datePublished: 2026-07-01
+dateModified: 2026-09-01
+authors:
+  - name: Yunsung Lee
+    marker: ¹*
+    profileUrl: https://github.com/alohays
+    email: sung@maum.ai
+    affiliation: Maum AI
+  - name: Hyeongmin Lee
+    marker: ²*†
+    profileUrl: https://hyeongminlee.github.io/
+    email: hyeongmin.lee@seoultech.ac.kr
+    affiliation: Seoul National University of Science and Technology
+links:
+  paper: https://arxiv.org/pdf/2607.00647
+  paperAbstract: https://arxiv.org/abs/2607.00647
+  code: https://github.com/ManLuML/on-manifold-tfg
+  datasets:
+    - label: Bird benchmark
+      url: https://huggingface.co/datasets/ManLuML/onmanifold-tfg-bird-benchmark
+    - label: Butterfly benchmark
+      url: https://huggingface.co/datasets/ManLuML/onmanifold-tfg-butterfly-benchmark
+    - label: FID statistics
+      url: https://huggingface.co/datasets/ManLuML/onmanifold-tfg-fid-stats
