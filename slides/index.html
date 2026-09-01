@@ -302,17 +302,57 @@ But now a clean image exists at every step · exactly what the classifier needs.
 <section id="section-11" class="slide level2 on-manifold-tfg" data-source-section="paper-transition" data-background-color="#f9fafc">
 <h2></h2>
 <div class="showcase-section bg-paper-soft">
-  <div class="max-w-6xl mx-auto w-full">
+  <div class="max-w-6xl mx-auto w-full guidance-outcomes">
     <header class="max-w-6xl mx-auto w-full">
-      <p class="text-base lg:text-lg uppercase tracking-[0.22em] text-cyan-deep font-semibold">Core hypothesis</p>
-      <h2 class="mt-3 font-display text-4xl lg:text-5xl tracking-tight font-semibold text-ink leading-tight">Does the prediction target decide how guidance fails?</h2>
-      <p class="mt-3 text-lg lg:text-xl text-ink-soft">How each target amplifies error in x̂₀ determines whether strong TFG leaves the data manifold.</p>
+      <p class="text-base lg:text-lg uppercase tracking-[0.22em] text-cyan-deep font-semibold">Guidance outcomes</p>
+      <h2 class="mt-3 font-display text-[2.75rem] whitespace-nowrap tracking-tight font-semibold text-ink leading-tight">Do prediction targets decide how guidance fails?</h2>
+      <p class="mt-3 text-lg lg:text-xl text-ink-soft">On-manifold = a realistic parent-class sample; exact target correctness is a separate question.</p>
     </header>
-    <img src="../slides/assets/paper-teaser.png" alt="Figure 1: prediction target determines whether training-free guidance stays on the data manifold" class="mt-8 w-full rounded-lg border border-line bg-paper">
-    <p class="mt-4 text-base lg:text-lg text-ink-soft text-center">Test: a controlled crossed-lines ablation and four pretrained ImageNet Diffusion Transformers.</p>
+
+    <div class="outcome-columns mt-5">
+      <article class="outcome-column outcome-success">
+        <p class="outcome-model">x-prediction</p>
+        <img src="../slides/assets/outcome-x-plot.png" alt="Crossed-lines samples under x-prediction stay on the target-class manifold" class="outcome-plot">
+        <div class="outcome-result frag-appear fragment" data-fragment-index="0">
+          <span class="outcome-arrow">↓</span>
+          <p class="outcome-badge">On-manifold · Success</p>
+          <img src="../slides/assets/outcome-success-photo.png" alt="High-quality red macaw from the requested target class" class="outcome-photo">
+          <p class="outcome-checks">target class ✓ · quality ✓</p>
+        </div>
+      </article>
+
+      <article class="outcome-column outcome-catastrophic">
+        <p class="outcome-model">ε-prediction</p>
+        <img src="../slides/assets/outcome-epsilon-plot.png" alt="Crossed-lines samples under epsilon-prediction leave the data manifold" class="outcome-plot">
+        <div class="outcome-result frag-appear fragment" data-fragment-index="1">
+          <span class="outcome-arrow">↓</span>
+          <p class="outcome-badge">Off-manifold · Catastrophic</p>
+          <img src="../slides/assets/outcome-catastrophic-photo.png" alt="Reddish artifact that is no longer a recognizable parrot" class="outcome-photo">
+          <p class="outcome-checks">target ✕ · parent class ✕ · quality ✕</p>
+        </div>
+      </article>
+
+      <article class="outcome-column outcome-graceful">
+        <p class="outcome-model">v-prediction</p>
+        <img src="../slides/assets/outcome-v-plot.png" alt="Crossed-lines samples under v-prediction remain on the data manifold but miss the target class" class="outcome-plot">
+        <div class="outcome-result frag-appear fragment" data-fragment-index="2">
+          <span class="outcome-arrow">↓</span>
+          <p class="outcome-badge">On-manifold · Graceful</p>
+          <img src="../slides/assets/outcome-graceful-photo.png" alt="High-quality blue-and-yellow macaw from the parent parrot class but not the requested target class" class="outcome-photo">
+          <p class="outcome-checks">target ✕ · parent class ✓ · quality ✓</p>
+        </div>
+      </article>
+    </div>
+
+    <div class="outcome-captions mt-5">
+      <p class="outcome-caption outcome-caption-success frag-appear fragment" data-fragment-index="0"><span>Success</span> · correct target class and a high-quality parrot.</p>
+      <p class="outcome-caption outcome-caption-catastrophic frag-appear fragment" data-fragment-index="1"><span>Catastrophic failure</span> · no recognizable parrot: guidance has left the data manifold.</p>
+      <p class="outcome-caption outcome-caption-graceful frag-appear fragment" data-fragment-index="2"><span>Graceful failure</span> · wrong parrot class, but still a high-quality parent-class sample.</p>
+      <p class="outcome-caption outcome-caption-definition frag-appear fragment" data-fragment-index="3"><span>On-manifold is about realism—not exact target correctness.</span></p>
+    </div>
   </div>
 </div>
-<!-- added-slide=paper-transition rewrite=hypothesis-and-experiment formulas=0 fragment-groups=0 -->
+<!-- added-slide=paper-transition rewrite=animated-guidance-outcomes formulas=0 fragment-groups=4 -->
 </section>
 <section id="section-12" class="slide level2 on-manifold-tfg" data-source-section="17" data-background-color="#ffffff">
 <h2></h2>

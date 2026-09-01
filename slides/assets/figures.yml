@@ -115,7 +115,27 @@ figures:
     source: https://eccv.ecva.net/static/core/img/eccv-navbar-logo.svg
     licence: official conference brand asset
     third_party: true
-  - file: paper-teaser.png
-    source: Lee and Lee, ECCV 2026, Figure 1
+  - file: outcome-x-plot.png
+    source: Lee and Lee, ECCV 2026, Figure 1(b); Google Slides reference page 5
+    licence: paper author asset
+    third_party: false
+  - file: outcome-epsilon-plot.png
+    source: Lee and Lee, ECCV 2026, Figure 1(b); Google Slides reference page 6
+    licence: paper author asset
+    third_party: false
+  - file: outcome-v-plot.png
+    source: Lee and Lee, ECCV 2026, Figure 1(b); Google Slides reference page 7
+    licence: paper author asset
+    third_party: false
+  - file: outcome-success-photo.png
+    source: Lee and Lee, ECCV 2026, Figure 1(b); Google Slides reference page 5
+    licence: paper author asset
+    third_party: false
+  - file: outcome-catastrophic-photo.png
+    source: Lee and Lee, ECCV 2026, Figure 1(b); Google Slides reference page 6
+    licence: paper author asset
+    third_party: false
+  - file: outcome-graceful-photo.png
+    source: Lee and Lee, ECCV 2026, Figure 1(b); Google Slides reference page 7
     licence: paper author asset
     third_party: false

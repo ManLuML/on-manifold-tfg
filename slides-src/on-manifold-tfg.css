@@ -142,6 +142,147 @@
 .reveal .slides > section.on-manifold-tfg[data-source-section="20"] { --on-manifold-content-scale: 1.42; }
 .reveal .slides > section.on-manifold-tfg[data-source-section="21"] { --on-manifold-content-scale: 1.35; }
 
+.reveal .slides > section.on-manifold-tfg .guidance-outcomes .outcome-columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+.reveal .slides > section.on-manifold-tfg .guidance-outcomes .outcome-column {
+  --outcome-accent: var(--color-navy);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  text-align: center;
+}
+
+.reveal .slides > section.on-manifold-tfg .guidance-outcomes .outcome-success {
+  --outcome-accent: #3f7d20;
+}
+
+.reveal .slides > section.on-manifold-tfg .guidance-outcomes .outcome-catastrophic {
+  --outcome-accent: #a00000;
+}
+
+.reveal .slides > section.on-manifold-tfg .guidance-outcomes .outcome-graceful {
+  --outcome-accent: #9333ea;
+}
+
+.reveal .slides > section.on-manifold-tfg .guidance-outcomes .outcome-model {
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.reveal .slides > section.on-manifold-tfg .guidance-outcomes .outcome-plot {
+  width: 12rem;
+  height: 13rem;
+  margin-top: 0.35rem;
+  object-fit: cover;
+  border: 1px solid var(--color-line);
+  border-radius: 0.5rem;
+  background: var(--color-paper);
+}
+
+.reveal .slides > section.on-manifold-tfg .guidance-outcomes .outcome-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.reveal .slides > section.on-manifold-tfg .guidance-outcomes .outcome-arrow {
+  height: 1.15rem;
+  color: var(--outcome-accent);
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.reveal .slides > section.on-manifold-tfg .guidance-outcomes .outcome-badge {
+  width: 100%;
+  max-width: 17rem;
+  padding: 0.35rem 0.45rem;
+  border: 2px solid var(--outcome-accent);
+  border-radius: 0.4rem;
+  background: var(--color-paper);
+  color: var(--outcome-accent);
+  font-family: var(--font-display);
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.reveal .slides > section.on-manifold-tfg .guidance-outcomes .outcome-photo {
+  width: 8.5rem;
+  aspect-ratio: 1;
+  margin-top: 0.4rem;
+  object-fit: cover;
+  border: 3px solid var(--outcome-accent);
+  border-radius: 0.4rem;
+  background: var(--color-paper);
+}
+
+.reveal .slides > section.on-manifold-tfg .guidance-outcomes .outcome-checks {
+  margin-top: 0.35rem;
+  color: var(--color-ink-soft);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.reveal .slides > section.on-manifold-tfg .guidance-outcomes .outcome-captions {
+  display: grid;
+  gap: 0.25rem;
+  max-width: 64rem;
+  margin-inline: auto;
+}
+
+.reveal .slides > section.on-manifold-tfg .guidance-outcomes .outcome-caption {
+  margin: 0;
+  padding: 0.28rem 0.65rem;
+  border-left: 4px solid var(--caption-accent);
+  background: var(--caption-background);
+  color: var(--color-ink);
+  font-size: 0.92rem;
+  line-height: 1.25;
+  text-align: left;
+}
+
+.reveal .slides > section.on-manifold-tfg .guidance-outcomes .outcome-caption span {
+  color: var(--caption-accent);
+  font-weight: 700;
+}
+
+.reveal .slides > section.on-manifold-tfg .guidance-outcomes .outcome-caption-success {
+  --caption-accent: #3f7d20;
+  --caption-background: #f0fdf4;
+}
+
+.reveal .slides > section.on-manifold-tfg .guidance-outcomes .outcome-caption-catastrophic {
+  --caption-accent: #a00000;
+  --caption-background: #fef2f2;
+}
+
+.reveal .slides > section.on-manifold-tfg .guidance-outcomes .outcome-caption-graceful {
+  --caption-accent: #9333ea;
+  --caption-background: #faf5ff;
+}
+
+.reveal .slides > section.on-manifold-tfg .guidance-outcomes .outcome-caption-definition {
+  --caption-accent: var(--color-navy);
+  --caption-background: var(--color-navy-soft);
+  text-align: center;
+}
+
 .reveal .slide-number {
   z-index: 30;
   padding: 0;
