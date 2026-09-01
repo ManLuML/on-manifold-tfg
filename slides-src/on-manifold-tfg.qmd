@@ -231,8 +231,9 @@ But now a clean image exists at every step · exactly what the classifier needs.
 ```{=html}
 <div class="showcase-section bg-paper-soft">
   <div class="guidance-sequence">
-    <header class="guidance-sequence-header">
-      <h2 class="font-display whitespace-nowrap tracking-tight font-semibold text-ink leading-tight">Do prediction targets decide how guidance fails?</h2>
+    <header class="max-w-6xl mx-auto w-full guidance-sequence-header">
+      <p class="text-base lg:text-lg uppercase tracking-[0.22em] text-cyan-deep font-semibold">Guidance outcomes</p>
+      <h2 class="mt-3 font-display text-4xl lg:text-5xl whitespace-nowrap tracking-tight font-semibold text-ink leading-tight">Do prediction targets decide how guidance fails?</h2>
     </header>
 
     <figure class="guidance-sequence-stage" aria-label="Google Slides visualization advancing through pages 5, 6, 7, and 4">

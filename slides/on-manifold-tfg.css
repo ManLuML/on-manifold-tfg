@@ -148,19 +148,14 @@
 }
 
 .reveal .slides > section.on-manifold-tfg .guidance-sequence {
-  width: 1320px;
+  width: 1240px;
   max-width: none;
   margin-inline: auto;
 }
 
-.reveal .slides > section.on-manifold-tfg .guidance-sequence-header h2 {
-  font-size: 2.5rem;
-  line-height: 1.15;
-}
-
 .reveal .slides > section.on-manifold-tfg .guidance-sequence-stage {
   position: relative;
-  width: 1320px;
+  width: 1240px;
   aspect-ratio: 16 / 9;
   margin: 0.5rem auto 0;
   overflow: hidden;
@@ -193,7 +188,7 @@
 .reveal .slides > section.on-manifold-tfg .guidance-sequence-captions {
   display: grid;
   gap: 0.2rem;
-  width: 1320px;
+  width: 1240px;
   margin: 0.45rem auto 0;
 }
 
