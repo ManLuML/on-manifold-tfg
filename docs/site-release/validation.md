@@ -45,4 +45,19 @@ The publicly linked PDF is arXiv v1 and differs from the accepted camera-ready s
 
 ## Production evidence
 
-To be appended after launch: repository commit SHAs, workflow run IDs, Pages deployment IDs, timestamped HTTP/metadata/asset/fragment checks, production screenshots, production lab metrics, cross-navigation, and rollback restoration evidence.
+Production verification completed on 2026-09-01 at 17:56 KST.
+
+| Site | Release commit | Pages workflow | Pages deployment | Public URL |
+| --- | --- | --- | ---: | --- |
+| ManLuML root | `9b16a9dc2522a2a1df7c2678771c67b5a85d3883` | [run 33488364896](https://github.com/ManLuML/manluml.github.io/actions/runs/33488364896), success | `6197663416` | `https://manluml.github.io/` |
+| On-Manifold TFG | `c355ecf4278285b53606351f71eba834c5d337f9` | [run 33488814933](https://github.com/ManLuML/on-manifold-tfg/actions/runs/33488814933), success | `6197743540` | `https://manluml.github.io/on-manifold-tfg/` |
+
+The existing Python [CI run 33488814927](https://github.com/ManLuML/on-manifold-tfg/actions/runs/33488814927) also passed lint and tests for the project release commit. Both Pages sites report workflow mode with HTTPS enforced. The root workflow’s post-deploy check verified the root canonical and root-to-project link; the project workflow’s post-deploy check verified both canonicals and bidirectional navigation.
+
+Fresh no-cache HTTP checks matched the reviewed artifacts byte-for-byte: root index `fe6458c24c38a5786e061ca32fc65cfebd4d2cd55b07d79787b75f0fe32b71bf`, root card `8408297a1d46fae70b9413d2c8c660f91bf38a002f3ce460d10320c0fa3084f6`, project index `c01aa2cbe34e4b4895d135997b0f9f53e96c5817d897f1ccf1a936042eadf5e8`, project card `0ba6afd2921b9d4e2b26dc449ffb9f83ce491617cc2f7670ead490e604acbfa2`, and slides recovery page `ab17f833b436836fccad257267aaf1310a2be8b707476a1d682199e6425d99a1`. Both custom 404 routes returned HTTP 404 with `noindex,follow`.
+
+Production smoke checks confirmed all four legacy fragments, all 18 legacy image URLs, the one-file noindex `/slides/` recovery route, exact simplified affiliations, explicit x-first/v-second/ε-third ranking, citation-version disclosure, Open Graph/X cards, and zero affiliation-logo or ECCV-logo references. Every public resource and both cross-site directions returned HTTP 200.
+
+Production Chromium lab checks observed root LCP 544 ms and CLS 0.00038; project LCP 308 ms, CLS 0.01759, and slider interaction proxy 0.1 ms. Axe reported zero violations on both desktop pages, console errors and failed requests were empty, 320 CSS-pixel layouts had no document overflow, and both normal and 200% text-size accessibility checks passed. These remain lab measurements; no field p75/CrUX data exists for the newly launched pages.
+
+Production screenshots are committed as `production-root-desktop.png`, `production-root-320.png`, `production-project-desktop.png`, `production-project-320.png`, `production-project-formulas.png`, and `production-project-manifold-figure.png` under `docs/site-release/screenshots/`. They visually confirm the desktop/mobile hierarchy, balanced formulas, and camera-ready Figure 1(a) on the public origin.
