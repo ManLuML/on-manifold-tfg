@@ -100,6 +100,13 @@ if (sequenceOffsets.some((offset) => offset < 0)
   || sequenceOffsets.some((offset, index) => index > 0 && offset <= sequenceOffsets[index - 1])) {
   throw new Error('Guidance outcome frames must remain ordered as Google Slides pages 5, 6, 7, then 4.');
 }
+for (const caption of [
+  'only a reddish artifact, not a recognizable parrot',
+  'a high-quality blue macaw from the parrot parent class',
+  'realistic under the data distribution',
+]) {
+  if (!slidesHtml.includes(caption)) throw new Error(`Missing cumulative guidance caption: ${caption}`);
+}
 for (const file of expectedSlideAssets) await access(path.join(dist, 'slides', file));
 for (const file of ['404.html', 'robots.txt', 'sitemap-index.xml', '.nojekyll']) await access(path.join(dist, file));
 

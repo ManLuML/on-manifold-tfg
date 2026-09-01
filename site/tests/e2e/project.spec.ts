@@ -255,15 +255,40 @@ test('the complete ECCV presentation is published at the stable slide URL', asyn
     });
     return visible[visible.length - 1]?.getAttribute('src');
   });
+  const captions = page.locator('.guidance-sequence-caption');
+  await expect(captions).toHaveCount(4);
+  const visibleCaptions = () => captions.evaluateAll((items) => items.filter((item) => {
+    const style = getComputedStyle(item);
+    return style.visibility !== 'hidden' && Number(style.opacity) > 0.99;
+  }).map((item) => item.textContent?.replace(/\s+/g, ' ').trim()));
+  await page.waitForTimeout(700);
   expect(await activeFrame()).toContain('guidance-sequence-05-success.png');
-  for (const expected of [
-    'guidance-sequence-06-catastrophic.png',
-    'guidance-sequence-07-graceful.png',
-    'guidance-sequence-04-combined.png',
-  ]) {
+  expect(await visibleCaptions()).toHaveLength(1);
+  for (const [expected, captionCount] of [
+    ['guidance-sequence-06-catastrophic.png', 2],
+    ['guidance-sequence-07-graceful.png', 3],
+    ['guidance-sequence-04-combined.png', 4],
+  ] as const) {
     await page.keyboard.press('ArrowRight');
+    await page.waitForTimeout(700);
     expect(await activeFrame()).toContain(expected);
+    expect(await visibleCaptions()).toHaveLength(captionCount);
   }
+  const finalCaptionText = (await visibleCaptions()).join(' ');
+  expect(finalCaptionText).toContain('only a reddish artifact, not a recognizable parrot');
+  expect(finalCaptionText).toContain('a high-quality blue macaw from the parrot parent class');
+  expect(finalCaptionText).toContain('realistic under the data distribution');
+  expect(await captions.evaluateAll((items) => items.every((item) => item.scrollWidth <= item.clientWidth))).toBe(true);
+  expect(await captions.first().evaluate((item) => getComputedStyle(item).fontSize)).toBe('22px');
+  expect(await captions.evaluateAll((items) => items.map((item) => getComputedStyle(item).borderLeftColor))).toEqual([
+    'rgb(63, 125, 32)',
+    'rgb(160, 0, 0)',
+    'rgb(147, 51, 234)',
+    'rgb(13, 71, 161)',
+  ]);
+  const captionGap = await page.evaluate(() => document.querySelector('.slide-number')!.getBoundingClientRect().top
+    - document.querySelector('.guidance-sequence-captions')!.getBoundingClientRect().bottom);
+  expect(captionGap).toBeGreaterThan(10);
 });
 
 test('project custom 404 is useful and noindexed', async ({ page }) => {
