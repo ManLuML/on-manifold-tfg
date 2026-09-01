@@ -19,7 +19,19 @@ describe('ECCV slide deck', () => {
     expect(html).toContain('Do prediction targets decide how guidance fails?');
     expect(html).toContain('data-source-section="19"');
     expect(html).toContain("slideNumber: 'c/t'");
-    expect(html.match(/data-source-section=/g)).toHaveLength(17);
+    expect(html.match(/data-source-section=/g)).toHaveLength(18);
+    expect(html).toContain('data-source-section="task-benchmark"');
+    expect(html).toContain('rewrite=pretrained-support-and-public-benchmark');
+    expect(html).toContain('Steer within the pretrained bird domain.');
+    expect(html).toContain('Images / operating point');
+    expect(html).toContain('Public on Hugging Face');
+    expect(html).toContain('Bird benchmark');
+    expect(html).toContain('Butterfly · 34 species');
+    expect(html).toContain('FID statistics');
+    expect(html).toContain('Prediction target governs how TFG fails');
+    expect(html).toContain("TFG's weak link is the clean-image estimate");
+    expect(html).toContain('classifier Validity misses');
+    expect(html).not.toContain('Training-free guidance steers a <span');
     const sequence = [
       'guidance-sequence-05-success.png',
       'guidance-sequence-06-catastrophic.png',

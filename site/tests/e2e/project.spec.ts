@@ -228,19 +228,19 @@ test('the complete ECCV presentation is published at the stable slide URL', asyn
   const response = await page.goto('http://127.0.0.1:4324/on-manifold-tfg/slides/');
   expect(response?.ok()).toBe(true);
   await expect(page).toHaveTitle('Not All Prediction Targets Keep Training-Free Diffusion Guidance on the Manifold');
-  await expect(page.locator('.reveal .slides > section')).toHaveCount(17);
+  await expect(page.locator('.reveal .slides > section')).toHaveCount(18);
   await expect(page.locator('.reveal .slides > section').first()).toHaveAttribute('data-source-section', '01');
   await expect(page.locator('.reveal .slides > section[data-source-section="19"]')).toHaveCount(1);
   await expect(page.locator('.title-logo-maumai')).toHaveCount(1);
   await expect(page.locator('.title-logo-seoultech img')).toHaveCount(1);
   await expect(page.locator('.title-logo-eccv')).toHaveCount(1);
-  await expect(page.locator('.slide-number')).toContainText('1 / 17');
+  await expect(page.locator('.slide-number')).toContainText('1 / 18');
   await expect(page.locator('img').first()).toHaveJSProperty('complete', true);
   const dimensions = await page.evaluate(() => ({ width: document.documentElement.clientWidth, scrollWidth: document.documentElement.scrollWidth }));
   expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.width);
 
   await page.goto('http://127.0.0.1:4324/on-manifold-tfg/slides/?preview=outcomes#/section-11');
-  await expect(page.locator('.slide-number')).toContainText('12 / 17');
+  await expect(page.locator('.slide-number')).toContainText('12 / 18');
   const frames = page.locator('.guidance-sequence-frame');
   await expect(frames).toHaveCount(4);
   expect(await frames.evaluateAll((images) => images.every((image) => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth === 2400 && (image as HTMLImageElement).naturalHeight === 1350))).toBe(true);
@@ -290,6 +290,38 @@ test('the complete ECCV presentation is published at the stable slide URL', asyn
   const captionGap = await page.evaluate(() => document.querySelector('.slide-number')!.getBoundingClientRect().top
     - document.querySelector('.guidance-sequence-captions')!.getBoundingClientRect().bottom);
   expect(captionGap).toBeGreaterThan(10);
+
+  await page.goto('http://127.0.0.1:4324/on-manifold-tfg/slides/?preview=benchmark#/section-12');
+  await expect(page.locator('.slide-number')).toContainText('13 / 18');
+  const benchmarkSlide = page.locator('.reveal .slides > section[data-source-section="task-benchmark"]');
+  await expect(benchmarkSlide).toHaveCount(1);
+  await expect(benchmarkSlide.locator(':scope > section')).toHaveCount(0);
+  await expect(benchmarkSlide.locator('.task-benchmark-header h2')).toHaveText('Steer within the pretrained bird domain.');
+  await expect(benchmarkSlide.getByText('143 fine-grained species', { exact: true })).toBeVisible();
+  await expect(benchmarkSlide.getByText('Wholly unseen domain transfer', { exact: true })).toBeVisible();
+  const releaseBand = page.locator('.task-benchmark-release');
+  expect(await releaseBand.evaluate((element) => Number(getComputedStyle(element).opacity))).toBeLessThan(0.01);
+  await page.keyboard.press('ArrowRight');
+  await page.waitForTimeout(700);
+  expect(await releaseBand.evaluate((element) => Number(getComputedStyle(element).opacity))).toBeGreaterThan(0.99);
+  await expect(releaseBand).toContainText('143');
+  await expect(releaseBand).toContainText('30');
+  await expect(releaseBand).toContainText('9,152');
+  await expect(releaseBand).toContainText('Bird benchmark');
+  await expect(releaseBand).toContainText('Butterfly · 34 species');
+  await expect(releaseBand).toContainText('FID statistics');
+
+  await page.goto('http://127.0.0.1:4324/on-manifold-tfg/slides/?preview=takeaway#/section-16');
+  await expect(page.locator('.slide-number')).toContainText('17 / 18');
+  for (let index = 0; index < 3; index += 1) {
+    await page.keyboard.press('ArrowRight');
+    await page.waitForTimeout(700);
+  }
+  const takeaway = page.locator('.reveal .slides > section[data-source-section="20"]');
+  await expect(takeaway).toContainText('Prediction target governs how TFG fails');
+  await expect(takeaway).toContainText("TFG's weak link is the clean-image estimate");
+  await expect(takeaway).toContainText('classifier Validity misses');
+  await expect(takeaway).not.toContainText('Training-free guidance steers a frozen diffusion model');
 });
 
 test('project custom 404 is useful and noindexed', async ({ page }) => {

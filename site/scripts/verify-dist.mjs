@@ -84,11 +84,20 @@ const expectedSlideAssets = [
 if (!slidesHtml.includes('Not All Prediction Targets Keep Training-Free Diffusion Guidance on the Manifold')
   || !slidesHtml.includes('Do prediction targets decide how guidance fails?')
   || !slidesHtml.includes('data-source-section="19"')
+  || !slidesHtml.includes('data-source-section="task-benchmark"')
   || !slidesHtml.includes('rewrite=google-slides-sequence-5-6-7-4')
+  || !slidesHtml.includes('rewrite=pretrained-support-and-public-benchmark')
+  || !slidesHtml.includes('Steer within the pretrained bird domain.')
+  || !slidesHtml.includes('Images / operating point')
+  || !slidesHtml.includes('Public on Hugging Face')
+  || !slidesHtml.includes('Prediction target governs how TFG fails')
+  || !slidesHtml.includes("TFG's weak link is the clean-image estimate")
+  || !slidesHtml.includes('classifier Validity misses')
   || !slidesHtml.includes("slideNumber: 'c/t'")
-  || (slidesHtml.match(/data-source-section=/g) ?? []).length !== 17
+  || (slidesHtml.match(/data-source-section=/g) ?? []).length !== 18
+  || slidesHtml.includes('Training-free guidance steers a <span')
   || /<aside class="notes"|\sdata-notes=/.test(slidesHtml)) {
-  throw new Error('Complete 17-slide public deck is missing, altered, or contains private notes.');
+  throw new Error('Complete 18-slide public deck is missing, altered, or contains private notes.');
 }
 const sequenceAssets = [
   'guidance-sequence-05-success.png',
