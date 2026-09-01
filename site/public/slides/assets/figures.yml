@@ -1,0 +1,141 @@
+figures:
+  - file: ddpm-fig2-chain.png
+    source: Ho et al., NeurIPS 2020
+    licence: educational quotation
+    third_party: true
+  - file: ddpm-fig6-progressive.jpg
+    source: Ho et al., NeurIPS 2020
+    licence: educational quotation
+    third_party: true
+  - file: cell-noisy-02.png
+    source: "Li &amp; He"
+    licence: educational quotation
+    third_party: true
+  - file: cell-noisy-04.png
+    source: "Li &amp; He"
+    licence: educational quotation
+    third_party: true
+  - file: cell-noisy-05.png
+    source: "Li &amp; He"
+    licence: educational quotation
+    third_party: true
+  - file: cell-clean-02.png
+    source: "Li &amp; He"
+    licence: educational quotation
+    third_party: true
+  - file: cell-recovered-02.png
+    source: "Li &amp; He"
+    licence: educational quotation
+    third_party: true
+  - file: jit-fig1-manifold.png
+    source: "Li &amp; He"
+    licence: educational quotation
+    third_party: true
+  - file: jit-fig7-denoised.jpg
+    source: "Li &amp; He"
+    licence: educational quotation
+    third_party: true
+  - file: gen-mushroom.jpg
+    source: "Li &amp; He"
+    licence: educational quotation
+    third_party: true
+  - file: gen-mantis.jpg
+    source: "Li &amp; He"
+    licence: educational quotation
+    third_party: true
+  - file: gen-train.jpg
+    source: "Li &amp; He"
+    licence: educational quotation
+    third_party: true
+  - file: gen-capitol.jpg
+    source: "Li &amp; He"
+    licence: educational quotation
+    third_party: true
+  - file: gen-honeycomb.jpg
+    source: "Li &amp; He"
+    licence: educational quotation
+    third_party: true
+  - file: gen-coffee.jpg
+    source: "Li &amp; He"
+    licence: educational quotation
+    third_party: true
+  - file: bird-swan.jpg
+    source: Lee and Lee, ECCV 2026
+    licence: paper author asset
+    third_party: false
+  - file: bird-penguin.jpg
+    source: Lee and Lee, ECCV 2026
+    licence: paper author asset
+    third_party: false
+  - file: bird-bunting2.jpg
+    source: Lee and Lee, ECCV 2026
+    licence: paper author asset
+    third_party: false
+  - file: bird-spoonbill.jpg
+    source: Lee and Lee, ECCV 2026
+    licence: paper author asset
+    third_party: false
+  - file: bird-hummingbird.jpg
+    source: Lee and Lee, ECCV 2026
+    licence: paper author asset
+    third_party: false
+  - file: cell-bunting.png
+    source: Lee and Lee, ECCV 2026
+    licence: paper author asset
+    third_party: false
+  - file: noise-patch.png
+    source: Hyeongmin Lee source deck
+    licence: source deck asset
+    third_party: false
+  - file: fig7c-jit-strong.jpg
+    source: Lee and Lee, ECCV 2026
+    licence: paper author asset
+    third_party: false
+  - file: fig7d-dit-strong.jpg
+    source: Lee and Lee, ECCV 2026
+    licence: paper author asset
+    third_party: false
+  - file: fig4b-cfid.png
+    source: Lee and Lee, ECCV 2026
+    licence: paper author asset
+    third_party: false
+  - file: arxiv-qr.png
+    source: arXiv 2607.00647
+    licence: generated QR code
+    third_party: false
+  - file: maumai-logo.png
+    source: MaumAI brand asset supplied by presenter
+    licence: presenter-supplied brand asset
+    third_party: false
+  - file: seoultech-brand-guide.png
+    source: SeoulTech brand asset supplied by presenter
+    licence: presenter-supplied brand asset
+    third_party: false
+  - file: eccv-navbar-logo.svg
+    source: https://eccv.ecva.net/static/core/img/eccv-navbar-logo.svg
+    licence: official conference brand asset
+    third_party: true
+  - file: outcome-x-plot.png
+    source: Lee and Lee, ECCV 2026, Figure 1(b); Google Slides reference page 5
+    licence: paper author asset
+    third_party: false
+  - file: outcome-epsilon-plot.png
+    source: Lee and Lee, ECCV 2026, Figure 1(b); Google Slides reference page 6
+    licence: paper author asset
+    third_party: false
+  - file: outcome-v-plot.png
+    source: Lee and Lee, ECCV 2026, Figure 1(b); Google Slides reference page 7
+    licence: paper author asset
+    third_party: false
+  - file: outcome-success-photo.png
+    source: Lee and Lee, ECCV 2026, Figure 1(b); Google Slides reference page 5
+    licence: paper author asset
+    third_party: false
+  - file: outcome-catastrophic-photo.png
+    source: Lee and Lee, ECCV 2026, Figure 1(b); Google Slides reference page 6
+    licence: paper author asset
+    third_party: false
+  - file: outcome-graceful-photo.png
+    source: Lee and Lee, ECCV 2026, Figure 1(b); Google Slides reference page 7
+    licence: paper author asset
+    third_party: false

@@ -38,3 +38,16 @@ Sharp-generated AVIF/WebP derivatives use committed source files, fixed widths, 
 - Slides and all slide-bundle fonts.
 - The ECCV navbar SVG. Its official origin was verified, but no current written grant for republication on an independent project site was found; the release uses the text venue label only.
 - New MAUM.AI and SeoulTech derivatives for the redesigned page, following the final text-only affiliation decision. The legacy deck is preserved in immutable history rather than republished.
+
+## 2026-09-01 slide-publication addendum
+
+The ledger above records the first Astro project-page release and remains the provenance record for that release. The authors subsequently and explicitly superseded the slide-exclusion policy while retaining the text-only affiliation policy for the root Astro project page.
+
+The publication boundary is now path-specific:
+
+- `/on-manifold-tfg/` and its normal Astro assets remain text-only for affiliations. MAUM.AI, SeoulTech, and ECCV logos remain excluded from the root page, shared shell, metadata, social card, favicon, and reusable project-page assets.
+- `/on-manifold-tfg/slides/**` publishes the complete 17-slide author-prepared ECCV deck. The slide bundle is intentionally retained as a unit, including the MAUM.AI wordmark, SeoulTech affiliation artwork, official ECCV logo SVG, quoted educational figures, presentation fonts, Reveal support files, and all media required by the deck.
+- The earlier excluded-material entries for slides, slide-bundle fonts, the ECCV logo, and affiliation artwork are therefore superseded only within `/slides/**`. They continue to apply to the root Astro page.
+- Slide-specific logos, quoted figures, artwork, and fonts are presentation material rather than website-code assets. Inclusion in the deployed bundle does not place them under the repository’s MIT license or transfer any copyright or trademark rights.
+
+The immutable legacy tag and snapshot branch remain valid rollback evidence. They are no longer the only public recovery mechanism for the presentation; the current Actions artifact is intended to serve the complete deck directly from the stable `/slides/` URL.

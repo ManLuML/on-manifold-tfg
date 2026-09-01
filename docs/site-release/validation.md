@@ -61,3 +61,16 @@ Production smoke checks confirmed all four legacy fragments, all 18 legacy image
 Production Chromium lab checks observed root LCP 544 ms and CLS 0.00038; project LCP 308 ms, CLS 0.01759, and slider interaction proxy 0.1 ms. Axe reported zero violations on both desktop pages, console errors and failed requests were empty, 320 CSS-pixel layouts had no document overflow, and both normal and 200% text-size accessibility checks passed. These remain lab measurements; no field p75/CrUX data exists for the newly launched pages.
 
 Production screenshots are committed as `production-root-desktop.png`, `production-root-320.png`, `production-project-desktop.png`, `production-project-320.png`, `production-project-formulas.png`, and `production-project-manifold-figure.png` under `docs/site-release/screenshots/`. They visually confirm the desktop/mobile hierarchy, balanced formulas, and camera-ready Figure 1(a) on the public origin.
+
+## 2026-09-01 slide-publication addendum
+
+All evidence above remains the immutable validation record for the first Astro release. A later author-approved change supersedes only the slide-route exclusion: the Actions artifact is now expected to serve the complete 17-slide ECCV deck at `/on-manifold-tfg/slides/` instead of the one-file recovery placeholder.
+
+The release contract is deliberately path-scoped:
+
+- The root project page must continue to show affiliations as text and must contain no MAUM.AI, SeoulTech, or ECCV logo references.
+- The `/slides/**` subtree must preserve the authored deck intact, including its MAUM.AI, SeoulTech, and ECCV logos, quoted educational figures, presentation fonts, Reveal support files, and required media.
+- Automated logo exclusions must therefore inspect the root Astro site while exempting the isolated slide bundle; they must not remove or rewrite presentation assets.
+- Slide validation must confirm the full 17-slide structure, slide numbering, required assets, and absence of private speaker notes before deployment.
+
+The production commit, workflow run, deployed artifact hashes, and live smoke-test results for this addendum must be recorded only after GitHub Pages completes the replacement deployment. Until then, the earlier production table and hashes continue to describe the currently verified first Astro release.

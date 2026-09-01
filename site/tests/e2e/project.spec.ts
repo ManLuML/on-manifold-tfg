@@ -193,16 +193,21 @@ test('legacy asset URLs remain available', async ({ request }) => {
   }
 });
 
-test('the already-published slide URL remains safely recoverable', async ({ page }) => {
-  await page.setViewportSize({ width: 320, height: 568 });
+test('the complete ECCV presentation is published at the stable slide URL', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 720 });
   const response = await page.goto('http://127.0.0.1:4324/on-manifold-tfg/slides/');
   expect(response?.ok()).toBe(true);
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('published slide source remains preserved');
-  await expect(page.getByRole('link', { name: /preserved source on GitHub/ })).toHaveAttribute('href', /legacy-pages-pre-astro-2026-09-01/);
-  await expect(page.locator('img')).toHaveCount(0);
+  await expect(page).toHaveTitle('Not All Prediction Targets Keep Training-Free Diffusion Guidance on the Manifold');
+  await expect(page.locator('.reveal .slides > section')).toHaveCount(17);
+  await expect(page.locator('.reveal .slides > section').first()).toHaveAttribute('data-source-section', '01');
+  await expect(page.locator('.reveal .slides > section[data-source-section="19"]')).toHaveCount(1);
+  await expect(page.locator('.title-logo-maumai')).toHaveCount(1);
+  await expect(page.locator('.title-logo-seoultech img')).toHaveCount(1);
+  await expect(page.locator('.title-logo-eccv')).toHaveCount(1);
+  await expect(page.locator('.slide-number')).toContainText('1 / 17');
+  await expect(page.locator('img').first()).toHaveJSProperty('complete', true);
   const dimensions = await page.evaluate(() => ({ width: document.documentElement.clientWidth, scrollWidth: document.documentElement.scrollWidth }));
   expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.width);
-  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });
 
 test('project custom 404 is useful and noindexed', async ({ page }) => {

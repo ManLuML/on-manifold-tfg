@@ -57,9 +57,26 @@ const compatibility = [
 for (const file of compatibility) await access(path.join(dist, 'static/images', file));
 await access(path.join(dist, 'slides/index.html'));
 const slidesHtml = await readFile(path.join(dist, 'slides/index.html'), 'utf8');
-if (!slidesHtml.includes('legacy-pages-pre-astro-2026-09-01') || /<img|maumai-logo|seoultech-brand-guide|ddpm-fig|jit-fig/i.test(slidesHtml)) {
-  throw new Error('Legacy slide route must remain recoverable without republishing excluded assets.');
+const expectedSlideAssets = [
+  'on-manifold-tfg.css',
+  'assets/eccv-navbar-logo.svg',
+  'assets/maumai-logo.png',
+  'assets/seoultech-brand-guide.png',
+  'assets/outcome-success-photo.png',
+  'assets/outcome-catastrophic-photo.png',
+  'assets/outcome-graceful-photo.png',
+  'fonts/Pretendard-Regular.woff2',
+  'on-manifold-tfg_files/libs/revealjs/dist/reveal.js',
+];
+if (!slidesHtml.includes('Not All Prediction Targets Keep Training-Free Diffusion Guidance on the Manifold')
+  || !slidesHtml.includes('Do prediction targets decide how guidance fails?')
+  || !slidesHtml.includes('data-source-section="19"')
+  || !slidesHtml.includes("slideNumber: 'c/t'")
+  || (slidesHtml.match(/data-source-section=/g) ?? []).length !== 17
+  || /<aside class="notes"|\sdata-notes=/.test(slidesHtml)) {
+  throw new Error('Complete 17-slide public deck is missing, altered, or contains private notes.');
 }
+for (const file of expectedSlideAssets) await access(path.join(dist, 'slides', file));
 for (const file of ['404.html', 'robots.txt', 'sitemap-index.xml', '.nojekyll']) await access(path.join(dist, file));
 
 async function filesUnder(directory) {
@@ -80,12 +97,13 @@ const forbiddenLogoHashes = new Set([
 ]);
 for (const file of builtFiles) {
   const relative = path.relative(dist, file);
+  const isSlideAsset = relative === 'slides' || relative.startsWith(`slides${path.sep}`);
   const buffer = await readFile(file);
-  if (/maumai|maum-ai|seoultech|media\/affiliations/i.test(relative)
-    || forbiddenLogoHashes.has(createHash('sha256').update(buffer).digest('hex'))) {
+  if (!isSlideAsset && (/maumai|maum-ai|seoultech|media\/affiliations/i.test(relative)
+    || forbiddenLogoHashes.has(createHash('sha256').update(buffer).digest('hex')))) {
     throw new Error(`Forbidden affiliation-logo artifact found: ${relative}`);
   }
-  if (/\.(?:html|css|js|json|svg|txt|xml)$/.test(file)
+  if (!isSlideAsset && /\.(?:html|css|js|json|svg|txt|xml)$/.test(file)
     && /(?:src|href|url\()[^\n>)]*(?:maumai-logo|maum-ai\.png|seoultech\.png|seoultech-brand-guide|media\/affiliations)/i.test(buffer.toString('utf8'))) {
     throw new Error(`Forbidden affiliation-logo reference found: ${relative}`);
   }
