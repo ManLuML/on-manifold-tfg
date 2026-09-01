@@ -241,6 +241,12 @@ test('the complete ECCV presentation is published at the stable slide URL', asyn
 
   await page.goto('http://127.0.0.1:4324/on-manifold-tfg/slides/?preview=outcomes#/section-11');
   await expect(page.locator('.slide-number')).toContainText('12 / 18');
+  const outcomeSlide = page.locator('.reveal .slides > section[data-source-section="paper-transition"]');
+  await expect(outcomeSlide.locator('.guidance-sequence-header > p')).toHaveText('Guidance outcomes');
+  await expect(outcomeSlide.locator('.guidance-sequence-header h2')).toHaveText('Do prediction targets decide how guidance fails?');
+  expect(await outcomeSlide.locator('.guidance-sequence-header h2').evaluate((element) => getComputedStyle(element).fontSize)).toBe('48px');
+  expect(await outcomeSlide.locator('.guidance-sequence-header h2').evaluate((element) => element.getClientRects().length)).toBe(1);
+  expect(await outcomeSlide.locator('.guidance-sequence-stage').evaluate((element) => element.getBoundingClientRect().width)).toBeLessThan(850);
   const frames = page.locator('.guidance-sequence-frame');
   await expect(frames).toHaveCount(4);
   expect(await frames.evaluateAll((images) => images.every((image) => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth === 2400 && (image as HTMLImageElement).naturalHeight === 1350))).toBe(true);

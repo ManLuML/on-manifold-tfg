@@ -17,6 +17,9 @@ describe('ECCV slide deck', () => {
     const html = await readFile('public/slides/index.html', 'utf8');
     expect(html).toContain('Not All Prediction Targets Keep Training-Free Diffusion Guidance on the Manifold');
     expect(html).toContain('Do prediction targets decide how guidance fails?');
+    expect(html).toContain('Guidance outcomes');
+    expect(html).toContain('max-w-6xl mx-auto w-full guidance-sequence-header');
+    expect(html).toContain('text-4xl lg:text-5xl whitespace-nowrap');
     expect(html).toContain('data-source-section="19"');
     expect(html).toContain("slideNumber: 'c/t'");
     expect(html.match(/data-source-section=/g)).toHaveLength(18);
