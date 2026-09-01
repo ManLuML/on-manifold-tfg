@@ -427,3 +427,15 @@ The first release is done only when:
 - A large mascot variation or animation system.
 - Redesigning, recoloring, or using MAUM.AI/SeoulTech affiliation marks as ManLuML identity assets.
 - A shared component package before a second project proves the need.
+
+## 17. 2026-09-01 post-launch scope addendum
+
+The author has explicitly superseded the first-release slide exclusion and the earlier page-wide interpretation of the text-only affiliation policy. This addendum changes only the published presentation subtree and does not rewrite the historical plan or first-release validation record.
+
+- The Astro project page at `/on-manifold-tfg/` remains text-only for affiliations. MAUM.AI, SeoulTech, and ECCV logos remain excluded from that page, its shared shell, metadata, social card, favicon, and reusable template assets.
+- The presentation at `/on-manifold-tfg/slides/` is now in scope and must publish the complete current 17-slide ECCV deck, preserving the work produced for the talk as closely as possible.
+- The slide subtree intentionally retains its MAUM.AI and SeoulTech affiliation logos, ECCV logo, quoted educational figures, presentation fonts, Reveal runtime, animations, and required media. Root-page logo-removal checks must not delete, replace, or block those presentation assets.
+- The complete deck replaces the temporary one-file recovery placeholder in the Actions deployment. The immutable legacy tag and snapshot branch remain available for rollback and historical comparison.
+- Slide-specific third-party quotations, institutional artwork, and fonts remain outside the website code’s MIT license and must be described through the slide/publication notice rather than treated as reusable project-page assets.
+
+This addendum supersedes the earlier “Slides” decision in section 3, the “Slides are omitted” statement in section 9, and the slide-deck exclusion in section 16. It also narrows every affiliation-logo exclusion in this plan to the root Astro page and shared site assets; those exclusions do not apply inside `/slides/**`.

@@ -5,12 +5,12 @@ import sharp from 'sharp';
 import { describe, expect, it } from 'vitest';
 
 describe('public asset separation', () => {
-  it('ships no affiliation-logo originals or derivatives', async () => {
+  it('keeps the root project page affiliation artwork text-only', async () => {
     await expect(access('public/media/affiliations/maum-ai.png')).rejects.toBeDefined();
     await expect(access('public/media/affiliations/seoultech.png')).rejects.toBeDefined();
   });
 
-  it('recursively excludes affiliation-logo files, references, and known bytes', async () => {
+  it('excludes affiliation-logo files from the project site while allowing them in the deck', async () => {
     const walk = async (directory: string): Promise<string[]> => (await Promise.all((await readdir(directory, { withFileTypes: true })).map((entry) => {
       const file = path.join(directory, entry.name);
       return entry.isDirectory() ? walk(file) : [file];
@@ -22,6 +22,8 @@ describe('public asset separation', () => {
       'efe18143560eab3d84ba5e0967832f2098407adceb6a6da572c6eb7eecdc6cb7',
     ]);
     for (const file of await walk('public')) {
+      const relative = file.split(path.sep).join('/');
+      if (relative.startsWith('public/slides/')) continue;
       const buffer = await readFile(file);
       expect(file).not.toMatch(/maumai|maum-ai|seoultech|media\/affiliations/i);
       expect(forbidden.has(createHash('sha256').update(buffer).digest('hex'))).toBe(false);

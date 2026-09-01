@@ -26,6 +26,12 @@ The result comparison and recovery-error slider are the two explanatory interact
 
 `public/slides/index.html` keeps a slide URL published on the legacy deployment recoverable while linking its immutable rollback tag. It does not republish the deck’s excluded assets and is not linked as a primary project resource.
 
+### 2026-09-01 slide-publication addendum
+
+The paragraph above records the initial Astro launch policy and is superseded for the slide route only. `public/slides/` now contains the complete 17-slide ECCV presentation and is published at `https://manluml.github.io/on-manifold-tfg/slides/`. The bundle is kept intact, including its MAUM.AI, SeoulTech, and ECCV logo artwork, quoted educational figures, presentation fonts, Reveal runtime, and supporting media.
+
+This change does not alter the root project-page policy. The Astro page at `/on-manifold-tfg/` continues to render affiliations as text and must not import affiliation or venue logos. Logo-bearing material is permitted only within the independently authored `/slides/**` presentation subtree.
+
 ## Deployment and rollback
 
 Pull requests run the same schema, type, build, accessibility, interaction, screenshot, link, and performance checks used by deployment. The default branch deploys through `.github/workflows/pages.yml`. The final legacy production is preserved at tag `legacy-pages-pre-astro-2026-09-01` and snapshot branch `legacy-pages-pre-astro`; the earlier rollback tag also remains intact. See `../docs/site-release/rollback.md`.

@@ -23,3 +23,9 @@ The compatibility set contains the following 18 URLs below `/on-manifold-tfg/sta
 The legacy branch advanced during release preparation to publish `/on-manifold-tfg/slides/`. Its complete deck remains immutable and recoverable through the final tag and snapshot branch. The Actions artifact keeps the stable `/slides/` route as a one-file recovery page but does not republish the deck’s excluded third-party quotations, fonts, or institution artwork.
 
 The legacy page used Bulma, Font Awesome, Academicons, and MathJax at runtime. The rebuild preserves useful metadata, alternative text, intrinsic image dimensions, WebP coverage, the canonical URL, and copyable BibTeX while removing the runtime CDN dependencies and placeholder paper link.
+
+## 2026-09-01 post-baseline slide-publication addendum
+
+This document remains the frozen baseline for the pre-Astro deployment. The one-file `/slides/` recovery page described above was the intentional behavior of the first Astro Actions artifact, not a permanent restriction on the presentation route.
+
+After that launch, the authors explicitly directed the project to republish the complete, current 17-slide ECCV deck at `/on-manifold-tfg/slides/`. The root Astro page retains its text-only affiliation treatment, while the isolated `/slides/**` bundle keeps the presentation’s MAUM.AI, SeoulTech, and ECCV logos, quoted educational figures, fonts, runtime, and supporting media intact. The legacy tag, tree, and snapshot values above remain unchanged and continue to provide rollback history.
