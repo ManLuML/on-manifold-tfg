@@ -111,3 +111,11 @@ figures:
     source: SeoulTech brand asset supplied by presenter
     licence: presenter-supplied brand asset
     third_party: false
+  - file: eccv-navbar-logo.svg
+    source: https://eccv.ecva.net/static/core/img/eccv-navbar-logo.svg
+    licence: official conference brand asset
+    third_party: true
+  - file: paper-teaser.png
+    source: Lee and Lee, ECCV 2026, Figure 1
+    licence: paper author asset
+    third_party: false

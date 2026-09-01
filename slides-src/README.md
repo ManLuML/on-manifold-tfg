@@ -4,7 +4,7 @@ This directory is the canonical editable source for the ECCV 2026 presentation
 *Not All Prediction Targets Keep Training-Free Diffusion Guidance on the
 Manifold*.
 
-- `on-manifold-tfg.qmd` contains the 16-slide deck.
+- `on-manifold-tfg.qmd` contains the 17-slide deck.
 - `on-manifold-tfg.css` contains the deck-local design and full-screen
   occupancy settings.
 - `clean-academic.scss` is the pinned Reveal theme dependency.
