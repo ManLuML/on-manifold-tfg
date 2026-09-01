@@ -83,6 +83,9 @@ const expectedSlideAssets = [
 ];
 if (!slidesHtml.includes('Not All Prediction Targets Keep Training-Free Diffusion Guidance on the Manifold')
   || !slidesHtml.includes('Do prediction targets decide how guidance fails?')
+  || !slidesHtml.includes('Guidance outcomes')
+  || !slidesHtml.includes('max-w-6xl mx-auto w-full guidance-sequence-header')
+  || !slidesHtml.includes('text-4xl lg:text-5xl whitespace-nowrap')
   || !slidesHtml.includes('data-source-section="19"')
   || !slidesHtml.includes('data-source-section="task-benchmark"')
   || !slidesHtml.includes('rewrite=google-slides-sequence-5-6-7-4')
