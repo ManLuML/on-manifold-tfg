@@ -139,3 +139,19 @@ figures:
     source: Lee and Lee, ECCV 2026, Figure 1(b); Google Slides reference page 7
     licence: paper author asset
     third_party: false
+  - file: guidance-sequence-05-success.png
+    source: Lee and Lee, ECCV 2026; Google Slides revision A3DrOVsNeQSPhQ, page 5
+    licence: paper author asset
+    third_party: false
+  - file: guidance-sequence-06-catastrophic.png
+    source: Lee and Lee, ECCV 2026; Google Slides revision A3DrOVsNeQSPhQ, page 6
+    licence: paper author asset
+    third_party: false
+  - file: guidance-sequence-07-graceful.png
+    source: Lee and Lee, ECCV 2026; Google Slides revision A3DrOVsNeQSPhQ, page 7
+    licence: paper author asset
+    third_party: false
+  - file: guidance-sequence-04-combined.png
+    source: Lee and Lee, ECCV 2026; Google Slides revision A3DrOVsNeQSPhQ, page 4
+    licence: paper author asset
+    third_party: false
