@@ -54,6 +54,29 @@ for (const figure of figures) {
   }
 }
 
+const failureCrops = [
+  { slug: 'jit-failure-mobile', input: 'vis_off_jit.jpg' },
+  { slug: 'sit-failure-mobile', input: 'vis_off_sit.jpg' },
+  { slug: 'dit-failure-mobile', input: 'vis_off_dit.jpg' },
+];
+
+for (const crop of failureCrops) {
+  const input = path.join(sourceDir, crop.input);
+  const raster = sharp(input)
+    .extract({ left: 0, top: 0, width: 1220, height: 1304 })
+    .resize({ width: 640 });
+  const base = path.join(figuresDir, `${crop.slug}-640`);
+  const avifOutput = `${base}.avif`;
+  const webpOutput = `${base}.webp`;
+  const jpegOutput = `${base}.jpg`;
+  await Promise.all([
+    raster.clone().avif({ quality: 57, effort: 6 }).toFile(avifOutput),
+    raster.clone().webp({ quality: 84 }).toFile(webpOutput),
+    raster.clone().jpeg({ quality: 88, mozjpeg: true }).toFile(jpegOutput),
+  ]);
+  generated.push(avifOutput, webpOutput, jpegOutput);
+}
+
 const visual = await sharp(path.join(sourceDir, 'figure-1a.png'))
   .resize({ width: 420, height: 500, fit: 'contain', background: '#F7FAFC' })
   .png()

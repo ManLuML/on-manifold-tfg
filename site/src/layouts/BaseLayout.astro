@@ -29,17 +29,16 @@ const structuredData = {
   abstract,
   url: canonical,
   image: socialImage,
-  datePublished: '2026-07-01',
   dateModified: '2026-09-01',
-  version: 'Accepted camera-ready source reviewed at commit 22954ee7f9f7d0e58d61db34474f3d6a15ec8a07',
+  version: 'Accepted at ECCV 2026',
   author: [
     { '@type': 'Person', name: 'Yunsung Lee', url: 'https://github.com/alohays', affiliation: { '@type': 'Organization', name: 'Maum AI' } },
     { '@type': 'Person', name: 'Hyeongmin Lee', url: 'https://hyeongminlee.github.io/', affiliation: { '@type': 'CollegeOrUniversity', name: 'Seoul National University of Science and Technology' } },
   ],
   isPartOf: { '@type': 'PublicationIssue', name: 'European Conference on Computer Vision (ECCV) 2026' },
-  associatedMedia: { '@type': 'MediaObject', name: 'Public arXiv v1 preprint (2026-07-01)', contentUrl: paperUrl, encodingFormat: 'application/pdf' },
+  associatedMedia: { '@type': 'MediaObject', name: 'Public arXiv preprint', datePublished: '2026-07-01', contentUrl: paperUrl, encodingFormat: 'application/pdf' },
   inLanguage: 'en',
-  sameAs: ['https://arxiv.org/abs/2607.00647', 'https://github.com/ManLuML/on-manifold-tfg'],
+  sameAs: ['https://eccv.ecva.net/virtual/2026/poster/4934', 'https://arxiv.org/abs/2607.00647', 'https://github.com/ManLuML/on-manifold-tfg'],
 };
 ---
 
@@ -79,7 +78,6 @@ const structuredData = {
         <meta name="citation_conference_title" content="European Conference on Computer Vision (ECCV)" />
         <meta name="citation_pdf_url" content={paperUrl} />
         <meta name="citation_abstract" content={abstract} />
-        <meta name="citation_version" content="Accepted camera-ready source; public PDF is arXiv v1" />
         <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)} />
       </>
     )}

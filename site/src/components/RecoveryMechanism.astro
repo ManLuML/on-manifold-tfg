@@ -1,0 +1,129 @@
+---
+const base = import.meta.env.BASE_URL;
+---
+
+<div class="recovery-mechanism">
+  <div class="time-focus">
+    <div>
+      <p class="eyebrow">Where the failure begins</p>
+      <h3>The earliest, noisiest steps set global structure.</h3>
+      <p>TFG needs a clean-image estimate before the image is clean. This is exactly where ε-recovery is singular and the manifold-restoring force is weakest.</p>
+    </div>
+    <div class="time-axis" role="img" aria-label="Sampling runs from high noise near t equals zero to clean data at t equals one; the paper focuses on the early high-noise region">
+      <div class="axis-labels"><strong>High noise · t → 0</strong><span>Clean data · t → 1</span></div>
+      <div class="axis-track"><span></span></div>
+      <p>Critical guidance regime</p>
+    </div>
+  </div>
+
+  <div class="recovery-rows" aria-label="Clean-image recovery error by prediction target">
+    <article class="x">
+      <div class="target"><span>x</span><strong>Direct</strong></div>
+      <div class="formula-visual" aria-hidden="true"><span class="norm">‖</span><span>x̂<sup>(x)</sup> − x</span><span class="norm">‖</span><span>= δ<sub>x</sub></span></div>
+      <math class="sr-math"><mrow><mo>‖</mo><msup><mover><mi>x</mi><mo>^</mo></mover><mrow><mo>(</mo><mi>x</mi><mo>)</mo></mrow></msup><mo>−</mo><mi>x</mi><mo>‖</mo><mo>=</mo><msub><mi>δ</mi><mi>x</mi></msub></mrow></math>
+      <p>No singular recovery factor.</p>
+    </article>
+    <article class="v">
+      <div class="target"><span>v</span><strong>Bounded</strong></div>
+      <div class="formula-visual" aria-hidden="true"><span class="norm">‖</span><span>x̂<sup>(v)</sup> − x</span><span class="norm">‖</span><span>= (1 − t)δ<sub>v</sub></span></div>
+      <math class="sr-math"><mrow><mo>‖</mo><msup><mover><mi>x</mi><mo>^</mo></mover><mrow><mo>(</mo><mi>v</mi><mo>)</mo></mrow></msup><mo>−</mo><mi>x</mi><mo>‖</mo><mo>=</mo><mo>(</mo><mn>1</mn><mo>−</mo><mi>t</mi><mo>)</mo><msub><mi>δ</mi><mi>v</mi></msub></mrow></math>
+      <p>The multiplier never exceeds one.</p>
+    </article>
+    <article class="epsilon">
+      <div class="target"><span>ε</span><strong>Singular</strong></div>
+      <div class="formula-visual" aria-hidden="true"><span class="norm">‖</span><span>x̂<sup>(ε)</sup> − x</span><span class="norm">‖</span><span>=</span><span class="fraction"><span>1 − t</span><span>t</span></span><span>δ<sub>ε</sub></span></div>
+      <math class="sr-math"><mrow><mo>‖</mo><msup><mover><mi>x</mi><mo>^</mo></mover><mrow><mo>(</mo><mi>ε</mi><mo>)</mo></mrow></msup><mo>−</mo><mi>x</mi><mo>‖</mo><mo>=</mo><mfrac><mrow><mn>1</mn><mo>−</mo><mi>t</mi></mrow><mi>t</mi></mfrac><msub><mi>δ</mi><mi>ε</mi></msub></mrow></math>
+      <p>The multiplier diverges as t → 0.</p>
+    </article>
+  </div>
+
+  <p class="coefficient-note"><strong>These are recovery multipliers, not equal-error measurements.</strong> The base errors δ<sub>x</sub>(t), δ<sub>v</sub>(t), and δ<sub>ε</sub>(t) differ. The clean endpoint t=1 is not a robustness comparison: z<sub>1</sub>=x, so v- and ε-recovery return the already-clean state without using their predictions.</p>
+
+  <div class="manifold-evidence-grid">
+    <figure class="manifold-figure">
+      <picture>
+        <source type="image/avif" srcset={`${base}media/figures/figure-1a-720.avif 720w, ${base}media/figures/figure-1a-960.avif 960w`} sizes="(max-width: 860px) calc(100vw - 2rem), 520px" />
+        <source type="image/webp" srcset={`${base}media/figures/figure-1a-720.webp 720w, ${base}media/figures/figure-1a-960.webp 960w`} sizes="(max-width: 860px) calc(100vw - 2rem), 520px" />
+        <img src={`${base}media/figures/figure-1a-960.png`} srcset={`${base}media/figures/figure-1a-720.png 720w, ${base}media/figures/figure-1a-960.png 960w`} sizes="(max-width: 860px) calc(100vw - 2rem), 520px" width="960" height="1068" loading="lazy" decoding="async" alt="Paper Figure 1(a): x-prediction follows the data manifold from a noisy state toward the target region, while v- and epsilon-prediction can depart from the manifold" />
+      </picture>
+      <figcaption><strong>Mechanism.</strong> Guidance acts through the recovered clean image. Direct x-prediction follows the manifold toward the target; unstable indirect recovery can send the trajectory away from it.</figcaption>
+    </figure>
+
+    <div class="dimension-evidence">
+      <figure>
+        <picture>
+          <source type="image/avif" srcset={`${base}media/figures/onmanifold-vs-dim-720.avif 720w`} sizes="(max-width: 860px) calc(100vw - 2rem), 560px" />
+          <source type="image/webp" srcset={`${base}media/figures/onmanifold-vs-dim-720.webp 720w`} sizes="(max-width: 860px) calc(100vw - 2rem), 560px" />
+          <img src={`${base}media/figures/onmanifold-vs-dim-720.png`} width="720" height="532" loading="lazy" decoding="async" alt="On-manifold rate versus ambient dimension; x-prediction stays high while v-prediction declines and epsilon-prediction approaches zero" />
+        </picture>
+        <figcaption><strong>Controlled evidence.</strong> Identical networks, data, training, guidance, and sampling; only the prediction objective changes.</figcaption>
+      </figure>
+      <dl aria-label="On-manifold rate at ambient dimension 512">
+        <div class="x"><dt>x-prediction</dt><dd>93.3%</dd></div>
+        <div class="v"><dt>v-prediction</dt><dd>21.5%</dd></div>
+        <div class="epsilon"><dt>ε-prediction</dt><dd>0.5%</dd></div>
+      </dl>
+      <p class="result-note">On-manifold rate at D=512. The empirical ordering is measured; it is not inferred by pretending the three base errors are equal.</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .recovery-mechanism { margin-top: 2.5rem; }
+  .time-focus { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(20rem, 1.1fr); gap: clamp(2rem, 5vw, 4rem); align-items: end; padding: 1.5rem 0; border-block: 1px solid var(--line); }
+  .eyebrow { margin: 0 0 0.35rem; color: var(--navy); font-size: 0.72rem; font-weight: 850; letter-spacing: 0.14em; text-transform: uppercase; }
+  h3 { margin: 0; font-size: clamp(1.55rem, 2.8vw, 2.25rem); letter-spacing: -0.035em; line-height: 1.1; }
+  .time-focus > div:first-child > p:last-child { margin: 0.75rem 0 0; color: var(--slate); }
+  .axis-labels { display: flex; justify-content: space-between; gap: 1rem; color: var(--muted); font-size: 0.8rem; }
+  .axis-labels strong { color: var(--error); }
+  .axis-track { position: relative; height: 0.55rem; margin-top: 0.65rem; border-radius: 999px; background: linear-gradient(90deg, var(--error) 0%, #d98a80 24%, #dbe4ef 62%, #edf2f7 100%); }
+  .axis-track::before, .axis-track::after { position: absolute; top: 50%; width: 0.8rem; height: 0.8rem; border: 2px solid white; border-radius: 50%; content: ''; transform: translateY(-50%); }
+  .axis-track::before { left: 0; background: var(--error); }
+  .axis-track::after { right: 0; background: var(--navy); }
+  .axis-track span { position: absolute; inset: -0.22rem auto -0.22rem 26%; border-left: 2px solid var(--error); }
+  .time-axis > p { margin: 0.55rem 0 0; color: var(--error); font-size: 0.76rem; font-weight: 760; }
+  .recovery-rows { margin-top: 2rem; }
+  .recovery-rows article { display: grid; grid-template-columns: 9rem minmax(0, 1fr) minmax(12rem, 0.42fr); gap: 1.25rem; align-items: center; padding: 1.15rem 0; border-top: 2px solid var(--navy); }
+  .recovery-rows article.v { border-top-color: var(--cyan-dark); }
+  .recovery-rows article.epsilon { border-top-color: var(--error); }
+  .target { display: flex; align-items: baseline; gap: 0.65rem; }
+  .target span { font-size: 1.8rem; font-weight: 750; line-height: 1; }
+  .target strong { color: var(--muted); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .formula-visual { display: flex; min-height: 3rem; align-items: center; flex-wrap: wrap; gap: 0.12em; color: #263b5c; font-size: clamp(1.18rem, 2vw, 1.6rem); line-height: 1.25; }
+  .formula-visual sup, .formula-visual sub { font-size: 0.64em; }
+  .norm { font-size: 1.3em; font-weight: 400; }
+  .fraction { display: inline-grid; grid-template-rows: auto auto; min-width: 2.3em; align-items: center; margin-inline: 0.1em; text-align: center; line-height: 1; }
+  .fraction span:first-child { padding: 0 0.14em 0.08em; border-bottom: 1.5px solid currentColor; }
+  .fraction span:last-child { padding-top: 0.08em; }
+  .sr-math { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .recovery-rows article > p { margin: 0; color: var(--slate); font-size: 0.88rem; }
+  .coefficient-note { max-width: 68rem; margin: 1.25rem 0 0; padding: 1rem 0 0; border-top: 1px solid var(--line); color: var(--slate); font-size: 0.88rem; }
+  .manifold-evidence-grid { display: grid; grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr); gap: clamp(1.5rem, 4vw, 3rem); align-items: start; margin-top: 3rem; }
+  figure { min-width: 0; margin: 0; }
+  picture { display: block; overflow: hidden; border: 1px solid var(--line); background: white; }
+  img { width: 100%; }
+  figcaption { margin-top: 0.8rem; color: var(--slate); font-size: 0.86rem; line-height: 1.55; }
+  .dimension-evidence dl { margin: 1rem 0 0; }
+  .dimension-evidence dl div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.35rem 1rem; padding: 0.55rem 0; border-top: 2px solid var(--navy); }
+  .dimension-evidence dl div.v { border-top-color: var(--cyan-dark); }
+  .dimension-evidence dl div.epsilon { border-top-color: var(--error); }
+  dt { color: var(--slate); }
+  dd { min-width: 0; margin: 0 0 0 auto; font-size: 1.2rem; font-weight: 850; font-variant-numeric: tabular-nums; }
+  .result-note { margin: 0.75rem 0 0; color: var(--muted); font-size: 0.8rem; }
+
+  @media (max-width: 860px) {
+    .time-focus, .manifold-evidence-grid { grid-template-columns: minmax(0, 1fr); }
+    .recovery-rows article { grid-template-columns: 7rem minmax(0, 1fr); }
+    .recovery-rows article > p { grid-column: 2; }
+  }
+  @media (max-width: 560px) {
+    .time-focus { gap: 1.5rem; }
+    .axis-labels { align-items: flex-start; flex-direction: column; gap: 0.2rem; }
+    .recovery-rows article { grid-template-columns: minmax(0, 1fr); gap: 0.45rem; }
+    .recovery-rows article > p { grid-column: 1; }
+  }
+  @media (max-width: 480px) {
+    .dimension-evidence figure { display: none; }
+    .dimension-evidence dl { margin-top: 0; }
+  }
+</style>

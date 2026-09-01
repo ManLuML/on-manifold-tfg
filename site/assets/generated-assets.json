@@ -44,6 +44,9 @@
     "public/media/figures/dit-failure-grid-720.avif": "3dc7e861183a84b3e6eb21dcbd481dd31338ef60aa5b74d075dce9e38b1a9da4",
     "public/media/figures/dit-failure-grid-720.jpg": "55f283b3ebf84ed9d6ea588b29cc48318af1aa42db6dcaed45916dbcc3eab488",
     "public/media/figures/dit-failure-grid-720.webp": "28bb80fa89a7a6e8e40c7e338da29017d4684958e5de21ad93712ff37115b8ba",
+    "public/media/figures/dit-failure-mobile-640.avif": "c28b54d3ebc0e7945f34726dede23cf6d9196f85b48df6f57c2ae8866cd15bc7",
+    "public/media/figures/dit-failure-mobile-640.jpg": "dbdfc9f93f2d152f4e8b5f5f454bfc15dbe07d8e72d74bc10a7f0e9f126e7676",
+    "public/media/figures/dit-failure-mobile-640.webp": "84a42f86ce6c1441308fb13ecdd529a5145c4f98a1fde955f381d8e38913958b",
     "public/media/figures/figure-1a-720.avif": "3f25a8274ad43c70b9022a0885acd25c2802862ab9eed42a2c7434f823e064e6",
     "public/media/figures/figure-1a-720.png": "c21694792c5b6f43c098639598a14beccaba7b703da732190bc7cb460a8b7d06",
     "public/media/figures/figure-1a-720.webp": "3346a45a91521af0ef816909c133cc3a73e42d2fd63bb37b875ea189e50429d2",
@@ -65,6 +68,9 @@
     "public/media/figures/jit-failure-grid-720.avif": "b1937ed655aa170bb58ad9eaef839b6803c9880c241887e17d18b303e176959c",
     "public/media/figures/jit-failure-grid-720.jpg": "2567a2180e72419358d95557e9a29fe2a783a36a80e99bc227382f3dd2f0a155",
     "public/media/figures/jit-failure-grid-720.webp": "d6483d35bb25f83f476f023613693b9ead85b6df3bf4b7e38fcdba496b9cfec5",
+    "public/media/figures/jit-failure-mobile-640.avif": "d11db9acba072f5685ede7f276e130a37e249e88f897931c90ab51b662d05496",
+    "public/media/figures/jit-failure-mobile-640.jpg": "7a5061d386789d1a270cbe9b34c52219899cbe0a86bf55a75c3269fc0a2eebf4",
+    "public/media/figures/jit-failure-mobile-640.webp": "409915ddce2416dc252e7f3d5a62453eebac044e65a1b05afef3ea4d0561ef08",
     "public/media/figures/lgd-640.avif": "5bea061feb87919c8b3a36660e93efb5ebd8556d72769b6974058e20882a7523",
     "public/media/figures/lgd-640.png": "59f0855985cfa0d205ca51e27843e1f6c84f000d30264d1cf5f999293d740ea6",
     "public/media/figures/lgd-640.webp": "ef9147faf25d9ce59548a81892df504a75a3c231dedf9d689f804098dd2b4256",
@@ -101,6 +107,9 @@
     "public/media/figures/sit-failure-grid-720.avif": "5ae16327ca33898d7238d6b5929d8db4b377a105f95cbc52672ad484a9b561b7",
     "public/media/figures/sit-failure-grid-720.jpg": "9aa629949576a4f584400283c770b34107470a6c0a4a214fa6ef537b7e35189d",
     "public/media/figures/sit-failure-grid-720.webp": "faa7d762423fa4fc813ffd96f6503c2c3bfe3c305181d609438c59a7c2c4830c",
+    "public/media/figures/sit-failure-mobile-640.avif": "4d603cfeb183ae3517cd96ac7deece0fa0c0eb03ec8a00cdbfd5b92ca701e218",
+    "public/media/figures/sit-failure-mobile-640.jpg": "3a26234a48db746fa2d67c03843c993daa5cd1a4b19f5744585b7409c7ee2127",
+    "public/media/figures/sit-failure-mobile-640.webp": "748045c254f0b2d5e17c2f25b01fbc192e1da2653b81cb8bb7a46e1bf31ab73f",
     "public/media/figures/style-640.avif": "96c042218d9cbba33569fcd535deb59cf438ca23da7980cc780fd38105e598f3",
     "public/media/figures/style-640.png": "ce25390fab9d2de5a8ddcd4f2901a2032926664816318909ab54d69c5d6d93e3",
     "public/media/figures/style-640.webp": "09ab506e14dbecf7cf3e979d15a2200f645734753d95303deaf7af2fce0d3cb5",
@@ -253,6 +262,6 @@
     "public/static/images/vis_on_dit.webp": "278c88e6d46ba11d134becc930bc01a3b2d55a92f3cef2d9b32d8ce5cebfa16b",
     "public/static/images/vis_on_jit.jpg": "4d9967f8f9a7d70d64b4ddfa8a8212420562f3ca0f197dc4c845f3e36379010d",
     "public/static/images/vis_on_jit.webp": "4077c1c94ac7f8e1d754d34416e959aa1f80ab9a453e04c064772a1de29a9a04",
-    "scripts/process-assets.mjs": "6c944a14bf53f1e2b1f50677cc695ec961c89d6b924369df97bae9e1691ecb72"
+    "scripts/process-assets.mjs": "81b400a3dcbe3ca6873427e00acf9ea027bd7e776872129b80cc5e1c10ed8b0f"
   }
 }

@@ -22,6 +22,7 @@ const projects = defineCollection({
       affiliation: z.string().min(1),
     })).length(2),
     links: z.object({
+      official: url,
       paper: url,
       paperAbstract: url,
       code: url,

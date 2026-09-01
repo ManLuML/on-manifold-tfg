@@ -37,4 +37,11 @@ describe('public asset separation', () => {
     const metadata = await sharp('public/og/project-card.png').metadata();
     expect([metadata.width, metadata.height]).toEqual([1200, 630]);
   });
+
+  it('ships matched mobile crops for the scroll-native failure sequence', async () => {
+    for (const target of ['jit', 'sit', 'dit']) {
+      const metadata = await sharp(`public/media/figures/${target}-failure-mobile-640.jpg`).metadata();
+      expect([metadata.width, metadata.height]).toEqual([640, 684]);
+    }
+  });
 });

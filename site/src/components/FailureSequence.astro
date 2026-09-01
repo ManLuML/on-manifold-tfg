@@ -1,0 +1,107 @@
+---
+const base = import.meta.env.BASE_URL;
+const targets = [
+  {
+    id: 'x',
+    symbol: 'x',
+    rank: '1 · most robust',
+    label: 'x-prediction',
+    model: 'JiT-H/16 · pixel space',
+    outcome: 'Mostly realistic misses',
+    slug: 'jit-failure-grid',
+    alt: 'Grid of JiT x-prediction bird samples under strong guidance; most remain coherent natural birds even when some miss the requested species',
+    copy: 'Strong guidance can miss the requested species, yet the samples still look like plausible birds. The failure stays graceful because visual structure survives.',
+  },
+  {
+    id: 'v',
+    symbol: 'v',
+    rank: '2 · intermediate',
+    label: 'v-prediction',
+    model: 'SiT-XL/2 · latent space',
+    outcome: 'Visible degradation',
+    slug: 'sit-failure-grid',
+    alt: 'Grid of SiT v-prediction bird samples under strong guidance; structure is less stable than x-prediction but more coherent than epsilon-prediction',
+    copy: 'The clean-image estimate is recovered with a bounded multiplier. Samples occupy the middle ground: recognizable more often than ε-prediction, but less stable than x-prediction.',
+  },
+  {
+    id: 'epsilon',
+    symbol: 'ε',
+    rank: '3 · least robust',
+    label: 'ε-prediction',
+    model: 'DiT-XL/2 · latent space',
+    outcome: 'Severe off-manifold artifacts',
+    slug: 'dit-failure-grid',
+    alt: 'Grid of DiT epsilon-prediction bird samples under strong guidance; many contain severe artifacts and collapsed bird-like textures',
+    copy: 'Early recovery errors can be amplified without bound. Under strong guidance, classifier-friendly textures replace coherent anatomy and the failure becomes catastrophic.',
+  },
+];
+---
+
+<ol class="failure-sequence" aria-label="Prediction-target failure modes from most to least robust">
+  {targets.map((target) => (
+    <li class:list={['failure-band', target.id]}>
+      <div class="failure-copy">
+        <p class="rank">{target.rank}</p>
+        <p class="target"><span>{target.symbol}</span>{target.label}</p>
+        <p class="model">{target.model}</p>
+        <h3>{target.outcome}</h3>
+        <p>{target.copy}</p>
+      </div>
+      <figure>
+        <picture>
+          <source media="(max-width: 560px)" type="image/avif" srcset={`${base}media/figures/${target.slug.replace('-grid', '-mobile')}-640.avif 640w`} sizes="calc(100vw - 2rem)" />
+          <source media="(max-width: 560px)" type="image/webp" srcset={`${base}media/figures/${target.slug.replace('-grid', '-mobile')}-640.webp 640w`} sizes="calc(100vw - 2rem)" />
+          <source media="(max-width: 560px)" type="image/jpeg" srcset={`${base}media/figures/${target.slug.replace('-grid', '-mobile')}-640.jpg 640w`} sizes="calc(100vw - 2rem)" />
+          <source type="image/avif" srcset={`${base}media/figures/${target.slug}-720.avif 720w, ${base}media/figures/${target.slug}-1400.avif 1400w, ${base}media/figures/${target.slug}-2200.avif 2200w`} sizes="(max-width: 760px) calc(100vw - 2rem), 820px" />
+          <source type="image/webp" srcset={`${base}media/figures/${target.slug}-720.webp 720w, ${base}media/figures/${target.slug}-1400.webp 1400w, ${base}media/figures/${target.slug}-2200.webp 2200w`} sizes="(max-width: 760px) calc(100vw - 2rem), 820px" />
+          <img
+            src={`${base}media/figures/${target.slug}-1400.jpg`}
+            srcset={`${base}media/figures/${target.slug}-720.jpg 720w, ${base}media/figures/${target.slug}-1400.jpg 1400w, ${base}media/figures/${target.slug}-2200.jpg 2200w`}
+            sizes="(max-width: 760px) calc(100vw - 2rem), 820px"
+            width="1400"
+            height="468"
+            loading="lazy"
+            decoding="async"
+            alt={target.alt}
+          />
+        </picture>
+      </figure>
+    </li>
+  ))}
+</ol>
+
+<p class="sequence-note"><strong>Read the sequence, then test the cause.</strong> These pretrained models make the failure ordering visible. The controlled studies below separate prediction target from architecture, capacity, and operating space.</p>
+
+<style>
+  .failure-sequence { margin: 2.5rem 0 0; padding: 0; list-style: none; }
+  .failure-band {
+    display: grid;
+    grid-template-columns: minmax(14rem, 0.34fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 3.25rem);
+    align-items: center;
+    padding: 2rem 0;
+    border-top: 2px solid var(--navy);
+  }
+  .failure-band.v { border-top-color: var(--cyan-dark); }
+  .failure-band.epsilon { border-top-color: var(--error); }
+  .rank { margin: 0 0 0.65rem; color: var(--navy); font-size: 0.72rem; font-weight: 850; letter-spacing: 0.13em; text-transform: uppercase; }
+  .v .rank { color: var(--cyan-dark); }
+  .epsilon .rank { color: var(--error); }
+  .target { display: flex; align-items: baseline; gap: 0.55rem; margin: 0; color: var(--slate); font-weight: 760; }
+  .target span { color: var(--ink); font-size: 1.7rem; font-weight: 750; line-height: 1; }
+  .model { margin: 0.35rem 0 0; color: var(--muted); font-size: 0.76rem; font-weight: 760; letter-spacing: 0.06em; text-transform: uppercase; }
+  h3 { margin: 0.8rem 0 0.5rem; font-size: clamp(1.55rem, 2.7vw, 2.25rem); letter-spacing: -0.035em; line-height: 1.08; }
+  .failure-copy > p:last-child { margin: 0; color: var(--slate); }
+  figure { min-width: 0; margin: 0; }
+  picture { display: block; overflow: hidden; border: 1px solid var(--line); background: #edf1f6; }
+  img { width: 100%; }
+  .sequence-note { max-width: 62rem; margin: 1rem 0 0; padding: 1rem 0 0; border-top: 1px solid var(--line); color: var(--slate); font-size: 0.9rem; }
+
+  @media (max-width: 760px) {
+    .failure-band { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; padding: 1.75rem 0 2.25rem; }
+  }
+  @media (max-width: 560px) {
+    picture { aspect-ratio: 640 / 684; }
+    picture img { width: 100%; height: 100%; object-fit: cover; }
+  }
+</style>

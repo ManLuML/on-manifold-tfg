@@ -171,12 +171,15 @@ on-manifold-tfg/
 
 ```bibtex
 @inproceedings{lee2026onmanifold,
-  title     = {Not All Prediction Targets Keep Training-Free Diffusion Guidance on the Manifold},
   author    = {Lee, Yunsung and Lee, Hyeongmin},
-  booktitle = {European Conference on Computer Vision (ECCV)},
-  year      = {2026}
+  title     = {Not All Prediction Targets Keep Training-Free Diffusion Guidance on the Manifold},
+  booktitle = {Computer Vision -- ECCV 2026},
+  year      = {2026},
+  note      = {To appear}
 }
 ```
+
+The official ECCV listing confirms the title, authors, and acceptance. Volume, pages, and DOI will be added after Springer publishes the paper-level proceedings record.
 
 ---
 

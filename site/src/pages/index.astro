@@ -1,8 +1,9 @@
 ---
 import { getEntry } from 'astro:content';
 import ResponsiveFigure from '../components/ResponsiveFigure.astro';
-import AmplificationExplorer from '../components/interactive/AmplificationExplorer.astro';
-import ResultExplorer from '../components/interactive/ResultExplorer.astro';
+import FailureSequence from '../components/FailureSequence.astro';
+import RecoveryMechanism from '../components/RecoveryMechanism.astro';
+import { citationBibtex } from '../content/citation';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const entry = await getEntry('projects', 'on-manifold-tfg');
@@ -11,7 +12,8 @@ if (!entry) throw new Error('Project content is missing.');
 const project = entry.data;
 const base = import.meta.env.BASE_URL;
 const pageTitle = `${project.title} — ECCV 2026`;
-const pageDescription = 'Prediction target determines whether training-free guidance fails gracefully or catastrophically. Explore the equations, controls, results, resources, and limitations.';
+const pageDescription = 'Prediction target determines whether training-free guidance fails gracefully or catastrophically. Explore the mechanism, realistic TFG benchmark, controlled evidence, and released resources.';
+const titleParts = project.title.split('Training-Free');
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription} abstract={project.abstract}>
@@ -22,16 +24,20 @@ const pageDescription = 'Prediction target determines whether training-free guid
     </a>
     <nav aria-label="Project navigation">
       <a href="#abstract">Thesis</a>
+      <a href="#benchmark">Benchmark</a>
       <a href="#resources">Resources</a>
     </nav>
   </header>
 
   <main id="main-content">
     <header class="project-hero" id="top">
-      <div class="hero-copy">
+      <div class="hero-heading">
         <p class="venue">{project.venue}</p>
-        <h1>{project.title}</h1>
+        <h1>{titleParts[0]}<span class="nowrap">Training-Free</span>{titleParts[1]}</h1>
+      </div>
 
+      <div class="hero-grid">
+        <div class="hero-copy">
         <p class="authors">
           {project.authors.map((author, index) => (
             <>
@@ -60,23 +66,18 @@ const pageDescription = 'Prediction target determines whether training-free guid
           <a href="#resources">Data <span aria-hidden="true">↓</span></a>
           <a href="#bibtex">Cite <span aria-hidden="true">↓</span></a>
         </nav>
-      </div>
+        </div>
 
-      <aside class="hero-thesis" aria-label="Headline result">
-        <p class="thesis-label">TFG robustness ranking</p>
-        <ol class="robustness-ranking" aria-label="Prediction targets ranked from most to least robust for training-free guidance">
-          <li class="x"><span>1</span><strong>x-prediction</strong><em>most robust</em></li>
-          <li class="v"><span>2</span><strong>v-prediction</strong></li>
-          <li class="epsilon"><span>3</span><strong>ε-prediction</strong><em>least robust</em></li>
-        </ol>
-        <p>Direct clean-image prediction keeps recovery stable. Noise prediction can amplify small errors without bound at the earliest, noisiest steps.</p>
-        <dl>
-          <div><dt>x at D=512</dt><dd>93.3%</dd></div>
-          <div><dt>v at D=512</dt><dd>21.5%</dd></div>
-          <div><dt>ε at D=512</dt><dd>0.5%</dd></div>
-        </dl>
-        <p class="metric-note">On-manifold rate in the fully controlled crossed-lines experiment.</p>
-      </aside>
+        <aside class="hero-thesis" aria-label="Headline result">
+          <p class="thesis-label">TFG robustness ranking</p>
+          <ol class="robustness-ranking" aria-label="Prediction targets ranked from most to least robust for training-free guidance">
+            <li class="x"><span>1</span><strong>x-prediction</strong><em>most robust</em></li>
+            <li class="v"><span>2</span><strong>v-prediction</strong></li>
+            <li class="epsilon"><span>3</span><strong>ε-prediction</strong><em>least robust</em></li>
+          </ol>
+          <p>Direct clean-image prediction keeps guidance stable where global structure is set. Indirect recovery becomes progressively less reliable at high noise.</p>
+        </aside>
+      </div>
     </header>
 
     <section class="thesis-section" id="abstract" aria-labelledby="thesis-heading">
@@ -84,24 +85,6 @@ const pageDescription = 'Prediction target determines whether training-free guid
         <p class="kicker">The thirty-second thesis</p>
         <h2 id="thesis-heading">The target decides how failure looks.</h2>
         <p class="thesis-lede">Training-free guidance acts through an estimate of the clean image. When that estimate is direct, a miss can stay realistic. When recovery divides error by a nearly zero time value, a miss can become an off-manifold collapse.</p>
-      </div>
-
-      <div class="target-summary" aria-label="Prediction target summary">
-        <article class="target-card x-card">
-          <p class="target-symbol">x</p>
-          <h3>No recovery amplification</h3>
-          <p>The model predicts the clean image directly. Guidance can miss the requested class while the image remains plausible.</p>
-        </article>
-        <article class="target-card v-card">
-          <p class="target-symbol">v</p>
-          <h3>Bounded amplification</h3>
-          <p>Recovery error is scaled by <math><mrow><mo>(</mo><mn>1</mn><mo>−</mo><mi>t</mi><mo>)</mo></mrow></math>, so the coefficient stays bounded.</p>
-        </article>
-        <article class="target-card epsilon-card">
-          <p class="target-symbol">ε</p>
-          <h3>Unbounded at high noise</h3>
-          <p>The coefficient <math><mrow><mo>(</mo><mn>1</mn><mo>−</mo><mi>t</mi><mo>)</mo><mo>/</mo><mi>t</mi></mrow></math> diverges as <math><mrow><mi>t</mi><mo>→</mo><mn>0</mn></mrow></math>.</p>
-        </article>
       </div>
 
       <figure class="teaser-figure">
@@ -123,28 +106,50 @@ const pageDescription = 'Prediction target determines whether training-free guid
       </figure>
     </section>
 
+    <section class="content-section benchmark-section" id="benchmark" aria-labelledby="benchmark-heading">
+      <div class="section-intro">
+        <p class="kicker">01 · A benchmark for the real task</p>
+        <h2 id="benchmark-heading">Steer a pretrained model. Keep the result real.</h2>
+        <p class="thesis-lede">Training-free guidance promises new control without retraining. Our benchmark makes that promise measurable: a pretrained ImageNet model supplies a coarse bird class, while an external guide asks for one of 143 fine-grained species. Success means reaching the species without leaving its visual distribution.</p>
+      </div>
+
+      <ol class="task-flow" aria-label="Realistic training-free guidance evaluation task">
+        <li><span>1</span><div><h3>Coarse prior</h3><p>CFG selects one of 30 ImageNet parent classes that the frozen model already knows.</p></div></li>
+        <li><span>2</span><div><h3>Fine-grained request</h3><p>Training-free guidance targets one of 143 child species without updating model weights.</p></div></li>
+        <li><span>3</span><div><h3>Independent check</h3><p>A different classifier measures validity; Child FID and Precision/Recall measure realism and coverage.</p></div></li>
+        <li><span>4</span><div><h3>Full stress test</h3><p>Guidance strength is swept across Pareto frontiers instead of selecting one favorable setting.</p></div></li>
+      </ol>
+
+      <dl class="benchmark-facts" aria-label="Benchmark scale and coverage">
+        <div><dt>Fine-grained targets</dt><dd>143 species</dd></div>
+        <div><dt>Coarse priors</dt><dd>30 parents</dd></div>
+        <div><dt>Every operating point</dt><dd>9,152 images</dd></div>
+        <div><dt>Evaluation coverage</dt><dd>6 configs · 3 targets · 2 spaces</dd></div>
+      </dl>
+      <p class="benchmark-definition"><strong>Child FID</strong> compares the pooled guided distribution across all 143 targets with the full fine-grained bird reference distribution. It catches classifier-valid samples that drift away from realistic bird imagery.</p>
+    </section>
+
     <section class="content-section failure-section" id="results" aria-labelledby="failure-heading">
       <div class="section-intro">
-        <p class="kicker">01 · The visible failure</p>
+        <p class="kicker">02 · The visible failure</p>
         <h2 id="failure-heading">A wrong bird can still look like a bird.</h2>
         <p class="thesis-lede">Validity asks whether a classifier accepts the target. It does not ask whether the image remains realistic. The distinction becomes obvious at stronger guidance: a graceful miss preserves coherent structure; a catastrophic miss becomes an artifact that merely excites the classifier.</p>
       </div>
-      <ResultExplorer />
+      <FailureSequence />
     </section>
 
     <section class="content-section method-section" id="method" aria-labelledby="method-heading">
       <div class="section-intro">
-        <p class="kicker">02 · Why the target matters</p>
-        <h2 id="method-heading">The same model error can arrive with a very different multiplier.</h2>
+        <p class="kicker">03 · Why the target matters</p>
+        <h2 id="method-heading">The recovery formula decides whether error stays bounded.</h2>
         <p class="thesis-lede">In the paper’s flow-matching convention, <math><mrow><msub><mi>z</mi><mi>t</mi></msub><mo>=</mo><mi>t</mi><mi>x</mi><mo>+</mo><mo>(</mo><mn>1</mn><mo>−</mo><mi>t</mi><mo>)</mo><mi>ε</mi></mrow></math>. All three targets can recover a clean image estimate, but only ε-recovery divides by t.</p>
       </div>
-      <AmplificationExplorer />
-      <p class="technical-note"><strong>Read the ranking at the right level.</strong> The exact recovery coefficients are shown above; the paper’s overall robustness ordering—x first, v second, ε third—also reflects the targets’ different base errors, not a claim that the three displayed coefficients alone have one strict order at every t.</p>
+      <RecoveryMechanism />
     </section>
 
     <section class="content-section controlled-section" aria-labelledby="controlled-heading">
       <div class="section-intro">
-        <p class="kicker">03 · Controlled evidence first</p>
+        <p class="kicker">04 · Controlled evidence</p>
         <h2 id="controlled-heading">Hold the model fixed. Change the target.</h2>
         <p class="thesis-lede">The crossed-lines study is the clean attribution test: identical residual MLPs, identical data, identical training budget, identical guidance, and only the prediction objective changed. As ambient dimension rises, the gap opens sharply.</p>
       </div>
@@ -197,9 +202,9 @@ const pageDescription = 'Prediction target determines whether training-free guid
 
     <section class="content-section real-image-section" aria-labelledby="real-heading">
       <div class="section-intro">
-        <p class="kicker">04 · Real-image evidence</p>
+        <p class="kicker">05 · Real-image evidence</p>
         <h2 id="real-heading">Classifier validity can hide manifold damage.</h2>
-        <p class="thesis-lede"><strong>Child FID</strong> compares guided samples with the requested fine-grained species, rather than with the broad parent distribution. It exposes samples that a classifier accepts even though their appearance has drifted away from realistic images of that species.</p>
+        <p class="thesis-lede"><strong>Child FID</strong> compares the pooled guided distribution across all 143 targets with the full fine-grained bird reference distribution. It exposes classifier-valid samples whose appearance has drifted away from realistic bird imagery.</p>
       </div>
 
       <div class="metric-callouts" aria-label="Matched validity Child FID results">
@@ -234,7 +239,7 @@ const pageDescription = 'Prediction target determines whether training-free guid
 
       <div class="matched-table table-scroll" tabindex="0" aria-label="Matched validity results, horizontally scrollable">
         <table>
-          <caption>Matched-validity operating points from the camera-ready paper</caption>
+          <caption>Matched-validity operating points reported in the paper</caption>
           <thead><tr><th scope="col">Model</th><th scope="col">Target</th><th scope="col">Guidance ρ</th><th scope="col">Validity</th><th scope="col">P-FID</th><th scope="col">C-FID</th></tr></thead>
           <tbody>
             <tr><th scope="row">JiT-H/16</th><td>x</td><td>3.0</td><td>26.60%</td><td>6.91</td><td class="best">32.85</td></tr>
@@ -247,7 +252,7 @@ const pageDescription = 'Prediction target determines whether training-free guid
 
     <section class="content-section broader-section" aria-labelledby="broader-heading">
       <div class="section-intro">
-        <p class="kicker">05 · Broader validation</p>
+        <p class="kicker">06 · Broader validation</p>
         <h2 id="broader-heading">Does the ordering persist?</h2>
         <p class="thesis-lede">Across guidance rules, domains, and metrics, the evidence points in the same direction—with qualifications where separation is weaker.</p>
       </div>
@@ -286,28 +291,14 @@ const pageDescription = 'Prediction target determines whether training-free guid
       </div>
     </section>
 
-    <section class="content-section limitations-section" aria-labelledby="limitations-heading">
-      <div class="section-intro">
-        <p class="kicker">06 · Scope and limitations</p>
-        <h2 id="limitations-heading">Converging evidence is not a perfect six-model ablation.</h2>
-        <p class="thesis-lede">The controlled crossed-lines experiment isolates prediction target. The pretrained real-image comparisons do not: models also vary in architecture, operating space, capacity, and native sampler. The closer pairwise controls and capacity reversal strengthen attribution without erasing those differences.</p>
-      </div>
-      <div class="limitations-grid">
-        <article><h3>What is controlled</h3><p>Crossed lines holds architecture, data, optimization, guidance, and sampling fixed while changing the training target. DiT/SiT and JiT/PixelFlow provide closer pairwise controls in latent and pixel spaces.</p></article>
-        <article><h3>Theoretical assumptions</h3><p>The analysis assumes Lipschitz energy functions, well-trained predictors, and comparable order-one Jacobian norms where asymptotic target comparisons use them.</p></article>
-        <article><h3>Guidance family</h3><p>The mechanism applies to gradient-based methods that differentiate through the clean estimate, including DPS, LGD, TFG, FreeDoM, and Flow Guidance. Attention-only guidance is outside scope.</p></article>
-        <article><h3>Resolution and tasks</h3><p>All reported image experiments use 256×256 generation. Higher-resolution scaling is untested; style-transfer separation is weaker, and inverse-problem PSNR remains below the simple degraded-input baselines.</p></article>
-      </div>
-    </section>
-
     <section class="content-section resources-section" id="resources" aria-labelledby="resources-heading">
       <div class="section-intro">
-        <p class="kicker">07 · Resources and citation</p>
+        <p class="kicker">Resources and citation</p>
         <h2 id="resources-heading">Follow every claim back to its source.</h2>
       </div>
 
       <div class="resources-grid">
-        <article><p class="resource-type">Paper</p><h3>arXiv preprint</h3><p>Read the public preprint. Site claims and qualifications are reviewed against the accepted camera-ready source commit.</p><a href={project.links.paper}>Open the PDF ↗</a><a href={project.links.paperAbstract}>View the arXiv record ↗</a></article>
+        <article><p class="resource-type">Paper</p><h3>ECCV 2026 · accepted</h3><p>The official ECCV listing confirms the title and authors. The public manuscript is available on arXiv.</p><a href={project.links.official}>View the ECCV record ↗</a><a href={project.links.paper}>Open the PDF ↗</a><a href={project.links.paperAbstract}>View the arXiv record ↗</a></article>
         <article><p class="resource-type">Code</p><h3>Evaluation and inference</h3><p>Reproduce the crossed-lines study, bird benchmark, and inverse-problem evaluations.</p><a href={project.links.code}>Open the repository ↗</a></article>
         <article class="datasets"><p class="resource-type">Data</p><h3>Published benchmark resources</h3><ul>{project.links.datasets.map((dataset) => <li><a href={dataset.url}>{dataset.label} ↗</a></li>)}</ul></article>
       </div>
@@ -315,15 +306,11 @@ const pageDescription = 'Prediction target determines whether training-free guid
       <div class="citation-card" id="bibtex">
         <div>
           <p class="resource-type">Cite</p>
-          <h3>BibTeX</h3>
+          <h3>Provisional ECCV BibTeX</h3>
         </div>
         <button type="button" data-copy-bibtex aria-describedby="copy-status">Copy BibTeX</button>
-        <pre id="bibtex-text" tabindex="0" aria-label="BibTeX citation, horizontally scrollable"><code>@inproceedings&#123;lee2026onmanifold,
-  title     = &#123;Not All Prediction Targets Keep Training-Free Diffusion Guidance on the Manifold&#125;,
-  author    = &#123;Lee, Yunsung and Lee, Hyeongmin&#125;,
-  booktitle = &#123;European Conference on Computer Vision (ECCV)&#125;,
-  year      = &#123;2026&#125;
-&#125;</code></pre>
+        <pre id="bibtex-text" tabindex="0" aria-label="BibTeX citation, horizontally scrollable"><code>{citationBibtex}</code></pre>
+        <p class="citation-source">ECCV confirms the title, authors, and acceptance. Springer has not yet published this paper’s volume, pages, or DOI, so those fields are intentionally omitted and the entry is marked “To appear.”</p>
         <p id="copy-status" class="copy-status" role="status" aria-live="polite">Select the citation directly if copying is unavailable.</p>
       </div>
 
@@ -386,13 +373,16 @@ const pageDescription = 'Prediction target determines whether training-free guid
   .site-header nav { display: flex; gap: 1.1rem; }
   .site-header nav a { color: var(--slate); font-size: 0.88rem; font-weight: 700; }
   .project-hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1.48fr) minmax(17rem, 0.52fr);
-    gap: clamp(2.5rem, 6vw, 6rem);
-    align-items: start;
-    width: var(--content);
+    width: min(1280px, calc(100% - 2rem));
     margin: 0 auto;
-    padding: clamp(3rem, 5vw, 4.5rem) 0 4rem;
+    padding: clamp(3rem, 5vw, 4.5rem) 0 clamp(3.5rem, 6vw, 5rem);
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.12fr) minmax(20rem, 0.88fr);
+    gap: clamp(2.5rem, 7vw, 6rem);
+    align-items: start;
+    margin-top: 2.5rem;
   }
   .venue, .kicker {
     margin: 0 0 1rem;
@@ -403,15 +393,17 @@ const pageDescription = 'Prediction target determines whether training-free guid
     text-transform: uppercase;
   }
   h1 {
-    max-width: 18ch;
+    max-width: none;
     margin: 0;
-    font-size: clamp(2.8rem, 4.45vw, 4.65rem);
+    font-size: clamp(2.3rem, 3.55vw, 3.2rem);
     font-weight: 660;
-    letter-spacing: -0.048em;
-    line-height: 1.01;
-    overflow-wrap: anywhere;
+    letter-spacing: -0.044em;
+    line-height: 1.03;
+    overflow-wrap: normal;
+    text-wrap: balance;
   }
-  .authors { margin: 2rem 0 0.5rem; font-size: clamp(1.1rem, 2vw, 1.35rem); overflow-wrap: anywhere; }
+  .nowrap { white-space: nowrap; }
+  .authors { margin: 0 0 0.5rem; font-size: clamp(1.1rem, 2vw, 1.35rem); overflow-wrap: anywhere; }
   .authors a { color: var(--ink); font-weight: 780; text-decoration-thickness: 0.08em; }
   sup { font-size: 0.65em; font-weight: 800; }
   .affiliations { display: flex; flex-wrap: wrap; gap: 0.25rem 1.5rem; margin: 0; padding: 0; color: var(--slate); overflow-wrap: anywhere; list-style: none; }
@@ -435,8 +427,6 @@ const pageDescription = 'Prediction target determines whether training-free guid
   }
   .resource-actions .primary { padding-inline: 0.9rem; border-bottom-color: var(--navy); border-radius: 0.35rem; background: var(--navy); color: white; }
   .hero-thesis {
-    position: sticky;
-    top: 6.5rem;
     padding: 1.15rem 0 0;
     border: 0;
     border-top: 2px solid var(--navy);
@@ -451,26 +441,13 @@ const pageDescription = 'Prediction target determines whether training-free guid
   .robustness-ranking li.epsilon > span { background: var(--error); }
   .robustness-ranking strong { font-size: 0.92rem; }
   .robustness-ranking em { color: var(--muted); font-size: 0.68rem; font-style: normal; font-weight: 650; text-transform: uppercase; }
-  .hero-thesis > p:not(.thesis-label, .metric-note) { color: var(--slate); }
-  .hero-thesis dl { margin: 1.4rem 0 0; }
-  .hero-thesis dl div { display: flex; justify-content: space-between; gap: 1rem; padding: 0.45rem 0; border-top: 1px solid var(--line); }
-  .hero-thesis dt { color: var(--slate); }
-  .hero-thesis dd { margin: 0; font-weight: 850; font-variant-numeric: tabular-nums; }
-  .metric-note { margin-bottom: 0; color: var(--muted); font-size: 0.78rem; }
+  .hero-thesis > p:not(.thesis-label) { margin-bottom: 0; color: var(--slate); }
   .thesis-section { padding: 7rem max(1rem, calc((100vw - 1160px) / 2)); border-top: 1px solid var(--line); background: var(--paper); }
   .section-intro { max-width: 56rem; }
   h2 { max-width: 17ch; margin: 0; font-size: clamp(2.2rem, 4.2vw, 3.75rem); font-weight: 630; letter-spacing: -0.043em; line-height: 1.06; overflow-wrap: anywhere; }
   .thesis-lede { max-width: 48rem; margin: 1.5rem 0 0; color: var(--slate); font-size: clamp(1.12rem, 2vw, 1.32rem); }
-  .target-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin: 3rem 0; }
-  .target-card { padding: 1rem 0 0; border: 0; border-top: 2px solid var(--navy); border-radius: 0; background: transparent; }
-  .target-card .target-symbol { margin: 0; font-size: 1.9rem; font-weight: 680; line-height: 1; }
-  .target-card h3 { margin: 0.7rem 0; font-size: 1.05rem; }
-  .target-card p:last-child { margin-bottom: 0; color: var(--slate); font-size: 0.92rem; }
-  .x-card { border-top-color: var(--navy); }
-  .v-card { border-top-color: var(--cyan-dark); }
-  .epsilon-card { border-top-color: var(--error); background: transparent; }
   math { font-family: Cambria Math, STIX Two Math, Times New Roman, serif; }
-  .teaser-figure { margin: 4rem 0 0; }
+  .teaser-figure { margin: 3rem 0 0; }
   .teaser-figure picture { display: block; overflow: hidden; border: 1px solid var(--line); border-radius: 0; background: white; }
   .teaser-figure img { width: 100%; }
   .teaser-figure figcaption { max-width: 60rem; margin: 1rem 0 0; color: var(--slate); font-size: 0.9rem; }
@@ -479,9 +456,27 @@ const pageDescription = 'Prediction target determines whether training-free guid
     border-top: 1px solid var(--line);
   }
   .content-section { background: white; }
-  .method-section, .limitations-section { background: var(--paper); }
-  #abstract, #results, #method, #resources, #bibtex { scroll-margin-top: 5.5rem; }
-  .technical-note, .sample-scale {
+  .method-section { background: var(--paper); }
+  #abstract, #benchmark, #results, #method, #resources, #bibtex { scroll-margin-top: 5.5rem; }
+  .task-flow { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 3rem 0 0; padding: 0; border-block: 1px solid var(--line); list-style: none; }
+  .task-flow li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.8rem; align-content: start; padding: 1.25rem 1.15rem 1.35rem 0; }
+  .task-flow li + li { padding-left: 1.15rem; border-left: 1px solid var(--line); }
+  .task-flow span { display: grid; width: 1.65rem; height: 1.65rem; place-items: center; border-radius: 50%; background: var(--navy); color: white; font-size: 0.72rem; font-weight: 850; }
+  .task-flow h3 { margin: 0; font-size: 1rem; }
+  .task-flow p { margin: 0.3rem 0 0; color: var(--slate); font-size: 0.86rem; }
+  .benchmark-facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 2.25rem 0 0; }
+  .benchmark-facts div { padding: 0.9rem 1rem 0 0; border-top: 2px solid var(--navy); }
+  .benchmark-facts div + div { padding-left: 1rem; }
+  .benchmark-facts dt { color: var(--muted); font-size: 0.74rem; font-weight: 750; letter-spacing: 0.05em; text-transform: uppercase; }
+  .benchmark-facts dd { min-width: 0; margin: 0.35rem 0 0; overflow-wrap: anywhere; font-size: clamp(1.15rem, 2.3vw, 1.65rem); font-weight: 760; letter-spacing: -0.025em; line-height: 1.15; }
+  .benchmark-definition {
+    max-width: 62rem;
+    margin: 2rem 0 0;
+    padding: 1rem 0 0;
+    border-top: 1px solid var(--line);
+    color: var(--slate);
+  }
+  .sample-scale {
     max-width: 62rem;
     margin: 1.5rem 0 0;
     padding: 1rem 1.15rem;
@@ -529,10 +524,6 @@ const pageDescription = 'Prediction target determines whether training-free guid
   .inverse-card { display: flex; flex-direction: column; justify-content: flex-end; background: transparent; }
   .inverse-table { width: 100%; max-width: 100%; }
   .inverse-table table { min-width: 28rem; }
-  .limitations-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 3rem; }
-  .limitations-grid article { padding: 1rem 0 0; border: 0; border-top: 1px solid var(--line); border-radius: 0; background: transparent; }
-  .limitations-grid h3 { margin: 0; font-size: 1.1rem; }
-  .limitations-grid p { margin-bottom: 0; color: var(--slate); }
   .resources-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; margin-top: 3rem; }
   .resources-grid article { padding: 1rem 0 0; border: 0; border-top: 1px solid var(--line); border-radius: 0; background: transparent; }
   .resource-type { margin: 0; color: var(--navy); font-size: 0.72rem; font-weight: 850; letter-spacing: 0.13em; text-transform: uppercase; }
@@ -556,7 +547,8 @@ const pageDescription = 'Prediction target determines whether training-free guid
   .citation-card .resource-type { color: #83d5e6; }
   .citation-card button { min-height: 2.7rem; padding: 0.55rem 0.9rem; border: 1px solid #83d5e6; border-radius: 999px; background: transparent; color: white; font-weight: 780; cursor: pointer; }
   .citation-card pre { grid-column: 1 / -1; overflow-x: auto; margin: 0; padding: 1rem; border-radius: 0.55rem; background: #111827; color: #edf4ff; font-size: 0.86rem; line-height: 1.55; white-space: pre; }
-  .copy-status { grid-column: 1 / -1; margin: 0; color: #cad7ea; font-size: 0.8rem; }
+  .citation-source, .copy-status { grid-column: 1 / -1; margin: 0; color: #cad7ea; font-size: 0.8rem; }
+  .citation-source { max-width: 68rem; }
   .rights-note { margin-top: 1.5rem; padding: 1rem 0 0; border: 0; border-top: 1px solid var(--line); border-radius: 0; background: transparent; }
   .rights-note p { margin-bottom: 0; color: var(--slate); font-size: 0.88rem; }
   .project-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; width: var(--content); margin: 0 auto; padding: 2rem 0; color: var(--muted); font-size: 0.85rem; }
@@ -564,10 +556,14 @@ const pageDescription = 'Prediction target determines whether training-free guid
   .footer-brand img { width: 2.5rem; height: 2.5rem; }
   .project-footer p { margin: 0; }
 
+  @media (max-width: 960px) {
+    .task-flow, .benchmark-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .task-flow li:nth-child(3) { border-left: 0; }
+    .task-flow li:nth-child(n + 3) { border-top: 1px solid var(--line); }
+  }
+
   @media (max-width: 860px) {
-    .project-hero { grid-template-columns: minmax(0, 1fr); }
-    .hero-thesis { position: static; }
-    .target-summary { grid-template-columns: minmax(0, 1fr); }
+    .hero-grid { grid-template-columns: minmax(0, 1fr); }
     .controlled-grid { grid-template-columns: minmax(0, 1fr); }
     .controlled-copy { position: static; }
     .metric-callouts { grid-template-columns: repeat(2, 1fr); }
@@ -578,17 +574,23 @@ const pageDescription = 'Prediction target determines whether training-free guid
   @media (max-width: 560px) {
     .site-header { align-items: flex-start; flex-wrap: wrap; }
     .site-header nav { margin-left: auto; }
-    .site-header nav a:first-child { display: none; }
+    .site-header nav a:not(:last-child) { display: none; }
     .project-hero { padding-top: 3.5rem; }
-    h1 { font-size: clamp(2.75rem, 14vw, 4.2rem); }
+    h1 { font-size: 2rem; line-height: 1.06; }
     .resource-actions a { flex: 1 1 calc(50% - 0.65rem); justify-content: center; }
     .thesis-section { padding-block: 5rem; }
     .content-section { padding-block: 5rem; }
-    .metric-callouts, .validation-grid, .limitations-grid { grid-template-columns: 1fr; }
+    .task-flow, .benchmark-facts, .metric-callouts, .validation-grid { grid-template-columns: 1fr; }
+    .task-flow li, .task-flow li + li { padding: 1rem 0; border-left: 0; border-top: 1px solid var(--line); }
+    .task-flow li:first-child { border-top: 0; }
+    .benchmark-facts div, .benchmark-facts div + div { padding: 0.9rem 0 0; }
     .validation-card .answer { min-height: auto; }
     .citation-card { grid-template-columns: 1fr; }
     .citation-card button { justify-self: start; }
-    .citation-card pre, .copy-status { grid-column: 1; }
+    .citation-card pre, .citation-source, .copy-status { grid-column: 1; }
     .project-footer { align-items: flex-start; flex-direction: column; }
+  }
+  @media (max-width: 360px) {
+    .nowrap { white-space: normal; }
   }
 </style>

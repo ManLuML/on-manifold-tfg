@@ -9,11 +9,14 @@ Verified on 2026-09-01 against camera-ready paper commit `22954ee7f9f7d0e58d61db
 | x recovery has no multiplier | `section_latex/3_method.tex`; `section_latex/appendix/A_proofs.tex` | `‖x̂^(x)-x‖ = δ_x`. |
 | v recovery is bounded | Same | `‖x̂^(v)-x‖ = (1-t)δ_v`. |
 | ε recovery diverges at high noise | Same | `‖x̂^(ε)-x‖ = ((1-t)/t)δ_ε`; the coefficient diverges as `t → 0`. |
+| Clean endpoint interpretation | `section_latex/3_method.tex`; sampler implementation; Appendix A | At `t=1`, `z₁=x`, so v/ε recovery returns the already-clean state without using the prediction. The page states that `1,0,0` recovery coefficients are not a robustness ranking and does not expose a full-domain slider. |
 | Overall TFG robustness ordering | Abstract, method, and results | Public copy states “x first, v second, ε third” and labels the direction from most to least robust, avoiding an ambiguous bare inequality. It does not claim that the three recovery coefficients alone have one strict order at every `t`. |
 | Crossed-lines D=512 on-manifold rates | `section_latex/appendix/C_experimental_protocols.tex`, Table `tab:crossed_lines_full` | x 93.3%, v 21.5%, ε 0.5%. Fully controlled, identical network design and training protocol. |
 | Matched-validity Child FID | `section_latex/5_results.tex`; Appendix C full sweep | JiT-H/x 32.85 → 32.9, SiT/v 34.66 → 34.7, DiT/ε 38.11 → 38.1, all near 26.6% validity. |
 | x-versus-ε Child FID gap | Abstract and results | Exact table difference is 5.26; camera-ready prose reports 5.2 points. |
 | Bird benchmark scale | `section_latex/4_experiments.tex`; Appendix C | 143 species under 30 ImageNet parents; 64 samples per species; 9,152 generated images per plotted point. |
+| Realistic TFG evaluation task | Introduction; `section_latex/4_experiments.tex`; Appendix C | A frozen ImageNet model supplies a coarse parent class while gradient guidance targets a fine-grained child species. Separate guidance/evaluation classifiers reduce direct self-scoring, and guidance strength is swept rather than cherry-picked. |
+| Child FID computation | `section_latex/appendix/E_metric_justification.tex` | Pooled FID between all 9,152 guided samples across 143 targets and the full fine-grained bird reference distribution; never described as a per-species FID. |
 | Capacity-reversed evidence | `section_latex/appendix/F_confound_discussion.tex` | JiT-B 131M reaches C-FID 31.3; DiT and SiT at 675M reach 36.7 and 34.4. Capacity is not a sufficient explanation. |
 | LGD and FreeDoM | Appendix C, `fig:tfg_family` | JiT-H has the lowest C-FID frontier under both. No invented numeric table is shown. |
 | Butterfly domain | Appendix C, `fig:butterfly` | 34 species under six ImageNet parents; JiT-H has the lowest C-FID frontier. |
@@ -25,4 +28,4 @@ Verified on 2026-09-01 against camera-ready paper commit `22954ee7f9f7d0e58d61db
 
 ## Citation
 
-The paper tree has no self-citation entry. The public BibTeX is constructed from camera-ready title, authors, venue, and year and matches the public repository citation.
+The provisional accepted-conference entry is audited in `docs/site-release/bibtex-audit.md`. ECCV confirms title, author order, and acceptance; Springer confirms the proceedings title `Computer Vision – ECCV 2026`; arXiv confirms identifier `2607.00647`; and no exact Crossref DOI exists yet. The page therefore marks the entry `To appear` and omits unverified chapter fields until Springer publishes them.

@@ -5,7 +5,7 @@ import sharp from 'sharp';
 
 const dist = path.resolve('dist');
 const html = await readFile(path.join(dist, 'index.html'), 'utf8');
-const description = 'Prediction target determines whether training-free guidance fails gracefully or catastrophically. Explore the equations, controls, results, resources, and limitations.';
+const description = 'Prediction target determines whether training-free guidance fails gracefully or catastrophically. Explore the mechanism, realistic TFG benchmark, controlled evidence, and released resources.';
 const pageTitle = 'Not All Prediction Targets Keep Training-Free Diffusion Guidance on the Manifold — ECCV 2026';
 const required = [
   '<html lang="en">',
@@ -23,8 +23,8 @@ const required = [
   `<meta name="twitter:description" content="${description}">`,
   '<meta name="twitter:image" content="https://manluml.github.io/on-manifold-tfg/og/project-card.png">',
   'citation_pdf_url',
-  'citation_version',
   'https://arxiv.org/pdf/2607.00647',
+  'https://eccv.ecva.net/virtual/2026/poster/4934',
   '"@type":"ScholarlyArticle"',
   'Maum AI',
   'Seoul National University of Science and Technology',
@@ -34,8 +34,11 @@ const required = [
   'id="bibtex"',
   'TFG robustness ranking',
   'most robust',
-  'arXiv preprint',
+  'Steer a pretrained model. Keep the result real.',
+  'Computer Vision -- ECCV 2026',
+  'To appear',
   'media/figures/figure-1a-960.png',
+  'media/figures/onmanifold-vs-dim-720.png',
   '93.3%', '21.5%', '0.5%', '32.9', '34.7', '38.1', '9,152',
 ];
 for (const value of required) if (!html.includes(value)) throw new Error(`Missing built assertion: ${value}`);
@@ -44,7 +47,9 @@ if (/<(?:script|img)[^>]+src="https?:\/\//.test(html) || /<link[^>]+rel="stylesh
   throw new Error('Runtime CDN dependency found.');
 }
 if (/Republic of Korea|media\/affiliations|maum-ai\.png|seoultech\.png/i.test(html)) throw new Error('Affiliations must remain simplified and text-only.');
-if (/x\s*&lt;\s*v\s*&lt;\s*ε/i.test(html) || /Camera-ready preprint/i.test(html)) throw new Error('Ambiguous ranking or public-preprint conflation found.');
+if (/x\s*&lt;\s*v\s*&lt;\s*ε/i.test(html)) throw new Error('Ambiguous ranking found.');
+if (/camera-ready|Scope and limitations|citation_version/i.test(html)) throw new Error('Removed project-page framing returned.');
+if (/role="tab"|role="tabpanel"|type="range"/i.test(html)) throw new Error('Removed explanatory interactions returned.');
 const card = await sharp(path.join(dist, 'og/project-card.png')).metadata();
 if (card.width !== 1200 || card.height !== 630) throw new Error('Project social card must be 1200×630.');
 const compatibility = [

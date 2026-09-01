@@ -18,6 +18,7 @@ authors:
     email: hyeongmin.lee@seoultech.ac.kr
     affiliation: Seoul National University of Science and Technology
 links:
+  official: https://eccv.ecva.net/virtual/2026/poster/4934
   paper: https://arxiv.org/pdf/2607.00647
   paperAbstract: https://arxiv.org/abs/2607.00647
   code: https://github.com/ManLuML/on-manifold-tfg

@@ -29,61 +29,69 @@ test('project metadata, claims, resources, and text-only affiliations are comple
   await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute('content', 'https://manluml.github.io/on-manifold-tfg/og/project-card.png');
   await expect(page.locator('meta[name="citation_author"]')).toHaveCount(2);
   await expect(page.locator('meta[name="citation_pdf_url"]')).toHaveAttribute('content', 'https://arxiv.org/pdf/2607.00647');
-  await expect(page.locator('meta[name="citation_version"]')).toHaveAttribute('content', 'Accepted camera-ready source; public PDF is arXiv v1');
-  expect(await page.locator('script[type="application/ld+json"]').textContent()).toContain('ScholarlyArticle');
+  await expect(page.locator('meta[name="citation_version"]')).toHaveCount(0);
+  const scholarlyArticle = JSON.parse(await page.locator('script[type="application/ld+json"]').textContent() ?? '{}');
+  expect(scholarlyArticle['@type']).toBe('ScholarlyArticle');
+  expect(scholarlyArticle.datePublished).toBeUndefined();
+  expect(scholarlyArticle.associatedMedia).toMatchObject({ name: 'Public arXiv preprint', datePublished: '2026-07-01' });
   await expect(page.getByRole('link', { name: /^Paper/ }).first()).toHaveAttribute('href', 'https://arxiv.org/pdf/2607.00647');
   await expect(page.getByRole('link', { name: /^Code/ }).first()).toHaveAttribute('href', 'https://github.com/ManLuML/on-manifold-tfg');
   await expect(page.getByRole('link', { name: /^Data/ }).first()).toHaveAttribute('href', '#resources');
   await expect(page.getByRole('link', { name: /^Cite/ }).first()).toHaveAttribute('href', '#bibtex');
+  await expect(page.getByRole('link', { name: /View the ECCV record/ })).toHaveAttribute('href', 'https://eccv.ecva.net/virtual/2026/poster/4934');
   await expect(page.locator('.affiliations li').nth(0)).toContainText('Maum AI');
   await expect(page.locator('.affiliations li').nth(1)).toContainText('Seoul National University of Science and Technology');
   await expect(page.getByText(/Republic of Korea/)).toHaveCount(0);
   await expect(page.locator('img[src*="affiliations"], img[src*="maum"], img[src*="seoultech"]')).toHaveCount(0);
   await expect(page.getByText('ECCV 2026', { exact: true }).first()).toBeVisible();
   await expect(page.getByRole('list', { name: 'Prediction targets ranked from most to least robust for training-free guidance' })).toContainText('x-prediction');
-  await expect(page.getByRole('heading', { name: 'arXiv preprint' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'ECCV 2026 · accepted' })).toBeVisible();
   await expect(page.locator('#abstract, #method, #results, #bibtex')).toHaveCount(4);
   await expect(page.getByText('93.3%', { exact: true }).first()).toBeVisible();
   await expect(page.getByText('21.5%', { exact: true }).first()).toBeVisible();
   await expect(page.getByText('0.5%', { exact: true }).first()).toBeVisible();
   await expect(page.getByText('9,152 generated images')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Steer a pretrained model. Keep the result real.' })).toBeVisible();
+  await expect(page.getByText('Scope and limitations')).toHaveCount(0);
+  await expect(page.getByText(/Camera-ready/i)).toHaveCount(0);
   expect(externalRuntimeRequests).toEqual([]);
 });
 
-test('both explanatory interactions are keyboard complete', async ({ page }) => {
-  await page.goto('./#results');
-  const epsilonTab = page.getByRole('tab', { name: 'ε ε-prediction' });
-  await epsilonTab.focus();
-  await epsilonTab.press('Enter');
-  await expect(epsilonTab).toHaveAttribute('aria-selected', 'true');
-  await expect(page.getByRole('tabpanel', { name: 'ε ε-prediction' })).toBeVisible();
-  await epsilonTab.press('Home');
-  await expect(page.getByRole('tab', { name: 'x x-prediction' })).toHaveAttribute('aria-selected', 'true');
+test('desktop hero keeps the conclusion-sized title readable at a glance', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('./');
+  const lineCount = await page.locator('h1').evaluate((heading) => {
+    const range = document.createRange();
+    range.selectNodeContents(heading);
+    return new Set([...range.getClientRects()].filter((rect) => rect.width > 1).map((rect) => Math.round(rect.top))).size;
+  });
+  expect(lineCount).toBeLessThanOrEqual(2);
+});
 
-  const slider = page.getByRole('slider', { name: 'Flow-matching time (0 = noise, 1 = clean)' });
-  await slider.focus();
-  await slider.press('Home');
-  await expect(slider).toHaveValue('0.02');
-  await expect(page.locator('[data-time-output]')).toHaveText('t = 0.02');
-  await expect(page.locator('[data-epsilon-value]')).toHaveText('49.00');
-  await slider.press('End');
-  await expect(slider).toHaveValue('1');
-  await expect(page.locator('[data-epsilon-value]')).toHaveText('0.00');
+test('failure and mechanism stories are scroll-native and complete', async ({ page }) => {
+  await page.goto('./#results');
+  await expect(page.getByRole('tab')).toHaveCount(0);
+  await expect(page.getByRole('slider')).toHaveCount(0);
+  await expect(page.locator('.failure-band')).toHaveCount(3);
+  for (const band of await page.locator('.failure-band').all()) await expect(band).toBeVisible();
+  await expect(page.locator('.recovery-rows article')).toHaveCount(3);
+  await expect(page.getByText('The clean endpoint t=1 is not a robustness comparison')).toBeVisible();
 });
 
 test('formula and manifold figure visual baselines remain balanced', async ({ page }) => {
   await page.goto('./#method');
-  await expect(page.locator('.coefficient-grid')).toHaveScreenshot('project-formulas-desktop.png');
-  await expect(page.locator('.paper-manifold-figure')).toHaveScreenshot('project-manifold-figure-desktop.png');
+  await expect(page.locator('.recovery-rows')).toHaveScreenshot('project-formulas-desktop.png');
+  await expect(page.locator('.manifold-evidence-grid')).toHaveScreenshot('project-manifold-figure-desktop.png');
 });
 
 test('static fallback is complete without JavaScript', async ({ browser }) => {
   const context = await browser.newContext({ javaScriptEnabled: false });
   const page = await context.newPage();
   await page.goto('http://127.0.0.1:4324/on-manifold-tfg/');
-  await expect(page.locator('[role="tabpanel"]')).toHaveCount(3);
-  for (const panel of await page.locator('[role="tabpanel"]').all()) await expect(panel).toBeVisible();
-  await expect(page.getByRole('table', { name: 'Recovery-error multiplier before each target’s base error' })).toBeVisible();
+  await expect(page.locator('[role="tabpanel"], [role="tab"], input[type="range"]')).toHaveCount(0);
+  await expect(page.locator('.failure-band')).toHaveCount(3);
+  await expect(page.locator('.recovery-rows article')).toHaveCount(3);
+  await expect(page.locator('.manifold-evidence-grid figure')).toHaveCount(2);
   await expect(page.locator('#bibtex-text')).toContainText('@inproceedings');
   await context.close();
 });
@@ -112,6 +120,9 @@ test('all rendered project images and same-origin resources load', async ({ page
 
 test('copy feedback is visible and announced', async ({ page }) => {
   await page.goto('./#bibtex');
+  await expect(page.locator('#bibtex-text')).toContainText('Computer Vision -- ECCV 2026');
+  await expect(page.locator('#bibtex-text')).toContainText('note      = {To appear}');
+  await expect(page.locator('#bibtex-text')).not.toContainText(/doi|pages|volume/i);
   await page.getByRole('button', { name: 'Copy BibTeX' }).click();
   await expect(page.locator('#copy-status')).toContainText(/copied|selected/i);
 });
@@ -132,9 +143,35 @@ test('320px reflow keeps text affiliations and content within the viewport', asy
   await expect(page.locator('.affiliations')).toBeVisible();
   const dimensions = await page.evaluate(() => ({ width: document.documentElement.clientWidth, scrollWidth: document.documentElement.scrollWidth }));
   expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.width);
+  const titleLines = await page.locator('h1').evaluate((heading) => {
+    const range = document.createRange();
+    range.selectNodeContents(heading);
+    return new Set([...range.getClientRects()].filter((rect) => rect.width > 1).map((rect) => Math.round(rect.top))).size;
+  });
+  expect(titleLines).toBeLessThanOrEqual(5);
+  const compoundLines = await page.locator('h1 .nowrap').evaluate((text) => {
+    const range = document.createRange();
+    range.selectNodeContents(text);
+    return new Set([...range.getClientRects()].map((rect) => Math.round(rect.top))).size;
+  });
+  expect(compoundLines).toBe(1);
+  await expect(page.locator('.dimension-evidence figure')).toBeHidden();
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await expect(page).toHaveScreenshot('project-320.png');
   await expect(page.locator('.affiliations')).toHaveScreenshot('project-affiliations-320.png');
+});
+
+test('mobile failure sequence keeps individual samples legible', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 568 });
+  await page.goto('./#results');
+  const image = page.locator('.failure-band.x img');
+  await image.evaluate(async (element) => {
+    const target = element as HTMLImageElement;
+    target.loading = 'eager';
+    await target.decode();
+  });
+  expect(await image.evaluate((element) => (element as HTMLImageElement).currentSrc)).toContain('jit-failure-mobile-640');
+  await expect(page.locator('.failure-band.x')).toHaveScreenshot('project-failure-x-320.png');
 });
 
 test('200% text sizing reflows without clipped content', async ({ page }) => {
@@ -172,17 +209,9 @@ test('first-view performance budgets hold in the lab', async ({ page }) => {
   await page.goto('./');
   await page.waitForTimeout(700);
   const metrics = await page.evaluate(() => (window as typeof window & { __projectMetrics: { cls: number; lcp: number } }).__projectMetrics);
-  const interactionLatency = await page.getByRole('slider', { name: 'Flow-matching time (0 = noise, 1 = clean)' }).evaluate((element) => new Promise<number>((resolve) => {
-    const input = element as HTMLInputElement;
-    const start = performance.now();
-    input.value = '0.02';
-    input.dispatchEvent(new Event('input', { bubbles: true }));
-    requestAnimationFrame(() => resolve(performance.now() - start));
-  }));
-  console.log(`Project lab metrics: LCP=${metrics.lcp.toFixed(1)}ms CLS=${metrics.cls.toFixed(4)} interaction=${interactionLatency.toFixed(1)}ms`);
+  console.log(`Project lab metrics: LCP=${metrics.lcp.toFixed(1)}ms CLS=${metrics.cls.toFixed(4)}`);
   expect(metrics.lcp).toBeLessThanOrEqual(2500);
   expect(metrics.cls).toBeLessThanOrEqual(0.1);
-  expect(interactionLatency).toBeLessThanOrEqual(200);
 });
 
 test('legacy asset URLs remain available', async ({ request }) => {

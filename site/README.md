@@ -20,18 +20,14 @@ npm run check:production
 
 Scientific content is frozen in `../docs/site-release/claim-table.md` against camera-ready paper commit `22954ee7f9f7d0e58d61db34474f3d6a15ec8a07`. Asset rights, transformations, and exclusions are recorded in `../docs/site-release/asset-provenance.md`.
 
-## Progressive enhancement
+## Scroll-native explanation
 
-The result comparison and recovery-error slider are the two explanatory interactions. All target panels, formulas, coefficient values, tables, prose, resources, and BibTeX are present in initial HTML. The copy button is a utility action and leaves selectable citation text available when clipboard access fails.
+The prediction-target comparison and recovery mechanism are static, semantic HTML designed to be understood during an ordinary scroll. All three failure bands, accessible formulas, the high-noise convention, paired mechanism/evidence figures, benchmark definition, resources, and BibTeX are present without JavaScript. The copy button is the only utility interaction and leaves selectable citation text available when clipboard access fails.
 
-`public/slides/index.html` keeps a slide URL published on the legacy deployment recoverable while linking its immutable rollback tag. It does not republish the deck’s excluded assets and is not linked as a primary project resource.
-
-### 2026-09-01 slide-publication addendum
-
-The paragraph above records the initial Astro launch policy and is superseded for the slide route only. `public/slides/` now contains the complete 17-slide ECCV presentation and is published at `https://manluml.github.io/on-manifold-tfg/slides/`. The bundle is kept intact, including its MAUM.AI, SeoulTech, and ECCV logo artwork, quoted educational figures, presentation fonts, Reveal runtime, and supporting media.
+`public/slides/` contains the complete 17-slide ECCV presentation and is published at `https://manluml.github.io/on-manifold-tfg/slides/`. The bundle is kept intact, including its MAUM.AI, SeoulTech, and ECCV logo artwork, quoted educational figures, presentation fonts, Reveal runtime, and supporting media.
 
 This change does not alter the root project-page policy. The Astro page at `/on-manifold-tfg/` continues to render affiliations as text and must not import affiliation or venue logos. Logo-bearing material is permitted only within the independently authored `/slides/**` presentation subtree.
 
 ## Deployment and rollback
 
-Pull requests run the same schema, type, build, accessibility, interaction, screenshot, link, and performance checks used by deployment. The default branch deploys through `.github/workflows/pages.yml`. The final legacy production is preserved at tag `legacy-pages-pre-astro-2026-09-01` and snapshot branch `legacy-pages-pre-astro`; the earlier rollback tag also remains intact. See `../docs/site-release/rollback.md`.
+Pull requests run the same schema, type, build, accessibility, scroll-story, screenshot, link, and performance checks used by deployment. The default branch deploys through `.github/workflows/pages.yml`. The final legacy production is preserved at tag `legacy-pages-pre-astro-2026-09-01` and snapshot branch `legacy-pages-pre-astro`; the earlier rollback tag also remains intact. See `../docs/site-release/rollback.md`.

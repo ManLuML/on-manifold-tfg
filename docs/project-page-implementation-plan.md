@@ -1,14 +1,22 @@
 # ManLuML research site and On-Manifold TFG project page plan
 
-- Status: approved implementation baseline
+- Status: implemented and production-verified; later user overrides recorded below
 - Date: 2026-09-01
-- Implementation: not started
+- Implementation: production release active; scroll-first revision pending deployment
 
 ## Implementation addendum — final affiliation treatment
 
 On 2026-09-01, the user explicitly superseded the affiliation-logo requirements in this baseline. The new production project page uses text-only affiliations and generates no MAUM.AI or SeoulTech logo derivatives. The visible affiliations are “Maum AI” and “Seoul National University of Science and Technology,” with country labels omitted. A slide deck published independently on the legacy deployment while this implementation was in progress is preserved at immutable tag `legacy-pages-pre-astro-2026-09-01`. Its stable `/slides/` route remains a minimal recovery page linking that snapshot, without republishing the deck’s excluded third-party quotations, fonts, or institution artwork. This addendum overrides every earlier requirement that either official mark appear on the new page; all other requirements remain in force.
 
 The implementation replaces the ambiguous public shorthand `x < v < ε` with an explicit TFG robustness ranking: x-prediction first, v-prediction second, and ε-prediction third, labeled from most to least robust. Camera-ready Figure 1(a) replaces the hand-built manifold path drawing, and visible formulas use balanced deterministic HTML/CSS typesetting with accessible MathML retained. The venue remains the text label “ECCV 2026”; the official navbar SVG is excluded because no current written republication grant for an independent project site was verified.
+
+## Implementation addendum — scroll-first revision
+
+The user subsequently superseded both explanatory interactions and the standalone limitations section. The project page now uses a scroll-native x→v→ε failure sequence and a static, high-noise-focused recovery explanation. It does not expose the misleading `t=1` endpoint as a target ranking: the page explicitly states that recovery coefficients multiply different base errors and that `z₁=x` makes v/ε recovery exact at the clean endpoint without proving that x-prediction is worse. Figure 1(a) is paired with the paper’s on-manifold-rate-versus-dimension plot in a balanced mechanism/evidence layout, with no visible “camera-ready” wording.
+
+The hero gives the paper title the full content width at a reduced display size, followed by a compact authorship/result grid. The page introduces the realistic TFG benchmark near the top: coarse ImageNet parent conditioning, a fine-grained 143-species request, separate guidance and evaluation classifiers, pooled Child FID, and guidance-strength Pareto sweeps. The visible Scope and limitations section is removed; essential comparison qualifications remain adjacent to the affected evidence.
+
+The BibTeX is independently audited against the official ECCV accepted-paper/poster records, Springer’s ECCV 2026 proceedings-title convention, arXiv, and Crossref. Because paper-level Springer metadata is not public, the provisional entry uses `booktitle = {Computer Vision -- ECCV 2026}` and `note = {To appear}` while intentionally omitting DOI, pages, volume, proceedings part, ISBN, editors, publisher, address, and month.
 
 ## 1. Outcome
 
