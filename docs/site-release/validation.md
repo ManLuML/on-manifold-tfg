@@ -80,3 +80,23 @@ Production deployment completed on 2026-09-01 at 21:16 KST from squash commit `e
 The live slide index is 233,339 bytes with SHA-256 `846aa170e3d7678f496e00b7c04f22a271aabd80384f97cb5416876041147892`, matching the reviewed artifact. A fresh public-origin browser check confirmed 17 direct slides, numbering from `1 / 17`, the MAUM.AI, SeoulTech, and ECCV logos, restored source section 19, all four outcome-animation groups, zero public speaker notes, zero broken images, no document-level horizontal overflow, and no legacy-placeholder copy. The ECCV, MAUM.AI, SeoulTech, outcome-photo, and vendored Reveal-runtime URLs all returned HTTP 200.
 
 The editable slide source branch was also fast-forwarded from `c3f04b4` to `6756b6a`; Pages remains workflow-driven from `main`, so this preserves the QMD/CSS source without changing the production deployment source.
+
+## 2026-09-01 scroll-first revision production evidence
+
+The user-directed page revision shipped through design commit `3b9dfc254dbcc173ccc023ca942efa8c26955cb4` and first-paint stabilization commit `b7d56ebebb261c73870be644e5aee5c01a21a844`. Pages [run 33507833229](https://github.com/ManLuML/on-manifold-tfg/actions/runs/33507833229) passed the complete quality suite, deployed through environment deployment `6201177733`, and then passed a cache-busted production gate that required the new benchmark, mobile-crop, and provisional-BibTeX markers while rejecting the previous tabs, slider, limitations section, and camera-ready wording. Existing Python [CI run 33507833309](https://github.com/ManLuML/on-manifold-tfg/actions/runs/33507833309) also passed.
+
+The first workflow for commit `3b9dfc2` correctly stopped at the quality gate when cold Linux font loading produced CLS 0.122. Commit `b7d56eb` added reviewed Latin and Greek font preloads; the replacement workflow passed before upload and deployment. This failed-first evidence confirms that the budget blocked a real first-paint regression rather than permitting a stale artifact to deploy.
+
+Fresh no-cache production downloads matched the reviewed build byte-for-byte:
+
+- root project HTML SHA-256 `7e45ab2430d18ab70e0538f291e255598e6d1b6fbb56744826d83d4aff7b5f1f`;
+- complete slide index SHA-256 `846aa170e3d7678f496e00b7c04f22a271aabd80384f97cb5416876041147892`;
+- social card SHA-256 `0ba6afd2921b9d4e2b26dc449ffb9f83ce491617cc2f7670ead490e604acbfa2`.
+
+The production smoke suite confirmed the two-line desktop title, five-line mobile title with an intact `Training-Free` compound, realistic TFG benchmark section, all three scroll-native failure bands, no explanatory tabs or slider, explicit `t=1` endpoint caveat, paired mechanism/evidence visuals, no small-screen plot, mobile AVIF comparison crops, pooled Child FID definition, absent limitations section, and provisional ECCV BibTeX with no invented DOI/pages/volume. All four legacy fragments, 18 legacy image URLs, three mobile crops, the 17-slide deck, custom 404, Open Graph/X metadata, official ECCV record, and bidirectional organization/project links passed.
+
+Production Chromium observed LCP 316 ms and CLS 0.0000. Axe found zero desktop, mobile, or 200%-text violations; document width remained 320/320 CSS pixels; clipped elements, console errors, and failed requests were empty. The mobile browser selected `jit-failure-mobile-640.avif`, and the dimension plot was correctly hidden while its 93.3% / 21.5% / 0.5% result rail remained available.
+
+Production screenshots are committed as `production-scroll-project-desktop.png`, `production-scroll-project-320.png`, `production-scroll-project-benchmark.png`, `production-scroll-project-failure.png`, `production-scroll-project-failure-320.png`, and `production-scroll-project-method.png` under `docs/site-release/screenshots/`.
+
+Pages remains workflow-driven from `main`. The author’s independent `gh-pages` slide-source history remains at `6756b6a`, and the directly deployable legacy rollback branch remains frozen at `c3f04b4`; neither was rewritten by this release.

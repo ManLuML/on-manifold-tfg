@@ -2,7 +2,7 @@
 
 - Status: implemented and production-verified; later user overrides recorded below
 - Date: 2026-09-01
-- Implementation: production release active; scroll-first revision pending deployment
+- Implementation: production release active; scroll-first revision deployed and verified
 
 ## Implementation addendum — final affiliation treatment
 
