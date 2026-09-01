@@ -237,6 +237,33 @@ test('the complete ECCV presentation is published at the stable slide URL', asyn
   await expect(page.locator('img').first()).toHaveJSProperty('complete', true);
   const dimensions = await page.evaluate(() => ({ width: document.documentElement.clientWidth, scrollWidth: document.documentElement.scrollWidth }));
   expect(dimensions.scrollWidth).toBeLessThanOrEqual(dimensions.width);
+
+  await page.goto('http://127.0.0.1:4324/on-manifold-tfg/slides/?preview=outcomes#/section-11');
+  await expect(page.locator('.slide-number')).toContainText('12 / 17');
+  const frames = page.locator('.guidance-sequence-frame');
+  await expect(frames).toHaveCount(4);
+  expect(await frames.evaluateAll((images) => images.every((image) => (image as HTMLImageElement).complete && (image as HTMLImageElement).naturalWidth === 2400 && (image as HTMLImageElement).naturalHeight === 1350))).toBe(true);
+  const frameRects = await frames.evaluateAll((images) => images.map((image) => {
+    const rect = image.getBoundingClientRect();
+    return [rect.left, rect.top, rect.width, rect.height].map((value) => Math.round(value * 100) / 100);
+  }));
+  expect(new Set(frameRects.map((rect) => JSON.stringify(rect))).size).toBe(1);
+  const activeFrame = () => frames.evaluateAll((images) => {
+    const visible = images.filter((image) => {
+      const style = getComputedStyle(image);
+      return style.visibility !== 'hidden' && Number(style.opacity) > 0.95;
+    });
+    return visible[visible.length - 1]?.getAttribute('src');
+  });
+  expect(await activeFrame()).toContain('guidance-sequence-05-success.png');
+  for (const expected of [
+    'guidance-sequence-06-catastrophic.png',
+    'guidance-sequence-07-graceful.png',
+    'guidance-sequence-04-combined.png',
+  ]) {
+    await page.keyboard.press('ArrowRight');
+    expect(await activeFrame()).toContain(expected);
+  }
 });
 
 test('project custom 404 is useful and noindexed', async ({ page }) => {

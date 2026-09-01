@@ -73,16 +73,32 @@ const expectedSlideAssets = [
   'assets/outcome-success-photo.png',
   'assets/outcome-catastrophic-photo.png',
   'assets/outcome-graceful-photo.png',
+  'assets/guidance-sequence-05-success.png',
+  'assets/guidance-sequence-06-catastrophic.png',
+  'assets/guidance-sequence-07-graceful.png',
+  'assets/guidance-sequence-04-combined.png',
   'fonts/Pretendard-Regular.woff2',
   'on-manifold-tfg_files/libs/revealjs/dist/reveal.js',
 ];
 if (!slidesHtml.includes('Not All Prediction Targets Keep Training-Free Diffusion Guidance on the Manifold')
   || !slidesHtml.includes('Do prediction targets decide how guidance fails?')
   || !slidesHtml.includes('data-source-section="19"')
+  || !slidesHtml.includes('rewrite=google-slides-sequence-5-6-7-4')
   || !slidesHtml.includes("slideNumber: 'c/t'")
   || (slidesHtml.match(/data-source-section=/g) ?? []).length !== 17
   || /<aside class="notes"|\sdata-notes=/.test(slidesHtml)) {
   throw new Error('Complete 17-slide public deck is missing, altered, or contains private notes.');
+}
+const sequenceAssets = [
+  'guidance-sequence-05-success.png',
+  'guidance-sequence-06-catastrophic.png',
+  'guidance-sequence-07-graceful.png',
+  'guidance-sequence-04-combined.png',
+];
+const sequenceOffsets = sequenceAssets.map((file) => slidesHtml.indexOf(file));
+if (sequenceOffsets.some((offset) => offset < 0)
+  || sequenceOffsets.some((offset, index) => index > 0 && offset <= sequenceOffsets[index - 1])) {
+  throw new Error('Guidance outcome frames must remain ordered as Google Slides pages 5, 6, 7, then 4.');
 }
 for (const file of expectedSlideAssets) await access(path.join(dist, 'slides', file));
 for (const file of ['404.html', 'robots.txt', 'sitemap-index.xml', '.nojekyll']) await access(path.join(dist, file));
