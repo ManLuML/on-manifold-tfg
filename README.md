@@ -8,7 +8,7 @@ Self-contained: `index.html` (Bulma + MathJax via CDN, no build step), figures u
 
 Published as the `gh-pages` branch of [ManLuML/on-manifold-tfg](https://github.com/ManLuML/on-manifold-tfg). Push the contents of this directory to that branch and enable GitHub Pages (source: `gh-pages`, root). The site is then served at `https://manluml.github.io/on-manifold-tfg/`.
 
-The ECCV 2026 presentation is served at `https://manluml.github.io/on-manifold-tfg/slides/`. It is a note-free static snapshot exported from `alohays/paper2pr` commit `c8be3e8`; update it manually from a freshly validated, speaker-note-stripped bundle.
+The ECCV 2026 presentation is served at `https://manluml.github.io/on-manifold-tfg/slides/`. It is a note-free static snapshot exported from `alohays/paper2pr` commit `7c8bb70`; update it manually from a freshly validated, speaker-note-stripped bundle.
 
 ## TODO
 
