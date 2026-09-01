@@ -73,4 +73,8 @@ The release contract is deliberately path-scoped:
 - Automated logo exclusions must therefore inspect the root Astro site while exempting the isolated slide bundle; they must not remove or rewrite presentation assets.
 - Slide validation must confirm the full 17-slide structure, slide numbering, required assets, and absence of private speaker notes before deployment.
 
-The production commit, workflow run, deployed artifact hashes, and live smoke-test results for this addendum must be recorded only after GitHub Pages completes the replacement deployment. Until then, the earlier production table and hashes continue to describe the currently verified first Astro release.
+Production deployment completed on 2026-09-01 at 21:16 KST from squash commit `e874846b08761e1dae76c5acdf17f8c71eb2402d`. Pull request [#4](https://github.com/ManLuML/on-manifold-tfg/pull/4) passed both Pages quality checks and the repository Python CI before merge. Pages [run 33506672393](https://github.com/ManLuML/on-manifold-tfg/actions/runs/33506672393) successfully built, uploaded, deployed, and completed the production cross-site verifier.
+
+The live slide index is 233,339 bytes with SHA-256 `846aa170e3d7678f496e00b7c04f22a271aabd80384f97cb5416876041147892`, matching the reviewed artifact. A fresh public-origin browser check confirmed 17 direct slides, numbering from `1 / 17`, the MAUM.AI, SeoulTech, and ECCV logos, restored source section 19, all four outcome-animation groups, zero public speaker notes, zero broken images, no document-level horizontal overflow, and no legacy-placeholder copy. The ECCV, MAUM.AI, SeoulTech, outcome-photo, and vendored Reveal-runtime URLs all returned HTTP 200.
+
+The editable slide source branch was also fast-forwarded from `c3f04b4` to `6756b6a`; Pages remains workflow-driven from `main`, so this preserves the QMD/CSS source without changing the production deployment source.
