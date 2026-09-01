@@ -32,6 +32,13 @@ describe('ECCV slide deck', () => {
     expect(html).toMatch(/guidance-sequence-06-catastrophic\.png[^>]+current-visible[^>]+data-fragment-index="0"/);
     expect(html).toMatch(/guidance-sequence-07-graceful\.png[^>]+current-visible[^>]+data-fragment-index="1"/);
     expect(html).toMatch(/guidance-sequence-04-combined\.png[^>]+fade-in[^>]+data-fragment-index="2"/);
+    expect(html).toContain('<p class="guidance-sequence-caption guidance-sequence-caption-success">');
+    expect(html).toMatch(/guidance-sequence-caption-catastrophic[^>]+data-fragment-index="0"/);
+    expect(html).toMatch(/guidance-sequence-caption-graceful[^>]+data-fragment-index="1"/);
+    expect(html).toMatch(/guidance-sequence-caption-definition[^>]+data-fragment-index="2"/);
+    expect(html).toContain('only a reddish artifact, not a recognizable parrot');
+    expect(html).toContain('a high-quality blue macaw from the parrot parent class');
+    expect(html).toContain('realistic under the data distribution');
     expect(html).not.toContain('<aside class="notes"');
     expect(html).not.toMatch(/\sdata-notes=/);
     for (const file of [
