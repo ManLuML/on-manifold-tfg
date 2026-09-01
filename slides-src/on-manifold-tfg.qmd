@@ -255,6 +255,61 @@ But now a clean image exists at every step · exactly what the classifier needs.
 <!-- added-slide=paper-transition rewrite=google-slides-sequence-5-6-7-4 formulas=0 fragment-groups=3 -->
 
 
+## {.on-manifold-tfg data-source-section="task-benchmark" background-color="#f9fafc"}
+
+```{=html}
+<div class="showcase-section bg-paper-soft">
+  <div class="task-benchmark-slide">
+    <header class="task-benchmark-header">
+      <p>Benchmark · task definition</p>
+      <h2>Steer within the pretrained bird domain.</h2>
+      <p>We test parent → child guidance—not domain transfer to a wholly unseen distribution.</p>
+    </header>
+
+    <div class="task-benchmark-layout">
+      <div class="task-support-card" aria-label="Training-free guidance scope inside pretrained image support">
+        <div class="task-support-label"><span></span><strong>Pretrained ImageNet bird prior</strong><small>Parent bird classes already belong to the model's label space</small></div>
+        <div class="task-support-flow">
+          <article class="task-scope-node task-parent-node">
+            <span>Frozen prior</span>
+            <strong>30 coarse parents</strong>
+            <p>Classes the model already generates.</p>
+          </article>
+          <div class="task-guidance-arrow" aria-label="Training-free guidance without retraining"><span>TFG</span><b>→</b><small>guidance only<br>no weight updates</small></div>
+          <article class="task-scope-node task-child-node">
+            <span>Requested child domain</span>
+            <strong>143 fine-grained species</strong>
+            <div class="task-child-thumbnails" role="img" aria-label="Examples of fine-grained bird child species">
+              <img src="../slides/assets/bird-bunting2.jpg" alt="">
+              <img src="../slides/assets/bird-hummingbird.jpg" alt="">
+              <img src="../slides/assets/bird-penguin.jpg" alt="">
+              <img src="../slides/assets/bird-spoonbill.jpg" alt="">
+              <img src="../slides/assets/bird-swan.jpg" alt="">
+            </div>
+          </article>
+        </div>
+        <div class="task-unseen-scope"><span>Out of scope</span><strong>Wholly unseen domain transfer</strong><p>This benchmark isolates parent → child control in the ImageNet bird domain.</p></div>
+      </div>
+
+      <div class="task-evaluation-card" aria-label="Benchmark evaluation design">
+        <p class="task-card-kicker">Success requires both</p>
+        <article><span>1</span><div><strong>Target match</strong><p>Separate validity evaluator</p></div></article>
+        <article><span>2</span><div><strong>Distribution realism</strong><p>Pooled Child FID + Precision/Recall</p></div></article>
+        <div class="task-sweep-note"><strong>Sweep guidance strength</strong><p>Pareto frontiers—not one favorable ρ.</p></div>
+      </div>
+    </div>
+
+    <div class="task-benchmark-release frag-appear fragment" data-fragment-index="0">
+      <dl aria-label="Bird benchmark scale"><div><dt>Child species</dt><dd>143</dd></div><div><dt>ImageNet parents</dt><dd>30</dd></div><div><dt>Images / operating point</dt><dd>9,152</dd></div></dl>
+      <div class="task-release-resources"><span>Public on Hugging Face</span><strong>Bird benchmark</strong><strong>Butterfly · 34 species</strong><strong>FID statistics</strong></div>
+    </div>
+  </div>
+</div>
+```
+
+<!-- added-slide=task-benchmark rewrite=pretrained-support-and-public-benchmark formulas=0 fragment-groups=1 -->
+
+
 ## {.on-manifold-tfg data-source-section="17" background-color="#ffffff"}
 
 ```{=html}
@@ -410,14 +465,15 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
 ```{=html}
 <div class="showcase-section bg-paper-soft">
  <div class="max-w-5xl mx-auto w-full"> <p class="text-base uppercase tracking-[0.22em] text-cyan-deep font-semibold">Takeaway</p> <ul class="mt-10 space-y-8"> <li class="flex items-start gap-6 frag-appear fragment" data-fragment-index="0"> <span class="font-display text-3xl font-semibold text-ink-mute">1</span> <p class="text-xl lg:text-2xl text-ink leading-relaxed">
-Training-free guidance steers a <span class="font-semibold text-navy">frozen</span> diffusion model
-            with classifier gradients, at sampling time.
+Prediction target governs how TFG fails · <span class="font-semibold text-navy">x</span> is most robust,
+            <span class="font-semibold text-violet-700">v</span> is intermediate, and <span class="font-semibold text-red-600">ε</span> is least robust.
 </p> </li> <li class="flex items-start gap-6 frag-appear fragment" data-fragment-index="1"> <span class="font-display text-3xl font-semibold text-ink-mute">2</span> <p class="text-xl lg:text-2xl text-ink leading-relaxed">
-Its weak link is the clean-image estimate <span class="math-inline "><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover accent="true"><mi>x</mi><mo>^</mo></mover><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">\hat{x}_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">x</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.2222em;"><span class="mord">^</span></span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> ·
+TFG's weak link is the clean-image estimate <span class="math-inline "><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover accent="true"><mi>x</mi><mo>^</mo></mover><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">\hat{x}_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">x</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.2222em;"><span class="mord">^</span></span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> ·
             recovering it from predicted noise amplifies error by <span class="math-inline "><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="false"><mfrac><mrow><mn>1</mn><mo>−</mo><mi>t</mi></mrow><mi>t</mi></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\tfrac{1-t}{t}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mbin mtight">−</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span>.
+<span class="text-lg lg:text-xl text-ink-soft">For ε-recovery this factor diverges at high noise; v stays bounded, while x adds no recovery amplification.</span>
 </p> </li> <li class="flex items-start gap-6 frag-appear fragment" data-fragment-index="2"> <span class="font-display text-3xl font-semibold text-ink-mute">3</span> <p class="text-xl lg:text-2xl text-ink leading-relaxed">
-Predicting the clean image <span class="font-semibold text-navy">directly</span> removes the weak link ·
-            guidance stays on the manifold.
+<span class="font-semibold text-navy">Child FID</span> and guidance-strength sweeps expose manifold damage
+            that classifier Validity misses · benchmarks and reference statistics are public.
 </p> </li> </ul> </div>
 </div>
 ```

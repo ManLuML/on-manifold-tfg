@@ -136,6 +136,7 @@
 .reveal .slides > section.on-manifold-tfg[data-source-section="15"] { --on-manifold-content-scale: 1.16; }
 .reveal .slides > section.on-manifold-tfg[data-source-section="16"] { --on-manifold-content-scale: 1.15; }
 .reveal .slides > section.on-manifold-tfg[data-source-section="paper-transition"] { --on-manifold-content-scale: 1; }
+.reveal .slides > section.on-manifold-tfg[data-source-section="task-benchmark"] { --on-manifold-content-scale: 1.1; }
 .reveal .slides > section.on-manifold-tfg[data-source-section="17"] { --on-manifold-content-scale: 1.08; }
 .reveal .slides > section.on-manifold-tfg[data-source-section="18"] { --on-manifold-content-scale: 1.18; }
 .reveal .slides > section.on-manifold-tfg[data-source-section="19"] { --on-manifold-content-scale: 1.12; }
@@ -232,6 +233,357 @@
   --caption-accent: var(--color-navy);
   --caption-background: var(--color-navy-soft);
   text-align: center;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-benchmark-slide {
+  width: 1660px;
+  max-width: none;
+  margin-inline: auto;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-benchmark-header > p:first-child {
+  color: var(--color-cyan-deep);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-benchmark-header h2 {
+  margin-top: 0.45rem;
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-benchmark-header > p:last-child {
+  margin-top: 0.55rem;
+  color: var(--color-ink-soft);
+  font-size: 1.35rem;
+  line-height: 1.35;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-benchmark-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 0.9fr);
+  gap: 1.2rem;
+  margin-top: 1.45rem;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-support-card,
+.reveal .slides > section.on-manifold-tfg .task-evaluation-card {
+  border: 2px solid var(--color-line);
+  border-radius: 1rem;
+  background: var(--color-paper);
+  box-shadow: 0 12px 30px rgb(15 23 42 / 8%);
+}
+
+.reveal .slides > section.on-manifold-tfg .task-support-card {
+  padding: 1.15rem 1.25rem;
+  border-color: color-mix(in srgb, var(--color-navy) 25%, white);
+  background: linear-gradient(135deg, #f7faff 0%, #ffffff 72%);
+}
+
+.reveal .slides > section.on-manifold-tfg .task-support-label {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-support-label > span {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 999px;
+  background: var(--color-navy);
+  box-shadow: 0 0 0 0.3rem var(--color-navy-soft);
+}
+
+.reveal .slides > section.on-manifold-tfg .task-support-label strong {
+  color: var(--color-navy-deep);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-support-label small {
+  justify-self: end;
+  color: var(--color-ink-mute);
+  font-size: 0.95rem;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-support-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 10rem minmax(0, 1.25fr);
+  gap: 0.8rem;
+  align-items: center;
+  margin-top: 1.15rem;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-scope-node {
+  min-height: 12rem;
+  padding: 1rem;
+  border: 2px solid var(--scope-accent);
+  border-radius: 0.85rem;
+  background: var(--scope-background);
+}
+
+.reveal .slides > section.on-manifold-tfg .task-parent-node {
+  --scope-accent: var(--color-navy);
+  --scope-background: var(--color-navy-soft);
+}
+
+.reveal .slides > section.on-manifold-tfg .task-child-node {
+  --scope-accent: var(--color-cyan-deep);
+  --scope-background: var(--color-cyan-soft);
+}
+
+.reveal .slides > section.on-manifold-tfg .task-scope-node > span {
+  color: var(--scope-accent);
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-scope-node > strong {
+  display: block;
+  margin-top: 0.45rem;
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-scope-node > p {
+  margin-top: 0.65rem;
+  color: var(--color-ink-soft);
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-guidance-arrow {
+  display: grid;
+  justify-items: center;
+  color: var(--color-navy);
+  text-align: center;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-guidance-arrow span {
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  background: var(--color-navy);
+  color: var(--color-paper);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-guidance-arrow b {
+  margin-top: -0.35rem;
+  font-size: 4.5rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-guidance-arrow small {
+  margin-top: -0.35rem;
+  color: var(--color-ink-soft);
+  font-size: 0.9rem;
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-child-thumbnails {
+  display: flex;
+  gap: 0.42rem;
+  margin-top: 0.8rem;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-child-thumbnails img {
+  width: 3.55rem;
+  height: 3.55rem;
+  max-height: none;
+  border: 2px solid var(--color-paper);
+  border-radius: 0.6rem;
+  object-fit: cover;
+  box-shadow: 0 3px 10px rgb(15 23 42 / 14%);
+}
+
+.reveal .slides > section.on-manifold-tfg .task-unseen-scope {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 0.6rem;
+  align-items: center;
+  margin-top: 0.9rem;
+  padding: 0.55rem 0.75rem;
+  border: 2px dashed #94a3b8;
+  border-radius: 0.7rem;
+  background: #f8fafc;
+  color: var(--color-ink-soft);
+}
+
+.reveal .slides > section.on-manifold-tfg .task-unseen-scope span {
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: #e2e8f0;
+  color: #475569;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-unseen-scope strong {
+  color: #334155;
+  font-size: 1rem;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-unseen-scope p {
+  justify-self: end;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-evaluation-card {
+  padding: 1.15rem;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-card-kicker {
+  color: var(--color-cyan-deep);
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-evaluation-card article {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  margin-top: 0.9rem;
+  padding: 0.85rem;
+  border-radius: 0.8rem;
+  background: var(--color-paper-soft);
+}
+
+.reveal .slides > section.on-manifold-tfg .task-evaluation-card article > span {
+  display: grid;
+  flex: 0 0 2.35rem;
+  width: 2.35rem;
+  height: 2.35rem;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--color-navy);
+  color: var(--color-paper);
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-evaluation-card article strong {
+  color: var(--color-ink);
+  font-size: 1.2rem;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-evaluation-card article p {
+  margin-top: 0.2rem;
+  color: var(--color-ink-soft);
+  font-size: 0.95rem;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-sweep-note {
+  margin-top: 0.9rem;
+  padding: 0.8rem 0.9rem;
+  border-left: 5px solid var(--color-cyan-deep);
+  border-radius: 0.5rem;
+  background: var(--color-cyan-soft);
+}
+
+.reveal .slides > section.on-manifold-tfg .task-sweep-note strong {
+  color: var(--color-cyan-deep);
+  font-size: 1.05rem;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-sweep-note p {
+  margin-top: 0.2rem;
+  color: var(--color-ink-soft);
+  font-size: 0.9rem;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-benchmark-release {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.4fr);
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  border: 2px solid var(--color-line);
+  border-radius: 0.9rem;
+  background: var(--color-paper);
+  box-shadow: 0 8px 20px rgb(15 23 42 / 8%);
+}
+
+.reveal .slides > section.on-manifold-tfg .task-benchmark-release dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin: 0;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-benchmark-release dl > div {
+  display: flex;
+  flex-direction: column-reverse;
+  padding-right: 0.6rem;
+  border-right: 1px solid var(--color-line);
+}
+
+.reveal .slides > section.on-manifold-tfg .task-benchmark-release dl > div:last-child {
+  border-right: 0;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-benchmark-release dt {
+  color: var(--color-ink-soft);
+  font-size: 0.8rem;
+  font-weight: 650;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-benchmark-release dd {
+  margin: 0;
+  color: var(--color-navy);
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 750;
+  line-height: 1;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-release-resources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-release-resources > span {
+  margin-right: 0.25rem;
+  color: var(--color-cyan-deep);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.reveal .slides > section.on-manifold-tfg .task-release-resources > strong {
+  padding: 0.35rem 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--color-navy) 35%, white);
+  border-radius: 999px;
+  background: var(--color-navy-soft);
+  color: var(--color-navy-deep);
+  font-size: 0.85rem;
+  font-weight: 750;
+  white-space: nowrap;
 }
 
 .reveal .slide-number {

@@ -324,7 +324,58 @@ But now a clean image exists at every step · exactly what the classifier needs.
 </div>
 <!-- added-slide=paper-transition rewrite=google-slides-sequence-5-6-7-4 formulas=0 fragment-groups=3 -->
 </section>
-<section id="section-12" class="slide level2 on-manifold-tfg" data-source-section="17" data-background-color="#ffffff">
+<section id="section-12" class="slide level2 on-manifold-tfg" data-source-section="task-benchmark" data-background-color="#f9fafc">
+<h2></h2>
+<div class="showcase-section bg-paper-soft">
+  <div class="task-benchmark-slide">
+    <header class="task-benchmark-header">
+      <p>Benchmark · task definition</p>
+      <h2>Steer within the pretrained bird domain.</h2>
+      <p>We test parent → child guidance—not domain transfer to a wholly unseen distribution.</p>
+    </header>
+
+    <div class="task-benchmark-layout">
+      <div class="task-support-card" aria-label="Training-free guidance scope inside pretrained image support">
+        <div class="task-support-label"><span></span><strong>Pretrained ImageNet bird prior</strong><small>Parent bird classes already belong to the model's label space</small></div>
+        <div class="task-support-flow">
+          <article class="task-scope-node task-parent-node">
+            <span>Frozen prior</span>
+            <strong>30 coarse parents</strong>
+            <p>Classes the model already generates.</p>
+          </article>
+          <div class="task-guidance-arrow" aria-label="Training-free guidance without retraining"><span>TFG</span><b>→</b><small>guidance only<br>no weight updates</small></div>
+          <article class="task-scope-node task-child-node">
+            <span>Requested child domain</span>
+            <strong>143 fine-grained species</strong>
+            <div class="task-child-thumbnails" role="img" aria-label="Examples of fine-grained bird child species">
+              <img src="../slides/assets/bird-bunting2.jpg" alt="">
+              <img src="../slides/assets/bird-hummingbird.jpg" alt="">
+              <img src="../slides/assets/bird-penguin.jpg" alt="">
+              <img src="../slides/assets/bird-spoonbill.jpg" alt="">
+              <img src="../slides/assets/bird-swan.jpg" alt="">
+            </div>
+          </article>
+        </div>
+        <div class="task-unseen-scope"><span>Out of scope</span><strong>Wholly unseen domain transfer</strong><p>This benchmark isolates parent → child control in the ImageNet bird domain.</p></div>
+      </div>
+
+      <div class="task-evaluation-card" aria-label="Benchmark evaluation design">
+        <p class="task-card-kicker">Success requires both</p>
+        <article><span>1</span><div><strong>Target match</strong><p>Separate validity evaluator</p></div></article>
+        <article><span>2</span><div><strong>Distribution realism</strong><p>Pooled Child FID + Precision/Recall</p></div></article>
+        <div class="task-sweep-note"><strong>Sweep guidance strength</strong><p>Pareto frontiers—not one favorable ρ.</p></div>
+      </div>
+    </div>
+
+    <div class="task-benchmark-release frag-appear fragment" data-fragment-index="0">
+      <dl aria-label="Bird benchmark scale"><div><dt>Child species</dt><dd>143</dd></div><div><dt>ImageNet parents</dt><dd>30</dd></div><div><dt>Images / operating point</dt><dd>9,152</dd></div></dl>
+      <div class="task-release-resources"><span>Public on Hugging Face</span><strong>Bird benchmark</strong><strong>Butterfly · 34 species</strong><strong>FID statistics</strong></div>
+    </div>
+  </div>
+</div>
+<!-- added-slide=task-benchmark rewrite=pretrained-support-and-public-benchmark formulas=0 fragment-groups=1 -->
+</section>
+<section id="section-13" class="slide level2 on-manifold-tfg" data-source-section="17" data-background-color="#ffffff">
 <h2></h2>
 <div class="showcase-section">
  <div class="max-w-6xl mx-auto w-full"> <header class="max-w-6xl mx-auto w-full"> <div class="font-display text-base lg:text-lg tracking-[0.22em] text-cyan-deep font-semibold uppercase"> Strong-guidance stress test </div> <h2 class="mt-3 font-display text-4xl lg:text-5xl tracking-tight font-semibold text-ink leading-tight"> Same task, two failure modes </h2> <p class="mt-3 text-lg lg:text-xl text-ink-soft">Compare pretrained x- and ε-prediction models under the same bird-guidance task.</p> </header> <div class="mt-6 space-y-4"> <div> <div class="flex items-baseline justify-between max-w-3xl mx-auto"> <p class="text-base lg:text-lg font-semibold text-navy"> <span class="math-inline "><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span></span>-prediction · JiT
@@ -335,7 +386,7 @@ The prediction target decides whether failure stays on-manifold.
 </div>
 <!-- source-section=17 formulas=2 fragment-groups=1 -->
 </section>
-<section id="section-13" class="slide level2 on-manifold-tfg" data-source-section="18" data-background-color="#f9fafc">
+<section id="section-14" class="slide level2 on-manifold-tfg" data-source-section="18" data-background-color="#f9fafc">
 <h2></h2>
 <div class="showcase-section bg-paper-soft">
  <div class="max-w-6xl mx-auto w-full"> <header class="max-w-6xl mx-auto w-full"> <div class="font-display text-base lg:text-lg tracking-[0.22em] text-cyan-deep font-semibold uppercase"> Manifold-aware evaluation </div> <h2 class="mt-3 font-display text-4xl lg:text-5xl tracking-tight font-semibold text-ink leading-tight"> Child FID measures manifold damage </h2> <p class="mt-3 text-lg lg:text-xl text-ink-soft">At matched classifier accuracy, do guided samples still look like the real target class?</p> </header> <div class="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center"> <div class="lg:col-span-7 space-y-5"> <p class="text-lg text-ink leading-relaxed">
@@ -354,7 +405,7 @@ lower-left is better · <span class="math-inline "><span class="katex"><span cla
 </div>
 <!-- source-section=18 formulas=4 fragment-groups=1 -->
 </section>
-<section id="section-14" class="slide level2 on-manifold-tfg" data-source-section="19" data-background-color="#ffffff">
+<section id="section-15" class="slide level2 on-manifold-tfg" data-source-section="19" data-background-color="#ffffff">
 <h2></h2>
 <div class="showcase-section"> <div class="max-w-6xl mx-auto w-full"> <header class="max-w-6xl mx-auto w-full"> <div class="font-display text-base lg:text-lg tracking-[0.22em] text-cyan-deep font-semibold uppercase"> Error-amplification analysis </div> <h2 class="mt-3 font-display text-4xl lg:text-5xl tracking-tight font-semibold text-ink leading-tight"> Why it works: statements and proofs </h2> <p class="mt-3 text-lg lg:text-xl text-ink-soft">Each result with its proof, from §3 and Appendix B. Kept here for the curious reader.</p> </header> <div class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-4"> <div class="rounded-xl border-2 border-navy bg-paper p-4 lg:p-5"> <p class="text-sm uppercase tracking-[0.14em] text-navy font-semibold">Proposition 1 · Error Amplification</p> <p class="mt-2 text-sm text-ink leading-relaxed">
 Let <span class="math-inline "><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>δ</mi><mi>ϵ</mi></msub><mo>=</mo><mi mathvariant="normal">∥</mi><mi>ϵ</mi><mo>−</mo><msub><mi>ϵ</mi><mi>θ</mi></msub><msub><mi mathvariant="normal">∥</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">\delta_\epsilon = \|\epsilon-\epsilon_\theta\|_2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0379em;">δ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0379em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">ϵ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∥</span><span class="mord mathnormal">ϵ</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal">ϵ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0278em;">θ</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord">∥</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span>,
@@ -462,23 +513,24 @@ M834 80h400000v40h-400000z"></path></svg></span></span></span><span class="vlist
 </p> </div> </div>
 <!-- source-section=19 formulas=40 fragment-groups=0 -->
 </section>
-<section id="section-15" class="slide level2 on-manifold-tfg" data-source-section="20" data-background-color="#f9fafc">
+<section id="section-16" class="slide level2 on-manifold-tfg" data-source-section="20" data-background-color="#f9fafc">
 <h2></h2>
 <div class="showcase-section bg-paper-soft">
  <div class="max-w-5xl mx-auto w-full"> <p class="text-base uppercase tracking-[0.22em] text-cyan-deep font-semibold">Takeaway</p> <ul class="mt-10 space-y-8"> <li class="flex items-start gap-6 frag-appear fragment" data-fragment-index="0"> <span class="font-display text-3xl font-semibold text-ink-mute">1</span> <p class="text-xl lg:text-2xl text-ink leading-relaxed">
-Training-free guidance steers a <span class="font-semibold text-navy">frozen</span> diffusion model
-            with classifier gradients, at sampling time.
+Prediction target governs how TFG fails · <span class="font-semibold text-navy">x</span> is most robust,
+            <span class="font-semibold text-violet-700">v</span> is intermediate, and <span class="font-semibold text-red-600">ε</span> is least robust.
 </p> </li> <li class="flex items-start gap-6 frag-appear fragment" data-fragment-index="1"> <span class="font-display text-3xl font-semibold text-ink-mute">2</span> <p class="text-xl lg:text-2xl text-ink leading-relaxed">
-Its weak link is the clean-image estimate <span class="math-inline "><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover accent="true"><mi>x</mi><mo>^</mo></mover><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">\hat{x}_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">x</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.2222em;"><span class="mord">^</span></span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> ·
+TFG's weak link is the clean-image estimate <span class="math-inline "><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover accent="true"><mi>x</mi><mo>^</mo></mover><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">\hat{x}_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">x</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.2222em;"><span class="mord">^</span></span></span></span></span></span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> ·
             recovering it from predicted noise amplifies error by <span class="math-inline "><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mstyle scriptlevel="0" displaystyle="false"><mfrac><mrow><mn>1</mn><mo>−</mo><mi>t</mi></mrow><mi>t</mi></mfrac></mstyle></mrow><annotation encoding="application/x-tex">\tfrac{1-t}{t}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mbin mtight">−</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span>.
+<span class="text-lg lg:text-xl text-ink-soft">For ε-recovery this factor diverges at high noise; v stays bounded, while x adds no recovery amplification.</span>
 </p> </li> <li class="flex items-start gap-6 frag-appear fragment" data-fragment-index="2"> <span class="font-display text-3xl font-semibold text-ink-mute">3</span> <p class="text-xl lg:text-2xl text-ink leading-relaxed">
-Predicting the clean image <span class="font-semibold text-navy">directly</span> removes the weak link ·
-            guidance stays on the manifold.
+<span class="font-semibold text-navy">Child FID</span> and guidance-strength sweeps expose manifold damage
+            that classifier Validity misses · benchmarks and reference statistics are public.
 </p> </li> </ul> </div>
 </div>
 <!-- source-section=20 formulas=2 fragment-groups=3 -->
 </section>
-<section id="section-16" class="slide level2 on-manifold-tfg" data-source-section="21" data-background-color="#ffffff">
+<section id="section-17" class="slide level2 on-manifold-tfg" data-source-section="21" data-background-color="#ffffff">
 <h2></h2>
 <div class="showcase-section">
   <div class="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
